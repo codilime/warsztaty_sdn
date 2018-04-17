@@ -1,0 +1,31 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Add latest Python and Ansible PPAs
+      shell: "add-apt-repository {{ item }} -y"
+      become:  true
+      with_items:
+        - ppa:jonathonf/python-3.6
+        - ppa:ansible/ansible
+        - ppa:mystic-mirage/pycharm
+
+    - name: install python3.6
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - python3.6
+        - python-pip
+        - python-dev
+        - build-essential
+        - docker.io
+        - pycharm-community
+      become: true
