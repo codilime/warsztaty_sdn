@@ -1,9 +1,11 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "marcoaltieri/ubuntu-desktop-16.04-64bit"
-  config.disksize.size = "15GB"
-
+  config.disksize.size = "16GB"
+  config.vm.define "polibuda-sdn"
+  config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
   config.vm.provider "virtualbox" do |vb|
+    vb.name = "polibuda-sdn"
     vb.gui = true
   end
 

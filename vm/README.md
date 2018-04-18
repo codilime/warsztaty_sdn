@@ -1,13 +1,25 @@
-1) Ściągnij vagrant z https://www.vagrantup.com/downloads.html
+## Przygtowanie 
+
+1) Ściągnij vagrant z [vagrant](https://www.vagrantup.com/downloads.html)
 2) Zainstaluj vagrant 
-3) sprawdz czy to wersja  2.0.x
-4) ściągnij virtualbox z https://www.virtualbox.org/wiki/Downloads
+3) Sprawdź czy to wersja  2.0.x
+4) Ściągnij virtualbox z [virtualbox](https://www.virtualbox.org/wiki/Downloads)
 5) Zainstaluj virtualbox
-6) sprawdz czy wersja to 5.2.x
-7) install extension pack https://download.virtualbox.org/virtualbox/5.2.8/Oracle_VM_VirtualBox_Extension_Pack-5.2.8.vbox-extpack
-8) Budowanie vm od zera 
+6) Sprawdź czy wersja to 5.2.x
+7) Zainstaluj extension pack [virtualbox-ext](https://download.virtualbox.org/virtualbox/5.2.8/Oracle_VM_VirtualBox_Extension_Pack-5.2.8.vbox-extpack)
+8) Zainstaluj vagrant [disksize](https://github.com/sprotheroe/vagrant-disksize)
 ```bash
-cd vm
+vagrant plugin install vagrant-disksize
+```
+## Budowanie od zera
+```bash
+cd build_vm
+vagrant up
+
+```
+## Gotowa vm
+```bash
+cd ready_vm
 vagrant up
 
 ```
