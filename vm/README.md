@@ -19,7 +19,7 @@
 ```bash
 vagrant plugin install vagrant-disksize
 ```
-## Budowanie od zera
+## Budowanie od zera (dużo dłuższe)
 ```bash
 cd build_vm
 vagrant up
