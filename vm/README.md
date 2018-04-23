@@ -26,7 +26,7 @@ vagrant up
 
 ```
 ## Gotowa vm
-ściągnąc box z https://drive.google.com/open?id=1Dr5VAObYJcqOy8gW9b9f3BSyYSxaSGgz
+ściągnąc box z https://drive.google.com/open?id=1cpKalme36MYi4QiJENTZw2ul_Z44XdJe
 
 ```bash
 cp  polibuda-sdn-ready.box ready_vm/
