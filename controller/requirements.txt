@@ -1,0 +1,6 @@
+flask
+flask_script
+flask_wtf
+wtforms
+docker
+netaddr
