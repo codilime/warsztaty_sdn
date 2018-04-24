@@ -1,4 +1,4 @@
-import urllib.parse
+import json
 
 
 class Router(object):
@@ -10,9 +10,13 @@ class Router(object):
         self.logical_ports = []
 
     def add_network(self, n):
-        self.poster.post(self.ip + "/create/network", urllib.parse.urlencode({"id": n.id}))
+        self.poster.post(self.ip + "/create/network",
+                         headers={"content-type": "application/json"},
+                         data=json.dumps({"id": n.id}))
         self.networks.append(n)
 
     def add_logical_port(self, p):
-        self.poster.post(self.ip + "/create/logical_port", urllib.parse.urlencode({"net_id": p.network.id, "ip":p.router_ip}))
+        self.poster.post(self.ip + "/create/logical_port",
+                         headers={"content-type": "application/json"},
+                         data=json.dumps({"net_id": p.network.id, "ip":p.router_ip}))
         self.logical_ports.append(p)
