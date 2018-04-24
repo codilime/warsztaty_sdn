@@ -1,0 +1,21 @@
+[controller]
+docker_id = sdn_controller_1
+docker_ip = {{ sdn_controller_1_ip.stdout }}
+listen_port = 8090
+listen_address = 0.0.0.0
+debug = True
+
+[router]
+docker_id = sdn_router_1
+docker_ip = {{ sdn_router_1_ip.stdout }}
+listen_port = 8090
+listen_address = 0.0.0.0
+debug = True
+
+[agent]
+listen_port = 8090
+listen_address = 0.0.0.0
+debug = True
+
+[docker]
+docker_socket = unix://var/run/docker.sock
