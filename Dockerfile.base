@@ -3,5 +3,7 @@ FROM ubuntu:16.04
 RUN apt-get update
 RUN apt-get install python3-pip python3-dev build-essential -y
 
+COPY requirements_base.txt .
+RUN pip3 install -r requirements_base.txt
 
 CMD python -m flask run
