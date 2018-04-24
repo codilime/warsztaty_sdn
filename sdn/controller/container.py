@@ -13,5 +13,5 @@ class Container(object):
 
     def add_logical_port(self, p):
         logger.info("Creating logical port on network %s on %s", p.network.ip, self.id)
-        self.poster.post(self.ip + "/create/logical_port", urllib.parse.urlencode({"net_ip": p.network.ip, "ip": p.container_ip}))
+        self.poster.post("http://"+self.ip + "/create/logical_port", urllib.parse.urlencode({"net_ip": p.network.ip, "ip": p.container_ip}))
         self.logical_ports.append(p)
