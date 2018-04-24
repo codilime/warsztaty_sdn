@@ -1,0 +1,13 @@
+---
+version: '2'
+
+services:
+    {% for agent in agents -%}
+    agent_{{ agent }}:
+        restart: always
+        image: agent
+        volumes:
+            - "{{ agent_path }}:/opt/agent"
+            - "{{ config_path }}:/opt/config"
+        command: 'python3 -m agent.flaskapp.app'
+    {% endfor %}

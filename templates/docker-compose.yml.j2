@@ -17,12 +17,3 @@ services:
             - "{{ config_path }}:/opt/config"
             - "/var/run/docker.sock:/var/run/docker.sock"
         command: 'python3 -m controller.flaskapp.app'
-    {% for agent in agents -%}
-    agent_{{ agent }}:
-        restart: always
-        image: agent
-        volumes:
-            - "{{ agent_path }}:/opt/agent"
-            - "{{ config_path }}:/opt/config"
-        command: 'python3 -m agent.flaskapp.app'
-    {% endfor %}
