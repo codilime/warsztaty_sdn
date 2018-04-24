@@ -2,6 +2,11 @@
 - name: Ensures /opt/sdn dir exists
   file: path=/opt/sdn  state=directory
 
+- name: install compose
+  pip:
+    name: docker-compose
+    state: present
+
 - name: Create docker compose
   template:
     src: docker-compose.yml.j2

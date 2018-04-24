@@ -4,3 +4,4 @@ vm/build_vm/ubuntu-xenial-16.04-cloudimg-console.log
 vm/ready_vm/polibuda-sdn-ready.box
 vm/build_vm/install.retry
 vm/ready_vm/.vagrant/
+*.orig
