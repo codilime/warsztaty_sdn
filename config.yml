@@ -1,4 +1,9 @@
 ---
+- name: Ensures /home/vagrant/Desktop/save/sdn/config dir exists
+  file:
+    path: '/home/vagrant/Desktop/save/sdn/config'
+    state: directory
+
 - shell: "docker inspect -f '{% raw %}{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{% endraw %}' sdn_router_1"
   register: sdn_router_1_ip
 
