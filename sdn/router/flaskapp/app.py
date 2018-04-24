@@ -1,4 +1,4 @@
-import traceback
+import logging
 from flask import Flask, request
 from router.router import Router, CommandExecutor
 from router.interface_finder import InterfaceFinder
@@ -8,7 +8,7 @@ from config.flask_config import get_config
 app = Flask('Router')
 config = get_config()
 debug_mode = config.getboolean('router', 'debug')
-
+logging.basicConfig(level=logging.DEBUG)
 
 router = Router(CommandExecutor, InterfaceFinder)
 

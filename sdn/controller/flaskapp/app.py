@@ -1,3 +1,4 @@
+import logging
 import requests
 import traceback
 from docker import DockerClient
@@ -13,6 +14,7 @@ from config.flask_config import get_config
 app = Flask('Controller')
 config = get_config()
 debug_mode = config.getboolean('controller', 'debug')
+logging.basicConfig(level=logging.DEBUG)
 
 controller = Controller(Router(id=config.get('router', 'docker_id'),
                                ip='http://%s:%s' % (config.get('router', 'docker_ip'),

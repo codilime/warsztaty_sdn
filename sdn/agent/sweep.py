@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class PingSweep(object):
     SWEEP_CMD = 'sudo nmap -v -sn -PE -n -oG - %s'
-    HOSTS_UP = re.compile(r"([0-9]+) hosts up")
+    HOSTS_UP = re.compile(r"([0-9]+) host(s)? up")
 
     def sweep(self, target):
         logger.info("Starting network sweep on %s", target)
