@@ -10,6 +10,7 @@ class Controller(object):
         self.router = router
         self.docker_client = docker_client
         self.ipam_pools = {}
+        self.networks = {}
 
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
@@ -17,6 +18,10 @@ class Controller(object):
         self.ipam_pools[n.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
 
         self.router.add_network(n)
+        self.networks[n.id] = n
+
+    def get_network(self, id):
+        return self.networks[id]
 
     def add_logical_port(self, p):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
