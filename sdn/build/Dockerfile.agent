@@ -1,10 +1,10 @@
 FROM sdn-base:latest
 
-COPY agent /opt/sdn/agent
+COPY agent/requirements.txt /opt/agent/requirements.txt
 
-RUN pip3 install -r /opt/sdn/agent/requirements.txt
+RUN pip3 install -r /opt/agent/requirements.txt
 ENV FLASK_APP=/opt/agent/flaskapp/app.py
 ENV PYTHONPATH=/opt/
 
-WORKDIR /opt/sdn
+WORKDIR /opt
 CMD python3 -m agent.flaskapp.app
