@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Remove docker agent contrainers
+      docker_container:
+        name: "sdn_agent_{{ item }}_1"
+        state: absent
+        force_kill: true
+      with_items: "{{ agents }}"
+
+    - name: Remove docker contrainers
+      docker_container:
+        name: "{{ item }}"
+        state: absent
+        force_kill: true
+      with_items:
+        - sdn_router_1
+        - sdn_controller_1
+
+    - name: Remove docker images
+      docker_image:
+        name: "{{ item }}"
+        state: absent
+        force: true
+      with_items:
+        - agent
+        - router
+        - controller
+        - sdn-base

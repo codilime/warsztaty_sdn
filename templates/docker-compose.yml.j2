@@ -1,0 +1,19 @@
+---
+version: '2'
+
+services:
+    router:
+        restart: always
+        image: router
+        command: "python -m flask run"
+    controller:
+        restart: always
+        image: controller
+        command: "python -m flask run"
+
+    {% for agent in agents -%}
+    agent_{{ agent }}:
+        restart: always
+        image: agent
+        command: "python -m flask run"
+    {% endfor %}
