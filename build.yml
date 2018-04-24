@@ -10,8 +10,8 @@
 - name: Build images
   docker_image:
     name: '{{ item }}'
-    path: 'sdn/{{ item }}/build'
-    dockerfile: 'Dockerfile'
+    path: 'sdn'
+    dockerfile: 'Dockerfile.{{ item }}'
     pull: false
     tag: latest
   with_items:
