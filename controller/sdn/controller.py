@@ -23,5 +23,6 @@ class Controller(object):
         docker_net.connect(p.container.id, ipv4_address=container_ip.format())
 
         p.router_ip = router_ip
+        p.container_ip = container_ip
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)

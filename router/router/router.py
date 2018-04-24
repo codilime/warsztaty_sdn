@@ -1,3 +1,6 @@
+import subprocess
+
+
 class Router(object):
     FORWARD_COMMAND = 'iptables -A FORWARD -i {} -o {} -j ACCEPT'
 
@@ -13,7 +16,17 @@ class Router(object):
         my_interface = self.interface_finder.find(ip)
         for peer in self.networks[net]:
             peer_interface = self.interface_finder.find(peer)
-            self.command_executor.execute(self.FORWARD_COMMAND.format(peer_interface, my_interface))
-            self.command_executor.execute(self.FORWARD_COMMAND.format(my_interface, peer_interface))
+            self.command_executor.execute(self._build_forward_command(peer_interface, my_interface))
+            self.command_executor.execute(self._build_forward_command(my_interface, peer_interface))
 
         self.networks[net].append(ip)
+
+    @staticmethod
+    def _build_forward_command(iface_in, iface_out):
+        return ['iptables', '-A', 'FORWARD', '-i', iface_in, '-o', iface_out, '-j', 'ACCEPT']
+
+
+class CommandExecutor(object):
+    @staticmethod
+    def execute(cmd):
+        subprocess.run(cmd)
