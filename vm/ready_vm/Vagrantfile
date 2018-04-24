@@ -1,11 +1,13 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "polibuda-sdn-ready.box"
-  config.disksize.size = "16GB"
   config.vm.define "polibuda-sdn-ready"
-  config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
+  config.disksize.size = "16GB"
+  config.vm.synced_folder "save/", "/home/vagrant/save"
   config.vm.provider "virtualbox" do |vb|
     vb.name = "polibuda-sdn-ready"
     vb.gui = true
+    vb.memory = 2048
+    vb.cpus = 2
   end
 end
