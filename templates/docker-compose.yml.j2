@@ -6,20 +6,19 @@ services:
         restart: always
         image: router
         volumes:
-            - "{{ router_path }}:{{ /opt/router }}"
+            - "{{ router_path }}:/opt/router"
         command: "python -m flask run"
     controller:
         restart: always
         image: controller
         volumes:
-            - "{{ controller_path }}:{{ /opt/controller }}"
+            - "{{ controller_path }}:/opt/controller"
         command: "python -m flask run"
-
     {% for agent in agents -%}
     agent_{{ agent }}:
         restart: always
         image: agent
         volumes:
-            - "{{ agent_path }}:{{ /opt/agent }}"
+            - "{{ agent_path }}:/opt/agent"
         command: "python -m flask run"
     {% endfor %}

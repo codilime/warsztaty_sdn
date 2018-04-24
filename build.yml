@@ -7,26 +7,14 @@
     dockerfile: Dockerfile.base
     tag: latest
 
-- name: Build router
+- name: Build images
   docker_image:
-    name: router
-    path: 'router/'
+    name: '{{ item }}'
+    path: 'sdn/{{ item }}/build'
     dockerfile: 'Dockerfile'
     pull: false
     tag: latest
-
-- name: Build controller
-  docker_image:
-    name: controller
-    path: 'controller/'
-    dockerfile: 'Dockerfile'
-    pull: false
-    tag: latest
-
-- name: Build agent
-  docker_image:
-    name: agent
-    path: 'agent/'
-    dockerfile: 'Dockerfile'
-    pull: false
-    tag: latest
+  with_items:
+    - router
+    - controller
+    - agent

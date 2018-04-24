@@ -8,5 +8,5 @@
   template:
     src: docker-compose.yml.j2
     dest: "/opt/sdn/docker-compose.yml"
-    version: "test"
+
 
