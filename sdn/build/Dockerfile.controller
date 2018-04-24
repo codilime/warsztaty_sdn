@@ -1,11 +1,10 @@
 FROM sdn-base:latest
 
 COPY controller /opt/sdn/controller
-COPY config /opt/sdn/config
 
 RUN pip3 install -r /opt/sdn/controller/requirements.txt
-ENV FLASK_APP=/opt/sdn/controller/flaskapp/app.py
-ENV PYTHONPATH=/opt/sdn
+ENV FLASK_APP=/opt/controller/flaskapp/app.py
+ENV PYTHONPATH=/opt/
 
 WORKDIR /opt/sdn
 CMD python3 -m controller.flaskapp.app
