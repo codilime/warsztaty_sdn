@@ -24,7 +24,11 @@ class ControllerTest(unittest.TestCase):
         n = Network("net1", "192.168.0.0/24")
         ctrl.add_network(n)
 
-        poster.post.assert_called_with(self.ROUTER_URL + "/create/network", "id=net1")
+        poster.post.assert_called_with(
+            self.ROUTER_URL + "/create/network",
+            data='{"id": "net1"}',
+            headers={'content-type': 'application/json'}
+        )
 
     def test_should_post_logical_port_to_router(self):
         poster = MagicMock()
@@ -38,7 +42,11 @@ class ControllerTest(unittest.TestCase):
         p = LogicalPort(c, n)
         ctrl.add_logical_port(p)
 
-        poster.post.assert_any_call(self.ROUTER_URL + "/create/logical_port", "net_id=net1&ip=192.168.0.1")
+        poster.post.assert_called_with(
+            self.ROUTER_URL + "/create/logical_port",
+            data='{"net_id": "net1", "ip": "192.168.0.1"}',
+            headers={'content-type': 'application/json'}
+        )
 
     def test_should_post_logical_port_to_container(self):
         poster = MagicMock()
@@ -69,7 +77,11 @@ class ControllerTest(unittest.TestCase):
         docker_client.networks.create = MagicMock(return_value=mocked_network)
         ctrl.add_logical_port(p)
 
-        poster.post.assert_called_with(self.ROUTER_URL + "/create/logical_port", "net_id=net1&ip=192.168.0.1")
+        poster.post.assert_called_with(
+            self.ROUTER_URL + "/create/logical_port",
+            data='{"net_id": "net1", "ip": "192.168.0.1"}',
+            headers={'content-type': 'application/json'}
+        )
         mocked_network.connect.assert_any_call(self.ROUTER_ID, ipv4_address='192.168.0.1')
         mocked_network.connect.assert_any_call(self.CONTAINER_RED_ID, ipv4_address='192.168.0.2')
 

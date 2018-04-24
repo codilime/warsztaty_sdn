@@ -1,5 +1,8 @@
+import logging
 import re
 import subprocess
+
+logger = logging.getLogger(__name__)
 
 
 class PingSweep(object):
@@ -7,7 +10,10 @@ class PingSweep(object):
     HOSTS_UP = re.compile(r"([0-9]+) hosts up")
 
     def sweep(self, target):
+        logger.info("Starting network sweep on %s", target)
         output = self.exec_command(self.SWEEP_CMD % target)
+
+        logger.debug("Sweep result: %s", output)
         if not output:
             return 0
 
