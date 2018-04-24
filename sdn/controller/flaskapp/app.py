@@ -1,60 +1,91 @@
-import os, requests
+import requests
+import traceback
 from docker import DockerClient
-from flask import Flask, request
-from configparser import ConfigParser
+from flask import Flask, request, jsonify
 from controller.controller import Controller
 from controller.router import Router
 from controller.network import Network
 from controller.logical_port import LogicalPort
+from config.flask_config import get_config
 
-
-CONFIG_FILE = 'controller.conf'
-CONFIG_PATH = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        CONFIG_FILE
-    )
-)
-
-
-config = ConfigParser({'debug': 'True'})
-config.read(CONFIG_PATH)
 
 app = Flask('Controller')
+config = get_config()
+debug_mode = config.getboolean('controller', 'debug')
 
-controller = Controller(Router(str(config.get('docker', 'router_id')),
-                               str(config.get('docker', 'router_endpoint')),
-                               requests),
-                        DockerClient(base_url=''))
+controller = Controller(Router(id=config.get('router', 'docker_id'),
+                               ip='http://%s:%s' % (config.get('router', 'docker_ip'),
+                                                    config.get('router', 'listen_port')),
+                               poster=requests),
+                        DockerClient(base_url=config.get('docker', 'docker_socket')))
+
+
+class ServerError(Exception):
+
+    def __init__(self, message, status_code, payload=None):
+        Exception.__init__(self)
+        self.message, self.status_code, self.payload = message, status_code, payload
+
+    def to_dict(self):
+        return {'message': self.message, 'payload': self.payload or {}}
+
+
+@app.errorhandler(ServerError)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+def _assert_proper_request(req):
+    if (req.content_type != 'application/json' or not hasattr(req, 'json')):
+        raise ServerError(message='Malformed request, expected json payload and type',
+                         status_code=400)
+
 
 @app.route('/')
 @app.route('/index')
 def get_index():
-    return '<br/>'.join([
-        '<b>Available endpoints:</b><br/>',
-        '/create/network<br/>',
-        '/create/logical_port<br/>'
+    return '<br/><br/>'.join([
+        '<b>Available endpoints:</b>',
+        '<ul><li>/create/network <br>POST - {"name": "xyz", "cidr": "10.20.0.0/16"}</li>',
+        '<li>/create/logical_port <br>POST - {"container_name": "dock", "network_name": "xyz"}</li>',
+        '</ul>'
     ])
 
 
 @app.route('/create/network', methods=['POST'])
 def create_network():
-    data = request.get_json()
-    new_network = Network(net_id=data.get('name'),
-                          ip=data.get('cidr'))
-    controller.add_network(new_network)
-    return 'Success\n'
+    _assert_proper_request(request)
+
+    try:
+        data = request.get_json()
+        new_network = Network(net_id=data.get('name'),
+                              ip=data.get('cidr'))
+        controller.add_network(new_network)
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error creating network',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
 
 
 @app.route('/create/logical_port', methods=['POST'])
 def create_logical_port():
-    data = request.get_json()
-    new_lp = LogicalPort(container=data.get('container'),
-                         network=data.get('network'))
-    controller.add_logical_port(new_lp)
-    return 'Success\n'
+    _assert_proper_request(request)
+
+    try:
+        data = request.get_json()
+        new_lp = LogicalPort(container=data.get('container'),
+                             network=data.get('network'))
+        controller.add_logical_port(new_lp)
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error creating logical port',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
 
 
-app.run(str(config.get('main','listen_address')),
-        config.getint('main', 'listen_port'),
-        config.getboolean('main', 'debug'))
+app.run(config.get('controller','listen_address'),
+        config.getint('controller', 'listen_port'),
+        debug_mode)
