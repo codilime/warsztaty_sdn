@@ -4,3 +4,4 @@ flask_wtf
 wtforms
 docker
 netaddr
+requests
