@@ -1,5 +1,5 @@
 import logging
-
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -12,3 +12,9 @@ class LogicalPort(object):
     def create(self, cmd_executor):
         logger.info("Creating logical port on %s, my IP is %s", self.net, self.local_ip)
         cmd_executor.execute(['route', 'add', 'default', 'gw', self.local_ip])
+
+
+class CommandExecutor(object):
+    @staticmethod
+    def execute(cmd):
+        subprocess.run(cmd)

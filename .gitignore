@@ -5,3 +5,4 @@ vm/ready_vm/polibuda-sdn-ready.box
 vm/build_vm/install.retry
 vm/ready_vm/.vagrant/
 *.orig
+vm/ready_vm/save/
