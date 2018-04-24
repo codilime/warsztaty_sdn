@@ -34,7 +34,7 @@ class RouterTests(unittest.TestCase):
 
         r.add_network(n)
 
-        poster.post.assert_called_with(self.ROUTER_URL+"/network", "id=net1")
+        poster.post.assert_called_with(self.ROUTER_URL+"/create/network", "id=net1")
 
     def test_should_store_single_logical_port(self):
         p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
@@ -53,7 +53,7 @@ class RouterTests(unittest.TestCase):
 
         r.add_logical_port(p)
 
-        poster.post.assert_called_with(self.ROUTER_URL + "/logical_port", "net_id=net1&ip=192.168.0.1")
+        poster.post.assert_called_with(self.ROUTER_URL + "/create/logical_port", "net_id=net1&ip=192.168.0.1")
 
 
 if __name__ == '__main__':
