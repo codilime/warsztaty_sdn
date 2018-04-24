@@ -6,6 +6,7 @@ from controller.controller import Controller
 from controller.router import Router
 from controller.network import Network
 from controller.logical_port import LogicalPort
+from controller.container import Container
 from config.flask_config import get_config
 
 
@@ -76,7 +77,11 @@ def create_logical_port():
 
     try:
         data = request.get_json()
-        new_lp = LogicalPort(container=data.get('container'),
+        raw_container = data.get('container')
+        container = Container(id=raw_container.get('id'),
+                              ip=raw_container.get('ip'),
+                              poster=requests)
+        new_lp = LogicalPort(container=container,
                              network=data.get('network'))
         controller.add_logical_port(new_lp)
         return 'Success\n'
