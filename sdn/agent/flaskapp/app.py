@@ -10,7 +10,8 @@ config = get_config()
 debug_mode = config.getboolean('agent', 'debug')
 logging.basicConfig(level=logging.DEBUG)
 
-@app.route('/ping/<target>', methods=['GET'])
+
+@app.route('/ping/<path:target>', methods=['GET'])
 def ping_target(target):
     sweeper = PingSweep()
     return str(sweeper.sweep(target=target))
