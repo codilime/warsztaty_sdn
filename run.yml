@@ -3,5 +3,6 @@
 - hosts: all
   gather_facts: no
   tasks:
+  - import_tasks: fix_docker.yml
   - import_tasks: build.yml
   - import_tasks: compose.yml
