@@ -2,10 +2,10 @@ import os, requests
 from docker import DockerClient
 from flask import Flask, request
 from configparser import ConfigParser
-from controller.sdn.controller import Controller
-from controller.sdn.router import Router
-from controller.sdn.network import Network
-from controller.sdn.logical_port import LogicalPort
+from controller.controller import Controller
+from controller.router import Router
+from controller.network import Network
+from controller.logical_port import LogicalPort
 
 
 CONFIG_FILE = 'controller.conf'
