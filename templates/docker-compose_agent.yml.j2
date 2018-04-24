@@ -14,7 +14,7 @@ services:
           static-network:
             ipv4_address: '172.20.128.{{loop.index}}'
     {% endfor %}
-    
+
 networks:
   static-network:
     ipam:
