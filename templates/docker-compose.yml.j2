@@ -7,12 +7,14 @@ services:
         image: router
         volumes:
             - "{{ router_path }}:/opt/router"
+            - "{{ config_path }}:/opt/config"
         command: 'export PYTHONPATH="${PYTHONPATH}:${PWD}"; python -m router.flaskapp.app'
     controller:
         restart: always
         image: controller
         volumes:
             - "{{ controller_path }}:/opt/controller"
+            - "{{ config_path }}:/opt/config"
         command: 'export PYTHONPATH="${PYTHONPATH}:${PWD}"; python -m controller.flaskapp.app'
     {% for agent in agents -%}
     agent_{{ agent }}:
@@ -20,5 +22,6 @@ services:
         image: agent
         volumes:
             - "{{ agent_path }}:/opt/agent"
+            - "{{ config_path }}:/opt/config"
         command: 'export PYTHONPATH="${PYTHONPATH}:${PWD}"; python -m agent.flaskapp.app'
     {% endfor %}

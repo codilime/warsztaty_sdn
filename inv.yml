@@ -12,3 +12,4 @@ all:
     router_path: "{{ sdn_path }}/router"
     controller_path: "{{ sdn_path }}/controller"
     agent_path: "{{ sdn_path }}/agent"
+    agent_path: "{{ config_path }}/config"
