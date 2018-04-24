@@ -30,6 +30,15 @@ class ControllerTest(unittest.TestCase):
             headers={'content-type': 'application/json'}
         )
 
+    def test_should_lookup_networks_by_id(self):
+        ctrl = Controller(MagicMock(), MagicMock())
+
+        n = Network("net1", "192.168.0.0/24")
+        ctrl.add_network(n)
+
+        stored_net = ctrl.get_network("net1")
+        self.assertEqual(n, stored_net)
+
     def test_should_post_logical_port_to_router(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)

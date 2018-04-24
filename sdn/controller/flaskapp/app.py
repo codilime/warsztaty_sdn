@@ -83,8 +83,8 @@ def create_logical_port():
         container = Container(id=raw_container.get('id'),
                               ip=raw_container.get('ip'),
                               poster=requests)
-        new_lp = LogicalPort(container=container,
-                             network=data.get('network'))
+        network = controller.get_network(data.get('net_id'))
+        new_lp = LogicalPort(container=container, network=network)
         controller.add_logical_port(new_lp)
         return 'Success\n'
     except:
