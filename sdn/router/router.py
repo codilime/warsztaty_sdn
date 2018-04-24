@@ -1,4 +1,7 @@
+import logging
 import subprocess
+
+logger = logging.getLogger(__name__)
 
 
 class Router(object):
@@ -10,12 +13,15 @@ class Router(object):
         self.networks = {}
 
     def add_network(self, name):
+        logger.info("Adding network %s", name)
         self.networks[name] = []
 
     def add_logical_port(self, net, ip):
+        logger.info("Adding logical port %s/%s", net, ip)
         my_interface = self.interface_finder.find(ip)
         for peer in self.networks[net]:
             peer_interface = self.interface_finder.find(peer)
+            logger.debug("Configuring routing for %s <-> %s", my_interface, peer_interface)
             self.command_executor.execute(self._build_forward_command(peer_interface, my_interface))
             self.command_executor.execute(self._build_forward_command(my_interface, peer_interface))
 
