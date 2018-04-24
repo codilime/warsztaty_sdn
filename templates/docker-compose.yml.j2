@@ -9,6 +9,9 @@ services:
             - "{{ router_path }}:/opt/router"
             - "{{ config_path }}:/opt/config"
         command: 'python3 -m router.flaskapp.app'
+        networks:
+          static-network:
+            ipv4_address: 172.20.128.20
     controller:
         restart: always
         image: controller
@@ -17,3 +20,12 @@ services:
             - "{{ config_path }}:/opt/config"
             - "/var/run/docker.sock:/var/run/docker.sock"
         command: 'python3 -m controller.flaskapp.app'
+        networks:
+          static-network:
+            ipv4_address: 172.20.128.10
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          ip_range: 172.28.5.0/24
