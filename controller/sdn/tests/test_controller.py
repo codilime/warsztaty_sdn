@@ -52,7 +52,7 @@ class ControllerTest(unittest.TestCase):
         p = LogicalPort(c, n)
         ctrl.add_logical_port(p)
 
-        poster.post.assert_called_with(self.CONTAINER_RED_URL + "/logical_port", "net_ip=192.168.0.0%2F24")
+        poster.post.assert_called_with(self.CONTAINER_RED_URL + "/logical_port", "net_ip=192.168.0.0%2F24&ip=192.168.0.2")
 
     def test_should_attach_logical_port_to_network(self):
         poster = MagicMock()

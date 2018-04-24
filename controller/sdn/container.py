@@ -9,5 +9,5 @@ class Container(object):
         self.logical_ports = []
 
     def add_logical_port(self, p):
-        self.poster.post(self.ip + "/logical_port", urllib.parse.urlencode({"net_ip": p.network.ip}))
+        self.poster.post(self.ip + "/logical_port", urllib.parse.urlencode({"net_ip": p.network.ip, "ip": p.container_ip}))
         self.logical_ports.append(p)
