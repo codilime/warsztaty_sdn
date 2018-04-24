@@ -1,6 +1,6 @@
 FROM sdn-base:latest
 
-COPY router /opt/router
+#COPY router /opt/router
 COPY requirements.txt /opt/router/
 
 RUN pip install -r /opt/router/requirements.txt

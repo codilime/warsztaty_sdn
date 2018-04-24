@@ -1,6 +1,6 @@
 FROM sdn-base:latest
 
-COPY agent /opt/agent
+#COPY agent /opt/agent
 COPY requirements.txt /opt/agent/
 
 RUN pip install -r /opt/agent/requirements.txt

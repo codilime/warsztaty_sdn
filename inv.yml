@@ -8,3 +8,7 @@ all:
       - ala
       - ola
       - kasia
+    sdn_path: "/home/vagrant/Desktop/save/sdn"
+    router_path: "{{ sdn_path }}/router"
+    controller_path: "{{ sdn_path }}/controller"
+    agent_path: "{{ sdn_path }}/agent"
