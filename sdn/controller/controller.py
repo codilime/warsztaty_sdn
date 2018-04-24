@@ -27,7 +27,9 @@ class Controller(object):
     def add_logical_port(self, p):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
         pool = next(self.ipam_pools[p.network.id])
-        router_ip, container_ip = pool.iter_hosts()
+        hosts = pool.iter_hosts()
+        next(hosts)
+        router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container", router_ip, container_ip)
 
         logger.debug("Creating docker networks")
