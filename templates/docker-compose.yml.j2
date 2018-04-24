@@ -15,6 +15,7 @@ services:
         volumes:
             - "{{ controller_path }}:/opt/controller"
             - "{{ config_path }}:/opt/config"
+            - "/var/run/docker.sock:/var/run/docker.sock"
         command: 'python3 -m controller.flaskapp.app'
     {% for agent in agents -%}
     agent_{{ agent }}:
