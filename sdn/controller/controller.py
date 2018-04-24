@@ -1,3 +1,4 @@
+import docker.types
 import netaddr
 import itertools
 import logging
@@ -30,7 +31,8 @@ class Controller(object):
         logger.info("Allocated %s for router and %s for container", router_ip, container_ip)
 
         logger.debug("Creating docker networks")
-        docker_net = self.docker_client.networks.create(p.network.id)
+        ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=p.network.ip)])
+        docker_net = self.docker_client.networks.create(p.network.id, driver="bridge", ipam=ipam)
         docker_net.connect(self.router.id, ipv4_address=router_ip.format())
         docker_net.connect(p.container.id, ipv4_address=container_ip.format())
 
