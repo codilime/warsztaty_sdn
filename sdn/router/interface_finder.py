@@ -15,4 +15,4 @@ class InterfaceFinder(object):
                 logger.info("Interface for %s is %s", ip, iface)
                 return iface
 
-        raise RuntimeError(f'No interface for {ip} found')
+        raise RuntimeError('No interface for {} found'.format(ip))

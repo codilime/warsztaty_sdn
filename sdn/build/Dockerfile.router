@@ -1,0 +1,11 @@
+FROM sdn-base:latest
+
+COPY router /opt/sdn/router
+COPY config /opt/sdn/config
+
+RUN pip3 install -r /opt/sdn/router/requirements.txt
+ENV FLASK_APP=/opt/sdn/router/flaskapp/app.py
+ENV PYTHONPATH=/opt/sdn
+
+WORKDIR /opt/sdn
+CMD python3 -m router.flaskapp.app
