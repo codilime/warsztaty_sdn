@@ -55,4 +55,6 @@ def create_logical_port():
     return 'Success\n'
 
 
-app.run('0.0.0.0', 8080, True)
+app.run(str(config.get('main','listen_address')),
+        config.getint('main', 'listen_port'),
+        config.getboolean('main', 'debug'))
