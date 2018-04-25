@@ -26,7 +26,7 @@ vagrant up
 
 ```
 ## Gotowa vm
-ściągnąc box z https://drive.google.com/open?id=1cpKalme36MYi4QiJENTZw2ul_Z44XdJe
+ściągnąc box z https://drive.google.com/open?id=16P8mRc6J9kblMDr6mPsCQ35eL0BVmyNP
 
 ## syn save
 
