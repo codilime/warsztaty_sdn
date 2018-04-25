@@ -57,7 +57,7 @@ vagrant up
 
 ```bash
 cd /home/vagrant/Desktop/save
-git clone git@github.com:codilime/warsztaty_sdn.git
+git clone https://github.com/codilime/warsztaty_sdn.git
 cd warsztaty_sdn
 ansible-playbook -i inv.yml ssh.yml
 ```
@@ -66,7 +66,7 @@ ansible-playbook -i inv.yml ssh.yml
 
 ```bash
 cd /home/vagrant/Desktop/save
-git clone git@github.com:codilime/warsztaty_sdn.git
+git clone https://github.com/codilime/warsztaty_sdn.git
 cd warsztaty_sdn
 ansible-playbook -i inv.yml clean.yml
 ansible-playbook -i inv.yml run.yml
