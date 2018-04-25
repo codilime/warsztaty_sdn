@@ -7,7 +7,6 @@ Library       libs.ConnectivityChecker    WITH NAME     Checker
 Library       libs.ControllerAdapter    ${CONTROLLER_ENDPOINT}    WITH NAME    Controller
 
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
-Test Teardown
 
 Force Tags     basic_suite    sdn_workshop
 
@@ -53,10 +52,11 @@ Basic VPN
 Threeway VPN
     [Tags]   simple_vpn_3
     [Documentation]  Tests simple vpn 1-network-2-lp
-    ${mynetwork}    Set Variable    Network-112
+    ${mynetwork}    Set Variable    Network-113
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
     Controller.Create Logical Port    ${mynetwork}    ${AGENT_OLA_ID}    ${AGENT_OLA_IP}
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_KASIA_ID}    ${AGENT_KASIA_IP}
 
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
     Run Keyword If    ${result} == ${False}    Fail
