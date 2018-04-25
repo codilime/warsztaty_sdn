@@ -34,8 +34,30 @@ cd ready_vm
 vagrant up
 
 ```
+## syn save
+dodać do vagrantfile
+```
+config.ssh.username = 'vagrant'
+config.ssh.password = 'vagrant'
+
+```
+zmienić w  vagrantfile
+```
+config.ssh.username = 'vagrant'
+config.ssh.password = 'vagrant'
+config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
+```
 
 ## Rozpoczęcie
+
+```bash
+cd /home/vagrant/Desktop/save
+git clone git@github.com:codilime/warsztaty_sdn.git
+cd warsztaty_sdn
+ansible-playbook -i inv.yml ssh.yml
+```
+
+## Rozpoczęcie pracy
 
 ```bash
 cd /home/vagrant/Desktop/save

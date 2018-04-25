@@ -1,9 +1,10 @@
 Vagrant.configure("2") do |config|
-
+  config.ssh.username = 'vagrant'
+  config.ssh.password = 'vagrant'
   config.vm.box = "polibuda-sdn-ready.box"
   config.vm.define "polibuda-sdn-ready"
   config.disksize.size = "16GB"
-  config.vm.synced_folder "save/", "/home/vagrant/save"
+  config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
   config.vm.provider "virtualbox" do |vb|
     vb.name = "polibuda-sdn-ready"
     vb.gui = true
