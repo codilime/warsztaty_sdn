@@ -21,6 +21,8 @@ def ping_target(target):
 def create_logical_port():
     data = request.get_json()
     new_lp = LogicalPort(net=data.get('net'),
+                         net_ip=data.get('net_ip'),
+                         router_ip=data.get('router_ip'),
                          local_ip=data.get('ip'))
     new_lp.create(CommandExecutor())
     return 'Success\n'

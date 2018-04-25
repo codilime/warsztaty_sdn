@@ -15,5 +15,9 @@ class Container(object):
         logger.info("Creating logical port on network %s on %s", p.network.ip, self.id)
         self.poster.post("http://"+self.ip + ":8090/create/logical_port",
                          headers={"content-type": "application/json"},
-                         data=json.dumps({"net_id": p.network.id, "ip": str(p.container_ip)}))
+                         data=json.dumps({
+                             "net_id": p.network.id,
+                             "net_ip": str(p.network.ip),
+                             "router_ip": str(p.router_ip),
+                             "ip": str(p.container_ip)}))
         self.logical_ports.append(p)

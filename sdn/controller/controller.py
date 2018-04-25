@@ -28,13 +28,13 @@ class Controller(object):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
         pool = next(self.ipam_pools[p.network.id])
         hosts = pool.iter_hosts()
-        next(hosts)
+        next(hosts) #skip docker default gateway
         router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
         logger.debug("Creating docker networks")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
-        docker_net = self.docker_client.networks.create(p.network.id, driver="bridge", ipam=ipam, internal=True)
+        docker_net = self.docker_client.networks.create(p.network.id, driver="bridge", ipam=ipam)
         docker_net.connect(self.router.id, ipv4_address=router_ip.format())
         docker_net.connect(p.container.id, ipv4_address=container_ip.format())
 
