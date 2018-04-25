@@ -39,7 +39,7 @@
       with_items:
         - docker
       become: true
-      
+
     - name: pull repo
       git:
         repo: 'https://gitlab.com/Kopka/polibuda.git'

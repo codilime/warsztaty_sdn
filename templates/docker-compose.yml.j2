@@ -23,6 +23,19 @@ services:
         networks:
           static-network:
             ipv4_address: 172.20.128.10
+    {% for agent in agents -%}
+    agent_{{ agent }}:
+        restart: always
+        image: agent
+        volumes:
+            - "{{ agent_path }}:/opt/agent"
+            - "{{ config_path }}:/opt/config"
+        command: 'python3 -m agent.flaskapp.app'
+        networks:
+          static-network:
+            ipv4_address: '172.20.128.{{loop.index}}'
+    {% endfor %}
+
 networks:
   static-network:
     ipam:
