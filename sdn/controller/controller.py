@@ -13,6 +13,10 @@ class Controller(object):
         self.ipam_pools = {}
         self.networks = {}
 
+    def clean(self):
+        self.ipam_pools = {}
+        self.networks = {}
+
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
         subnets = netaddr.IPNetwork(n.ip).subnet(29)

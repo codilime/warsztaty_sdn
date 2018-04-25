@@ -9,8 +9,9 @@ Library       libs.ControllerAdapter    ${CONTROLLER_ENDPOINT}    WITH NAME    C
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
 
 Force Tags     basic_suite    sdn_workshop
-
-#*** Keywords ***
+Test Teardown    Run Keywords
+...              Log To Console    Performing Teardown
+...              AND    Controller.Clean Data
 
 *** Variables ***
 ${CONTROLLER_ENDPOINT}    ${CONTROLLER_IP}:${CONTROLLER_PORT}
@@ -30,7 +31,7 @@ Simplest VPN
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
     Run Keyword If    ${result} == ${False}    Fail
 
-    [Teardown]    Cleaner.Remove Network    ${mynetwork}
+    Cleaner.Remove Network    ${mynetwork}
 
 Basic VPN
     [Tags]   simple_vpn_2
@@ -46,11 +47,11 @@ Basic VPN
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${False}    Fail
 
-    [Teardown]    Cleaner.Remove Network    ${mynetwork}
+    Cleaner.Remove Network    ${mynetwork}
 
 
 Threeway VPN
-    [Tags]   simple_vpn_3
+    [Tags]   simple_vpn_3    exclude_todo
     [Documentation]  Tests simple vpn 1-network-2-lp
     ${mynetwork}    Set Variable    Network-113
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
@@ -67,4 +68,4 @@ Threeway VPN
     ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.20
     Run Keyword If    ${result} == ${False}    Fail
 
-    [Teardown]    Cleaner.Remove Network    ${mynetwork}
+    Cleaner.Remove Network    ${mynetwork}

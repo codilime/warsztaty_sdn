@@ -32,6 +32,9 @@ class ControllerAdapter(object):
 
         logger.info('Request success %s' % resp.text)
 
+    def clean_data(self):
+        self._post(url_path='force_clean', data={})
+
     def create_network(self, name, cidr):
         data = {'name': name, 'cidr': cidr}
         self._post(url_path='create/network', data=data)

@@ -57,6 +57,11 @@ def get_index():
     ])
 
 
+@app.route('/force_clean', methods=['POST'])
+def force_clean():
+    controller.clean()
+
+
 @app.route('/create/network', methods=['POST'])
 def create_network():
     _assert_proper_request(request)
