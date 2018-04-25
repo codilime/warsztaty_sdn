@@ -2,10 +2,10 @@
 Library       Collections
 Resource      ../global_vars.robot
 
+Library       libs.Cleaner
 Library       libs.ControllerAdapter    ${CONTROLLER_IP}    WITH NAME    Controller
 
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
-Test Teardown
 
 Force Tags     crud_suite    sdn_workshop
 
@@ -22,7 +22,9 @@ ${CONTROLLER_ENDPOINT}    ${CONTROLLER_IP}:${CONTROLLER_PORT}
 Network Positive Validation
     [Tags]   net_validation_1
     [Documentation]  Tests network positive validation
-    Controller.Create Network    Network-1    192.168.0.0/24
+    ${mynetwork}    Network-1
+    Controller.Create Network    ${mynetwork}    192.168.0.0/24
+    [Teardown]    Cleaner.Remove Network    ${mynetwork}
 
 Network Negative Validation Wrong CIDR 1
     [Tags]   net_validation_2
@@ -47,5 +49,12 @@ Network Negative Validation Wrong CIDR 4
 Logical Port Positive Validation
     [Tags]    lp_validation_1
     [Documentation]    Tests logical port positive validation
-    Controller.Create Network    Network-1    192.168.0.0/24
-    Controller.Create Logical Port
+    ${mynetwork}    Network-11
+    Controller.Create Network    ${mynetwork}    192.168.0.0/24
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+    [Teardown]    Cleaner.Remove Network    ${mynetwork}
+
+Logical Port Negative Validation No Network
+    [Tags]    lp_validation_2
+    [Documentation]    Tests logical port negative validation no network
+    Controller.Create Logical Port    Network-2    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
