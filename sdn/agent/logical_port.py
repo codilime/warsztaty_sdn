@@ -17,4 +17,8 @@ class LogicalPort(object):
 class CommandExecutor(object):
     @staticmethod
     def execute(cmd):
-        subprocess.run(cmd)
+        logger.debug("Running %s", cmd)
+        result = subprocess.run(cmd)
+        logging.debug("Result code %d", result.returncode)
+        logging.debug("Stdout: %s", result.stdout)
+        logging.debug("Stderr: %s", result.stderr)
