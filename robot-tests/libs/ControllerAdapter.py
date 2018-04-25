@@ -7,6 +7,7 @@ from robot.libraries.BuiltIn import ExecutionFailed
 
 logger = logging.getLogger(__file__)
 
+
 class ControllerAdapter(object):
     def __init__(self, endpoint):
         self.endpoint = endpoint
@@ -33,5 +34,10 @@ class ControllerAdapter(object):
         data = {'id': name, 'cidr': cidr}
         self._post(url_path='create/network', data=data)
 
-    def create_logical_port(self, name, docker_id, ip):
-        pass
+    def create_logical_port(self, net_id, docker_id, docker_ip):
+        data = {'net_id': net_id,
+                'container': {
+                    'id': docker_id,
+                    'ip': docker_ip
+                }}
+        self._post(url_path='create/logical_port', data=data)
