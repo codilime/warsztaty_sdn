@@ -34,7 +34,7 @@ class Controller(object):
 
         logger.debug("Creating docker networks")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
-        docker_net = self.docker_client.networks.create(p.network.id, driver="bridge", ipam=ipam)
+        docker_net = self.docker_client.networks.create(p.network.id, driver="bridge", ipam=ipam, internal=True)
         docker_net.connect(self.router.id, ipv4_address=router_ip.format())
         docker_net.connect(p.container.id, ipv4_address=container_ip.format())
 
