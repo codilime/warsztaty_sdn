@@ -14,5 +14,10 @@
   with_items:
     - docker
 
+- name: add iptables
+  shell: "iptables -I DOCKER-ISOLATION -j RETURN"
+  become: true
+
+
 
 

@@ -22,16 +22,18 @@ class ControllerAdapter(object):
             resp = requests.post(url=url, headers=headers, data=json.dumps(data))
         except requests.RequestException:
             logger.error('Error during request %s' % url)
-            traceback.format_exc()
+            logger.error(traceback.format_exc())
+            return
         finally:
             if resp is not None and resp.status_code != 200:
                 msg ='Server responded with error code: %s' % str(resp.text)
                 logger.error(msg)
                 raise ExecutionFailed(msg)
+
         logger.info('Request success %s' % resp.text)
 
     def create_network(self, name, cidr):
-        data = {'id': name, 'cidr': cidr}
+        data = {'name': name, 'cidr': cidr}
         self._post(url_path='create/network', data=data)
 
     def create_logical_port(self, net_id, docker_id, docker_ip):
