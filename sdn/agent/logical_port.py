@@ -13,7 +13,7 @@ class LogicalPort(object):
 
     def create(self, cmd_executor):
         logger.info("Creating logical port on %s, my IP is %s", self.net, self.local_ip)
-        cmd_executor.execute(['ip', 'route', 'add', self.net_ip, 'via', self.router_ip])
+        cmd_executor.execute(['ip', 'route', 'add', self.net_ip[0], 'via', self.router_ip])
 
 
 class CommandExecutor(object):
