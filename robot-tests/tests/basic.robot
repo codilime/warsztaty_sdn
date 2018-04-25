@@ -26,6 +26,45 @@ Simplest VPN
 
     # Sanity check
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    127.0.0.1
-    Run Keyword If    ${result} == 'True'    Fail
+    Run Keyword If    ${result} == ${False}   Fail
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    [Teardown]    Cleaner.Remove Network    ${mynetwork}
+
+Basic VPN
+    [Tags]   simple_vpn_1
+    [Documentation]  Tests simple vpn 1-network-2-lp
+    ${mynetwork}    Set Variable    Network-112
+    Controller.Create Network    ${mynetwork}    192.168.0.0/24
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_OLA_ID}    ${AGENT_OLA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
+    Run Keyword If    ${result} == ${False}    Fail
+
+    [Teardown]    Cleaner.Remove Network    ${mynetwork}
+
+
+Threeway VPN
+    [Tags]   simple_vpn_1
+    [Documentation]  Tests simple vpn 1-network-2-lp
+    ${mynetwork}    Set Variable    Network-112
+    Controller.Create Network    ${mynetwork}    192.168.0.0/24
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_OLA_ID}    ${AGENT_OLA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
+    Run Keyword If    ${result} == ${False}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.20
+    Run Keyword If    ${result} == ${False}    Fail
 
     [Teardown]    Cleaner.Remove Network    ${mynetwork}
