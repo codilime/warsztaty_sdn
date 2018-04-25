@@ -17,7 +17,7 @@ class Container(object):
                          headers={"content-type": "application/json"},
                          data=json.dumps({
                              "net_id": p.network.id,
-                             "net_ip": str(p.network.ip),
+                             "net_ip": str(p.underlay_network_ip),
                              "router_ip": str(p.router_ip),
                              "ip": str(p.container_ip)}))
         self.logical_ports.append(p)
