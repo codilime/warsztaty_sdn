@@ -22,7 +22,7 @@ ${CONTROLLER_ENDPOINT}    ${CONTROLLER_IP}:${CONTROLLER_PORT}
 Network Positive Validation
     [Tags]   net_validation_1
     [Documentation]  Tests network positive validation
-    ${mynetwork}    Network-1
+    ${mynetwork}    Set Variable    Network-1
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     [Teardown]    Cleaner.Remove Network    ${mynetwork}
 
@@ -49,7 +49,7 @@ Network Negative Validation Wrong CIDR 4
 Logical Port Positive Validation
     [Tags]    lp_validation_1
     [Documentation]    Tests logical port positive validation
-    ${mynetwork}    Network-11
+    ${mynetwork}    Set Variable    Network-11
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
     [Teardown]    Cleaner.Remove Network    ${mynetwork}

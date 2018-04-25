@@ -1,4 +1,5 @@
 import logging
+import time
 from docker import DockerClient
 
 
@@ -18,6 +19,7 @@ class Cleaner(object):
 
         if net_to_delete is None:
             logger.warning('Could not find network to delete %s' % net_name)
+            return False
 
         for container in net_to_delete.containers:
             net_to_delete.disconnect(container=container, force=True)
