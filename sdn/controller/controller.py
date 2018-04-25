@@ -30,7 +30,7 @@ class Controller(object):
         hosts = pool.iter_hosts()
         next(hosts)
         router_ip, container_ip = next(hosts), next(hosts)
-        logger.info("Allocated %s for router and %s for container", router_ip, container_ip)
+        logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
         logger.debug("Creating docker networks")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
