@@ -13,6 +13,8 @@ class ContainerTests(unittest.TestCase):
         c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock())
         p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
         p.container_ip = '192.168.0.2'
+        p.router_ip = '192.168.0.1'
+        p.underlay_network_ip = "192.168.0.0/24"
 
         c.add_logical_port(p)
 
@@ -23,11 +25,13 @@ class ContainerTests(unittest.TestCase):
         c = Container(self.CONTAINER_ID, self.CONTAINER_URL, poster)
         p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
         p.container_ip = '192.168.0.2'
+        p.router_ip = '192.168.0.1'
+        p.underlay_network_ip = "192.168.0.0/24"
 
         c.add_logical_port(p)
 
         poster.post.assert_called_with("http://"+self.CONTAINER_URL + ":8090/create/logical_port",
-                                       data='{"net_id": "net1", "ip": "192.168.0.2"}',
+                                       data='{"net_id": "net1", "net_ip": "192.168.0.0/24", "router_ip": "192.168.0.1", "ip": "192.168.0.2"}',
                                        headers={'content-type': 'application/json'})
 
 if __name__ == '__main__':
