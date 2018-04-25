@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  tasks:
+    - name: sshd password permit
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication no'
+        line: 'PasswordAuthentication yes'
+
+    - name: sshd public key off
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PubkeyAuthentication yes'
+        line: 'PubkeyAuthentication no'
