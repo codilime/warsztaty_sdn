@@ -12,17 +12,27 @@ class Cleaner(object):
 
     def remove_network(self, net_name):
         net_to_delete = None
-        for net in self.docker_client.networks.list():
-            if net.name == net_name:
-                net_to_delete = net
-                break
+        guard = True
 
-        if net_to_delete is None:
-            logger.warning('Could not find network to delete %s' % net_name)
-            return False
+        while guard:
+            for net in self.docker_client.networks.list():
+                if net.name == net_name:
+                    net_to_delete = net
+                    break
+            else:
+                guard = False
 
-        for container in net_to_delete.containers:
-            net_to_delete.disconnect(container=container, force=True)
+            if net_to_delete is None:
+                logger.warning('Could not find network to delete %s' % net_name)
+                return False
 
-        net_to_delete.remove()
+            for container in net_to_delete.containers:
+                try:
+                    net_to_delete.disconnect(container=container, force=True)
+                except:
+                    pass
+            try:
+                net_to_delete.remove()
+            except:
+                pass
         return True

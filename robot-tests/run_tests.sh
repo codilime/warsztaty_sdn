@@ -1,1 +1,1 @@
-export PYTHONPATH="${PYTHONPATH}:${PWD}"; pybot -i sdn_workshop tests/
+export PYTHONPATH="${PYTHONPATH}:${PWD}"; pybot -i sdn_workshop -e exclude_todo tests/
