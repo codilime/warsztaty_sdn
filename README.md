@@ -28,25 +28,30 @@ vagrant up
 ## Gotowa vm
 ściągnąc box z https://drive.google.com/open?id=1cpKalme36MYi4QiJENTZw2ul_Z44XdJe
 
+## syn save
+
+dodać do vagrantfile
+
+```
+config.ssh.username = 'vagrant'
+config.ssh.password = 'vagrant'
+
+```
+
+zmienić w  vagrantfile
+
+```
+config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
+```
+
 ```bash
 cp  polibuda-sdn-ready.box ready_vm/
 cd ready_vm
 vagrant up
 
 ```
-## syn save
-dodać do vagrantfile
-```
-config.ssh.username = 'vagrant'
-config.ssh.password = 'vagrant'
 
-```
-zmienić w  vagrantfile
-```
-config.ssh.username = 'vagrant'
-config.ssh.password = 'vagrant'
-config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
-```
+
 
 ## Rozpoczęcie
 

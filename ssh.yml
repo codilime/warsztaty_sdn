@@ -13,3 +13,8 @@
         path: /etc/ssh/sshd_config
         regexp: '^PubkeyAuthentication yes'
         line: 'PubkeyAuthentication no'
+
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
