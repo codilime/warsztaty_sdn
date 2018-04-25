@@ -1,0 +1,1 @@
+export PYTHONPATH="${PYTHONPATH}:${PWD}"; pybot -i sdn_workshop tests/
