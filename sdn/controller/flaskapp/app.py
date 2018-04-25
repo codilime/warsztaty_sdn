@@ -60,6 +60,7 @@ def get_index():
 @app.route('/force_clean', methods=['POST'])
 def force_clean():
     controller.clean()
+    return 'Success\n'
 
 
 @app.route('/create/network', methods=['POST'])

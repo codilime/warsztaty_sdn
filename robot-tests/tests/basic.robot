@@ -9,9 +9,7 @@ Library       libs.ControllerAdapter    ${CONTROLLER_ENDPOINT}    WITH NAME    C
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
 
 Force Tags     basic_suite    sdn_workshop
-Test Teardown    Run Keywords
-...              Log To Console    Performing Teardown
-...              AND    Controller.Clean Data
+Test Teardown    Controller.Clean Data
 
 *** Variables ***
 ${CONTROLLER_ENDPOINT}    ${CONTROLLER_IP}:${CONTROLLER_PORT}

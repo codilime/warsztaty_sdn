@@ -6,9 +6,7 @@ Library       libs.Cleaner    WITH NAME    Cleaner
 Library       libs.ControllerAdapter    ${CONTROLLER_ENDPOINT}    WITH NAME    Controller
 
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
-Test Teardown    Run Keywords
-...              Log To Console    Performing Teardown
-...              AND    Controller.Clean Data
+Test Teardown    Controller.Clean Data
 
 Force Tags     crud_suite    sdn_workshop
 
@@ -25,7 +23,7 @@ ${CONTROLLER_ENDPOINT}    ${CONTROLLER_IP}:${CONTROLLER_PORT}
 Network Positive Validation
     [Tags]   net_validation_1
     [Documentation]  Tests network positive validation
-    ${mynetwork}    Set Test Variable    Network-1
+    ${mynetwork}    Set Variable    Network-1
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     Cleaner.Remove Network    ${mynetwork}
 
@@ -52,7 +50,7 @@ Network Negative Validation Wrong CIDR 4
 Logical Port Positive Validation
     [Tags]    lp_validation_1
     [Documentation]    Tests logical port positive validation
-    ${mynetwork}    Set Test Variable    Network-11
+    ${mynetwork}    Set Variable    Network-11
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
     Cleaner.Remove Network    ${mynetwork}
