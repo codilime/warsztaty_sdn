@@ -50,7 +50,7 @@ Basic VPN
 
 Threeway VPN
     [Tags]   simple_vpn_3    exclude_todo
-    [Documentation]  Tests simple vpn 1-network-2-lp
+    [Documentation]  Tests simple vpn 1-network-3-lp
     ${mynetwork}    Set Variable    Network-113
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
@@ -67,3 +67,31 @@ Threeway VPN
     Run Keyword If    ${result} == ${False}    Fail
 
     Cleaner.Remove Network    ${mynetwork}
+
+Standard VPN With Two Networks
+    [Tags]   simple_vpn_4
+    [Documentation]  Tests simple vpn 2-network-3-lp
+    ${mynetwork_1}    Set Variable    Network-200
+    ${mynetwork_2}    Set Variable    Network-300
+
+    Controller.Create Network    ${mynetwork_1}    192.168.0.0/24
+    Controller.Create Network    ${mynetwork_2}    192.168.100.0/24
+
+    Controller.Create Logical Port    ${mynetwork_1}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+    Controller.Create Logical Port    ${mynetwork_1}    ${AGENT_OLA_ID}    ${AGENT_OLA_IP}
+    Controller.Create Logical Port    ${mynetwork_2}    ${AGENT_KASIA_ID}    ${AGENT_KASIA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
+    Run Keyword If    ${result} == ${False}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${True}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.11
+    Run Keyword If    ${result} == ${True}    Fail
+
+    Cleaner.Remove Network    ${mynetwork_1}
+    Cleaner.Remove Network    ${mynetwork_2}
