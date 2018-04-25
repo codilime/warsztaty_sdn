@@ -26,7 +26,23 @@ vagrant up
 
 ```
 ## Gotowa vm
-ściągnąc box z https://drive.google.com/open?id=1cpKalme36MYi4QiJENTZw2ul_Z44XdJe
+ściągnąc box z https://drive.google.com/open?id=16P8mRc6J9kblMDr6mPsCQ35eL0BVmyNP
+
+## syn save
+
+dodać do vagrantfile
+
+```
+config.ssh.username = 'vagrant'
+config.ssh.password = 'vagrant'
+
+```
+
+zmienić w  vagrantfile
+
+```
+config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
+```
 
 ```bash
 cp  polibuda-sdn-ready.box ready_vm/
@@ -35,7 +51,18 @@ vagrant up
 
 ```
 
+
+
 ## Rozpoczęcie
+
+```bash
+cd /home/vagrant/Desktop/save
+git clone git@github.com:codilime/warsztaty_sdn.git
+cd warsztaty_sdn
+ansible-playbook -i inv.yml ssh.yml
+```
+
+## Rozpoczęcie pracy
 
 ```bash
 cd /home/vagrant/Desktop/save
