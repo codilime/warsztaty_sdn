@@ -34,7 +34,7 @@ Simplest VPN
     [Teardown]    Cleaner.Remove Network    ${mynetwork}
 
 Basic VPN
-    [Tags]   simple_vpn_1
+    [Tags]   simple_vpn_2
     [Documentation]  Tests simple vpn 1-network-2-lp
     ${mynetwork}    Set Variable    Network-112
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
@@ -51,7 +51,7 @@ Basic VPN
 
 
 Threeway VPN
-    [Tags]   simple_vpn_1
+    [Tags]   simple_vpn_3
     [Documentation]  Tests simple vpn 1-network-2-lp
     ${mynetwork}    Set Variable    Network-112
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
