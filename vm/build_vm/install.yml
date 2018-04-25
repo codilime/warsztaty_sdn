@@ -38,15 +38,10 @@
         state: present
       with_items:
         - docker
-
       become: true
+      
     - name: pull repo
       git:
         repo: 'https://gitlab.com/Kopka/polibuda.git'
         dest: '/home/vagrant/Desktop/save/sdn'
-
-    - name: run ansible
-      shell: 'cd /home/vagrant/Desktop/save/sdn; anisble-playbook -i inv.yml run.yml'
-
-      become: root
 
