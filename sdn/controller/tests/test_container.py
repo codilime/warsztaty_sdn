@@ -6,7 +6,7 @@ from ..network import Network
 
 
 class ContainerTests(unittest.TestCase):
-    CONTAINER_URL = "10.0.0.1:5000"
+    CONTAINER_URL = "10.0.0.1"
     CONTAINER_ID = "container1"
 
     def test_should_store_single_logical_port(self):
@@ -26,7 +26,7 @@ class ContainerTests(unittest.TestCase):
 
         c.add_logical_port(p)
 
-        poster.post.assert_called_with(self.CONTAINER_URL + "/logical_port", "net_ip=192.168.0.0%2F24&ip=192.168.0.2")
+        poster.post.assert_called_with("http://"+self.CONTAINER_URL + ":8090/create/logical_port", "net_ip=192.168.0.0%2F24&ip=192.168.0.2")
 
 
 if __name__ == '__main__':
