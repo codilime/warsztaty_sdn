@@ -2,8 +2,8 @@
 Library       Collections
 Resource      ../global_vars.robot
 
-Library       libs.Cleaner
-Library       libs.ControllerAdapter    ${CONTROLLER_IP}    WITH NAME    Controller
+Library       libs.Cleaner    WITH NAME    Cleaner
+Library       libs.ControllerAdapter    ${CONTROLLER_ENDPOINT}    WITH NAME    Controller
 
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
 
@@ -29,22 +29,22 @@ Network Positive Validation
 Network Negative Validation Wrong CIDR 1
     [Tags]   net_validation_2
     [Documentation]  Tests network negative validation wrong mask
-    Run Keyword And Expect Error    Controller.Create Network    Network-1    192.168.0.0/80
+    Run Keyword And Expect Error    *    Controller.Create Network    Network-1    192.168.0.0/80
 
 Network Negative Validation Wrong CIDR 2
     [Tags]   net_validation_3
     [Documentation]  Tests network negative validation wrong ip subnet
-    Run Keyword And Expect Error    Controller.Create Network    Network-1    192.168.0.0.1/12
+    Run Keyword And Expect Error    *    Controller.Create Network    Network-1    192.168.0.0.1/12
 
 Network Negative Validation Wrong CIDR 3
     [Tags]   net_validation_4
     [Documentation]  Tests network negative validation empty cidr
-    Run Keyword And Expect Error    Controller.Create Network    Network-1    ${NONE}
+    Run Keyword And Expect Error    *    Controller.Create Network    Network-1    ${NONE}
 
 Network Negative Validation Wrong CIDR 4
     [Tags]   net_validation_5
     [Documentation]  Tests network negative validation empty name
-    Run Keyword And Expect Error    Controller.Create Network    ${NONE}    192.168.0.0/24
+    Run Keyword And Expect Error    *    Controller.Create Network    ${NONE}    192.168.0.0/24
 
 Logical Port Positive Validation
     [Tags]    lp_validation_1
@@ -57,4 +57,4 @@ Logical Port Positive Validation
 Logical Port Negative Validation No Network
     [Tags]    lp_validation_2
     [Documentation]    Tests logical port negative validation no network
-    Controller.Create Logical Port    Network-2    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+    Run Keyword And Expect Error    *    Controller.Create Logical Port    Network-2    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
