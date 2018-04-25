@@ -34,3 +34,13 @@ cd ready_vm
 vagrant up
 
 ```
+
+## Rozpoczęcie
+
+```bash
+cd /home/vagrant/Desktop/save
+git clone git@github.com:codilime/warsztaty_sdn.git
+cd warsztaty_sdn
+ansible-playbook -i inv.yml clean.yml
+ansible-playbook -i inv.yml run.yml
+```
