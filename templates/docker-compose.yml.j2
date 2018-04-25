@@ -9,7 +9,8 @@ services:
             - "{{ router_path }}:/opt/router"
             - "{{ config_path }}:/opt/config"
         command: 'python3 -m router.flaskapp.app'
-        network_mode: bridge
+        cap_add:
+          - NET_ADMIN
         networks:
           static-network:
             ipv4_address: 172.20.128.20
@@ -20,7 +21,8 @@ services:
             - "{{ controller_path }}:/opt/controller"
             - "{{ config_path }}:/opt/config"
             - "/var/run/docker.sock:/var/run/docker.sock"
-        network_mode: bridge
+        cap_add:
+          - NET_ADMIN
         command: 'python3 -m controller.flaskapp.app'
         networks:
           static-network:
@@ -32,7 +34,8 @@ services:
         volumes:
             - "{{ agent_path }}:/opt/agent"
             - "{{ config_path }}:/opt/config"
-        network_mode: bridge
+        cap_add:
+          - NET_ADMIN
         command: 'python3 -m agent.flaskapp.app'
         networks:
           static-network:
