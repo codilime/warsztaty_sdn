@@ -41,5 +41,6 @@ class Controller(object):
         logger.debug("Notifying router and container")
         p.router_ip = router_ip
         p.container_ip = container_ip
+        p.underlay_network_ip = self.get_network(p.network.id).ip
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)
