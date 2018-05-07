@@ -58,18 +58,20 @@ vagrant up
 ## Jak uruchomić synchornizacje folderu save
 
 ```bash
+sudo -i
 cd /home/vagrant/Desktop/save
 git clone https://github.com/codilime/warsztaty_sdn.git
 cd warsztaty_sdn
-sudo ansible-playbook -i inv.yml ssh.yml
+ansible-playbook -i inv.yml ssh.yml
 ```
 
 ## Rozpoczęcie pracy
 
 ```bash
+sudo -i
 cd /home/vagrant/Desktop/save
 git clone https://github.com/codilime/warsztaty_sdn.git
 cd warsztaty_sdn
-sudo ansible-playbook -i inv.yml clean.yml
-sudo ansible-playbook -i inv.yml run.yml
+ansible-playbook -i inv.yml clean.yml
+ansible-playbook -i inv.yml run.yml
 ```
