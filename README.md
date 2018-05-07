@@ -38,16 +38,24 @@ config.ssh.password = 'vagrant'
 
 ```
 
-zmienić w  vagrantfile
+vagrantfile powinien wyglądać tak:
 
-```
-config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
-```
-
-```bash
-cp  polibuda-sdn-ready.box ready_vm/
-cd ready_vm
-vagrant up
+```yaml
+Vagrant.configure("2") do |config|
+  config.ssh.username = 'vagrant'
+  config.ssh.password = 'vagrant'
+  config.vm.box = "polibuda-sdn-ready.box"
+  config.vm.define "polibuda-sdn-ready"
+  config.disksize.size = "16GB"
+  config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "polibuda-sdn-ready"
+    vb.gui = true
+    vb.memory = 2048
+    vb.cpus = 2
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+end
 
 ```
 
@@ -59,7 +67,7 @@ vagrant up
 cd /home/vagrant/Desktop/save
 git clone https://github.com/codilime/warsztaty_sdn.git
 cd warsztaty_sdn
-ansible-playbook -i inv.yml ssh.yml
+sudo ansible-playbook -i inv.yml ssh.yml
 ```
 
 ## Rozpoczęcie pracy
@@ -68,6 +76,6 @@ ansible-playbook -i inv.yml ssh.yml
 cd /home/vagrant/Desktop/save
 git clone https://github.com/codilime/warsztaty_sdn.git
 cd warsztaty_sdn
-ansible-playbook -i inv.yml clean.yml
-ansible-playbook -i inv.yml run.yml
+sudo ansible-playbook -i inv.yml clean.yml
+sudo ansible-playbook -i inv.yml run.yml
 ```
