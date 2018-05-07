@@ -21,13 +21,13 @@ class ControllerAdapter(object):
         try:
             resp = requests.post(url=url, headers=headers, data=json.dumps(data))
         except requests.RequestException:
-            logger.error('Error during request %s' % url)
-            logger.error(traceback.format_exc())
+            logger.debug('Error during request %s' % url)
+            logger.debug(traceback.format_exc())
             return
         finally:
             if resp is not None and resp.status_code != 200:
                 msg ='Server responded with error code: %s' % str(resp.text)
-                logger.error(msg)
+                logger.debug(msg)
                 raise ExecutionFailed(msg)
 
         logger.info('Request success %s' % resp.text)

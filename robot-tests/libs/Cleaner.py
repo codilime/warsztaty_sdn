@@ -23,7 +23,7 @@ class Cleaner(object):
                 guard = False
 
             if net_to_delete is None:
-                logger.warning('Could not find network to delete %s' % net_name)
+                logger.debug('Could not find network to delete %s' % net_name)
                 return False
 
             for container in net_to_delete.containers:
