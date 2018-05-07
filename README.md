@@ -19,24 +19,10 @@
 ```bash
 vagrant plugin install vagrant-disksize
 ```
-## Budowanie od zera (dużo dłuższe)
-```bash
-cd build_vm
-vagrant up
 
-```
+
 ## Gotowa vm
 ściągnąc box z https://drive.google.com/open?id=16P8mRc6J9kblMDr6mPsCQ35eL0BVmyNP
-
-## syn save
-
-dodać do vagrantfile
-
-```
-config.ssh.username = 'vagrant'
-config.ssh.password = 'vagrant'
-
-```
 
 vagrantfile powinien wyglądać tak:
 
@@ -59,9 +45,17 @@ end
 
 ```
 
+## Uruchomienie VM
 
+```bash
+cd vm
+vagrant up
 
-## Rozpoczęcie
+```
+
+# Od tej pory pracujemy tylko w vm
+
+## Jak uruchomić synchornizacje folderu save
 
 ```bash
 cd /home/vagrant/Desktop/save
