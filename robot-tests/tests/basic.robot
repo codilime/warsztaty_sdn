@@ -9,10 +9,15 @@ Library       libs.ControllerAdapter    ${CONTROLLER_ENDPOINT}    WITH NAME    C
 Test Setup    Log To Console    Using Controller endpoint ${CONTROLLER_ENDPOINT}
 
 Force Tags     basic_suite    sdn_workshop
-Test Teardown    Controller.Clean Data
 
 *** Variables ***
 ${CONTROLLER_ENDPOINT}    ${CONTROLLER_IP}:${CONTROLLER_PORT}
+
+*** Keywords ***
+Perform Teardown
+    [Arguments]    ${network_name}
+    Controller.Clean Data
+    Cleaner.Remove Network    ${network_name}
 
 *** Test Cases ***
 Simplest VPN
@@ -29,7 +34,9 @@ Simplest VPN
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
     Run Keyword If    ${result} == ${False}    Fail
 
-    Cleaner.Remove Network    ${mynetwork}
+    [Teardown]    Perform Teardown    ${mynetwork}
+
+
 
 Basic VPN
     [Tags]   simple_vpn_2
@@ -45,7 +52,8 @@ Basic VPN
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${False}    Fail
 
-    Cleaner.Remove Network    ${mynetwork}
+    [Teardown]    Perform Teardown    ${mynetwork}
+
 
 
 Threeway VPN
@@ -66,7 +74,9 @@ Threeway VPN
     ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.20
     Run Keyword If    ${result} == ${False}    Fail
 
-    Cleaner.Remove Network    ${mynetwork}
+    [Teardown]    Perform Teardown    ${mynetwork}
+
+
 
 Standard VPN With Two Networks
     [Tags]   simple_vpn_4
@@ -93,5 +103,14 @@ Standard VPN With Two Networks
     ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${True}    Fail
 
-    Cleaner.Remove Network    ${mynetwork_1}
-    Cleaner.Remove Network    ${mynetwork_2}
+    [Teardown]    Run Keywords    Controller.Clean Data
+    ...           AND    Cleaner.Remove Network    ${mynetwork_1}
+    ...           AND    Cleaner.Remove Network    ${mynetwork_2}
+
+
+
+Standard VPN Witffffh Two Networks
+    [Tags]   simple_vpn_5
+    Cleaner.Remove Network    Network-200
+    Cleaner.Remove Network    Network-200
+    Cleaner.Remove Network    Network-300
