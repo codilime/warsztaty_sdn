@@ -8,7 +8,8 @@ all:
       - ala
       - ola
       - kasia
-    sdn_path: "/home/vagrant/Desktop/save/warsztaty_sdn/sdn"
+    warsztaty_path: "/home/vagrant/Desktop/save/warsztaty_sdn"
+    sdn_path: "{{ warsztaty_path }}/sdn"
     router_path: "{{ sdn_path }}/router"
     controller_path: "{{ sdn_path }}/controller"
     agent_path: "{{ sdn_path }}/agent"
