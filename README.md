@@ -75,3 +75,29 @@ cd warsztaty_sdn
 ansible-playbook -i inv.yml clean.yml
 ansible-playbook -i inv.yml run.yml
 ```
+
+## Konfiguracja środowiska
+
+```bash
+apt install python3-pip
+pip3 install virtualenv
+```
+
+## Virtualenv na potrzeby kodu
+
+```bash
+virtualenv /home/vagrant/Desktop/save/sdn_venv --python=python3.5
+source /home/vagrant/Desktop/save/sdn_venv/bin/activate
+cd /home/vagrant/Desktop/save/warsztaty_sdn
+pip3 install -r requirements_base.txt
+pip3 install -r sdn/agent/requirements.txt
+pip3 install -r sdn/controller/requirements.txt
+pip3 install -r sdn/router/requirements.txt
+```
+
+## Puszczanie testów jednostkowych
+
+```bash
+cd /home/vagrant/Desktop/save/warsztaty_sdn/sdn
+python3 -m unittest discover
+```
