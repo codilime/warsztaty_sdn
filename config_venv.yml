@@ -1,6 +1,12 @@
 ---
 - name: Install requirements
   pip:
+    name: virtualenv
+    state: present
+  become: true
+
+- name: Install requirements
+  pip:
     requirements: '{{ item }}'
     virtualenv: '{{ warsztaty_path }}/sdn_venv'
     virtualenv_python: python3.5
