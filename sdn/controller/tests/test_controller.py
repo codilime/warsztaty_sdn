@@ -1,5 +1,6 @@
 import unittest
 import docker.types
+import json
 from unittest.mock import MagicMock
 from ..logical_port import LogicalPort
 from ..container import Container
@@ -53,7 +54,7 @@ class ControllerTest(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/logical_port",
-            data='{"net_id": "net1", "ip": "192.168.0.2"}',
+            data=json.dumps({"net_id": "net1", "ip": "192.168.0.2"}, sort_keys=True),
             headers={'content-type': 'application/json'}
         )
 
@@ -70,7 +71,7 @@ class ControllerTest(unittest.TestCase):
         ctrl.add_logical_port(p)
 
         poster.post.assert_called_with("http://"+self.CONTAINER_RED_URL + ":8090/create/logical_port",
-                                       data='{"net_id": "net1", "net_ip": "192.168.0.0/24", "router_ip": "192.168.0.2", "ip": "192.168.0.3"}',
+                                       data=json.dumps({"net_id": "net1", "net_ip": "192.168.0.0/24", "router_ip": "192.168.0.2", "ip": "192.168.0.3"}, sort_keys=True),
                                        headers={'content-type': 'application/json'})
 
     def test_should_attach_logical_port_to_network(self):
@@ -90,7 +91,7 @@ class ControllerTest(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/logical_port",
-            data='{"net_id": "net1", "ip": "192.168.0.2"}',
+            data=json.dumps({"net_id": "net1", "ip": "192.168.0.2"}, sort_keys=True),
             headers={'content-type': 'application/json'}
         )
         mocked_network.connect.assert_any_call(self.ROUTER_ID, ipv4_address='192.168.0.2')

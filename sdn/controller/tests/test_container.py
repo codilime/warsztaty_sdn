@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import MagicMock
 from ..logical_port import LogicalPort
@@ -31,7 +32,7 @@ class ContainerTests(unittest.TestCase):
         c.add_logical_port(p)
 
         poster.post.assert_called_with("http://"+self.CONTAINER_URL + ":8090/create/logical_port",
-                                       data='{"net_id": "net1", "net_ip": "192.168.0.0/24", "router_ip": "192.168.0.1", "ip": "192.168.0.2"}',
+                                       data=json.dumps({"net_id": "net1", "net_ip": "192.168.0.0/24", "router_ip": "192.168.0.1", "ip": "192.168.0.2"}, sort_keys=True),
                                        headers={'content-type': 'application/json'})
 
 if __name__ == '__main__':

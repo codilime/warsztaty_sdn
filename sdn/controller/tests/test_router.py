@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import MagicMock
 from ..router import Router
@@ -35,7 +36,7 @@ class RouterTests(unittest.TestCase):
         r.add_network(n)
 
         poster.post.assert_called_with(self.ROUTER_URL+"/create/network",
-                                       data='{"id": "net1"}',
+                                       data=json.dumps({"id": "net1"}, sort_keys=True),
                                        headers={'content-type': 'application/json'},
         )
 
@@ -58,7 +59,7 @@ class RouterTests(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/logical_port",
-            data='{"net_id": "net1", "ip": "192.168.0.1"}',
+            data=json.dumps({"net_id": "net1", "ip": "192.168.0.1"}, sort_keys=True),
             headers={'content-type': 'application/json'},
         )
 

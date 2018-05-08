@@ -17,7 +17,8 @@ class Container(object):
                              "net_id": p.network.id,
                              "net_ip": str(p.underlay_network_ip),
                              "router_ip": str(p.router_ip),
-                             "ip": str(p.container_ip)})
+                             "ip": str(p.container_ip)},
+                        sort_keys=True)
         logging.debug("Sending %s to %s", data, self.ip)
         self.poster.post("http://"+self.ip + ":8090/create/logical_port",
                          headers={"content-type": "application/json"},
