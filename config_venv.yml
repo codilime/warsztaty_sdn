@@ -1,4 +1,10 @@
 ---
+- name: Install python3-dev
+  apt:
+    name: python3-dev
+    state: present
+  become: true
+
 - name: Install virtualenv
   pip:
     name: virtualenv
