@@ -1,0 +1,8 @@
+---
+
+- name: Install requirements
+  pip:
+    requirements: '{{ warsztaty_path }}/robot-tests/requirements.txt'
+    virtualenv: '{{ warsztaty_path }}/sdn_venv'
+    virtualenv_python: python3.5
+  become: true
