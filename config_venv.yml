@@ -1,5 +1,5 @@
 ---
-- name: Install requirements
+- name: Install virtualenv
   pip:
     name: virtualenv
     state: present
