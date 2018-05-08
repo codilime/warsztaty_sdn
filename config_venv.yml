@@ -1,8 +1,14 @@
 ---
-
 - name: Install requirements
   pip:
-    requirements: '{{ warsztaty_path }}/robot-tests/requirements.txt'
+    requirements: '{{ item }}'
     virtualenv: '{{ warsztaty_path }}/sdn_venv'
     virtualenv_python: python3.5
+  with_items:
+    - '{{ warsztaty_path }}/requirements_base.txt'
+    - '{{ warsztaty_path }}/robot-tests/requirements.txt'
+    - '{{ warsztaty_path }}/sdn/agent/requirements.txt'
+    - '{{ warsztaty_path }}/sdn/controller/requirements.txt'
+    - '{{ warsztaty_path }}/sdn/router/requirements.txt'
   become: true
+
