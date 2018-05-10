@@ -2,7 +2,6 @@ import json
 import logging
 import urllib.parse
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -25,7 +24,7 @@ class Router(object):
         logger.info("Creating logical port on %s", p.network.id)
         self.poster.post(self.ip + "/create/logical_port",
                          headers={"content-type": "application/json"},
-                         data=json.dumps({"net_id": p.network.id, "ip":str(p.router_ip)}, sort_keys=True))
+                         data=json.dumps({"net_id": p.network.id, "ip": str(p.router_ip)}, sort_keys=True))
         self.logical_ports.append(p)
 
     def get_logical_port(self, container_name, net_id):
@@ -39,4 +38,3 @@ class Router(object):
                          headers={"content-type": "application/json"},
                          data=json.dumps({"net_id": p.network.id, "ip": str(p.router_ip)}, sort_keys=True))
         self.logical_ports.remove(p)
-

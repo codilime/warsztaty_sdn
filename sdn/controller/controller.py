@@ -49,7 +49,6 @@ class Controller(object):
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)
 
-
     def remove_logical_port(self, net_id, container_name):
         logger.info("Removing logical port id: %s, ip: %s", net_id, container_name)
 

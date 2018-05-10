@@ -14,20 +14,25 @@ class Container(object):
     def add_logical_port(self, p):
         logger.info("Creating logical port on network %s on %s", p.network.ip, self.id)
         data = json.dumps({
-                             "net_id": p.network.id,
-                             "net_ip": str(p.underlay_network_ip),
-                             "router_ip": str(p.router_ip),
-                             "ip": str(p.container_ip)},
-                        sort_keys=True)
+            "net_id": p.network.id,
+            "net_ip": str(p.underlay_network_ip),
+            "router_ip": str(p.router_ip),
+            "ip": str(p.container_ip)},
+            sort_keys=True)
         logging.debug("Sending %s to %s", data, self.ip)
-        self.poster.post("http://"+self.ip + ":8090/create/logical_port",
+        self.poster.post("http://" + self.ip + ":8090/create/logical_port",
                          headers={"content-type": "application/json"},
                          data=data)
         self.logical_ports.append(p)
 
     def remove_logical_port(self, p):
         logger.info("Removing logical port on network %s on %s", p.network.ip, self.id)
-        data = json.dumps({"net_id": p.network.id}, sort_keys=True)
+        data = json.dumps({
+            "net_id": p.network.id,
+            "net_ip": str(p.underlay_network_ip),
+            "router_ip": str(p.router_ip),
+            "ip": str(p.container_ip)},
+            sort_keys=True)
         logging.debug("Sending %s to %s", data, self.ip)
         self.poster.post("http://" + self.ip + ":8090/remove/logical_port",
                          headers={"content-type": "application/json"},
