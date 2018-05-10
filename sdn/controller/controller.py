@@ -48,3 +48,21 @@ class Controller(object):
         p.underlay_network_ip = self.get_network(p.network.id).ip
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)
+
+
+    def remove_logical_port(self, net_id, container_name):
+        logger.info("Removing logical port id: %s, ip: %s", net_id, container_name)
+
+        logger.debug("Notifying router and container")
+        lp = self.router.get_logical_port(container_name, net_id)
+        lp.container.remove_logical_port(lp)
+        self.router.remove_logical_port(lp)
+
+        logger.debug("Removing docker networks")
+        docker_net = self.docker_client.networks.get(net_id)
+        for container in docker_net.containers():
+            docker_net.disconnect(container)
+        docker_net.remove()
+
+
+

@@ -24,3 +24,12 @@ class Container(object):
                          headers={"content-type": "application/json"},
                          data=data)
         self.logical_ports.append(p)
+
+    def remove_logical_port(self, p):
+        logger.info("Removing logical port on network %s on %s", p.network.ip, self.id)
+        data = json.dumps({"net_id": p.network.id}, sort_keys=True)
+        logging.debug("Sending %s to %s", data, self.ip)
+        self.poster.post("http://" + self.ip + ":8090/remove/logical_port",
+                         headers={"content-type": "application/json"},
+                         data=data)
+        self.logical_ports.remove(p)
