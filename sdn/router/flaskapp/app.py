@@ -27,6 +27,15 @@ def create_logical_port():
                             ip=data['ip'])
     return 'Success\n'
 
+
+@app.route('/remove/logical_port', methods=['POST'])
+def create_logical_port():
+    data = request.get_json()
+    router.remove_logical_port(net=data['net_id'],
+                            ip=data['ip'])
+    return 'Success\n'
+
+
 app.run(config.get('router','listen_address'),
         config.getint('router', 'listen_port'),
         debug_mode)
