@@ -7,3 +7,12 @@ vm/ready_vm/.vagrant/
 *.orig
 vm/ready_vm/save/
 *.pyc
+robot-tests/log.html
+robot-tests/output.xml
+robot-tests/report.html
+sdn/controller/venv/
+sdn/venv/
+sdn_venv/
+ssh.retry
+venv/
+
