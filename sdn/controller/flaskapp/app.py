@@ -110,7 +110,6 @@ def remove_logical_port():
         container_name = data.get('container_name')
         controller.remove_logical_port(data.get('net_id'), container_name)
 
-
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error removing logical port',

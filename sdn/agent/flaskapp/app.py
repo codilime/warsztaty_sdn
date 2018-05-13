@@ -33,7 +33,7 @@ def create_logical_port():
 
 
 @app.route('/remove/logical_port', methods=['POST'])
-def create_logical_port():
+def remove_logical_port():
     data = request.get_json()
     logging.debug("Received %s", str(data))
     new_lp = __logical_port_from_data(data)
