@@ -20,7 +20,7 @@ class Controller(object):
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
         subnets = netaddr.IPNetwork(n.ip).subnet(29)
-        self.ipam_pools[n.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        self.ipam_pools[n.id] = itertools.islice(subnets, 2)  # we've got at most 2 subnets
 
         self.router.add_network(n)
         self.networks[n.id] = n
@@ -32,7 +32,7 @@ class Controller(object):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
         pool = next(self.ipam_pools[p.network.id])
         hosts = pool.iter_hosts()
-        next(hosts) #skip docker default gateway
+        next(hosts)  # skip docker default gateway
         router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
@@ -59,9 +59,11 @@ class Controller(object):
 
         logger.debug("Removing docker networks")
         docker_net = self.docker_client.networks.get(net_id)
-        for container in docker_net.containers():
+        for container in docker_net.containers:
             docker_net.disconnect(container)
         docker_net.remove()
 
-
-
+        network = self.get_network(net_id)
+        subnets = netaddr.IPNetwork(network.ip).subnet(29)
+        self.ipam_pools[net_id] = itertools.chain(self.ipam_pools[net_id],
+                                                  (i for i in subnets if lp.container_ip in i))
