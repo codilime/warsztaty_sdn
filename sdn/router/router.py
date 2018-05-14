@@ -29,7 +29,7 @@ class Router(object):
     def remove_logical_port(self, net, ip):
         logger.info("Removing logical port %s/%s", net, ip)
         my_interface = self.interface_finder.find(ip)
-        for peer in self.networks[net]:
+        for peer in (i for i in self.networks[net] if i != ip):
             peer_interface = self.interface_finder.find(peer)
             logger.debug("Removing routing for %s <-> %s", my_interface, peer_interface)
             self.command_executor.execute(self._build_forward_command(peer_interface, my_interface, False))
