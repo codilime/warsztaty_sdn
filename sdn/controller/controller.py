@@ -58,8 +58,10 @@ class Controller(object):
         self.router.remove_logical_port(lp)
 
         logger.debug("Removing docker networks")
-        docker_net = self.docker_client.networks.get(net_id)
+        docker_net = next(net for net in self.docker_client.networks.list(names=[net_id])
+                          if any(cont.name == container_name for cont in net.containers))
         for container in docker_net.containers:
+            logger.debug("Disconnecting %s from %s", container.name, docker_net.name)
             docker_net.disconnect(container)
         docker_net.remove()
 
