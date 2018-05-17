@@ -1,26 +1,29 @@
 import json
 import logging
-import urllib.parse
+
+import requests
+from controller.logical_port import LogicalPort
+from controller.network import Network
 
 logger = logging.getLogger(__name__)
 
 
 class Router(object):
-    def __init__(self, id, ip, poster):
+    def __init__(self, id: str, ip: str, poster: requests) -> None:
         self.networks = []
         self.id = id
         self.ip = ip
         self.poster = poster
         self.logical_ports = []
 
-    def add_network(self, n):
+    def add_network(self, n: Network) -> None:
         logger.info("Creating network %s", n.id)
         self.poster.post(self.ip + "/create/network",
                          headers={"content-type": "application/json"},
                          data=json.dumps({"id": n.id}))
         self.networks.append(n)
 
-    def add_logical_port(self, p):
+    def add_logical_port(self, p: LogicalPort) -> None:
         logger.info("Creating logical port on %s", p.network.id)
         self.poster.post(self.ip + "/create/logical_port",
                          headers={"content-type": "application/json"},
