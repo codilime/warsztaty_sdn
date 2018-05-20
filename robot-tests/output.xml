@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20180520 23:56:03.602" generator="Robot 3.0.4 (Python 2.7.12 on linux2)">
+<suite source="/home/zx107/Desktop/sdn_no_vbox_3/robot-tests/tests/multiple_nets.robot" id="s1" name="Multiple Nets">
+<test id="s1-t1" name="Create Remove logical port">
+<kw type="setup" name="Log To Console" library="BuiltIn">
+<doc>Logs the given message to the console.</doc>
+<arguments>
+<arg>Using Controller endpoint ${CONTROLLER_ENDPOINT}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:03.736" starttime="20180520 23:56:03.735"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>Network-A</arg>
+</arguments>
+<assign>
+<var>${network_a}</var>
+</assign>
+<msg timestamp="20180520 23:56:03.736" level="INFO">${network_a} = Network-A</msg>
+<status status="PASS" endtime="20180520 23:56:03.736" starttime="20180520 23:56:03.736"></status>
+</kw>
+<kw name="Create Network" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>192.168.0.0/24</arg>
+</arguments>
+<msg timestamp="20180520 23:56:03.737" level="INFO">Sending request to http://172.20.128.10:8090/create/network</msg>
+<msg timestamp="20180520 23:56:03.743" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:03.743" starttime="20180520 23:56:03.736"></status>
+</kw>
+<kw name="Create Logical Port" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:03.743" level="INFO">Sending request to http://172.20.128.10:8090/create/logical_port</msg>
+<msg timestamp="20180520 23:56:05.070" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:05.070" starttime="20180520 23:56:03.743"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>127.0.0.1</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:05.076" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:05.076" starttime="20180520 23:56:05.071"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:05.077" starttime="20180520 23:56:05.077"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.0.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:05.083" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:05.083" starttime="20180520 23:56:05.077"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:05.083" starttime="20180520 23:56:05.083"></status>
+</kw>
+<kw name="Remove Logical Port" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:05.084" level="INFO">Sending request to http://172.20.128.10:8090/remove/logical_port</msg>
+<msg timestamp="20180520 23:56:06.636" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:06.636" starttime="20180520 23:56:05.084"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.0.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:16.645" level="INFO">${result} = False</msg>
+<status status="PASS" endtime="20180520 23:56:16.645" starttime="20180520 23:56:06.637"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${True}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:16.646" starttime="20180520 23:56:16.645"></status>
+</kw>
+<kw type="teardown" name="Perform Teardown One Network">
+<arguments>
+<arg>${network_a}</arg>
+</arguments>
+<kw name="Clean Data" library="Controller">
+<msg timestamp="20180520 23:56:16.648" level="INFO">Sending request to http://172.20.128.10:8090/force_clean</msg>
+<msg timestamp="20180520 23:56:16.651" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:16.651" starttime="20180520 23:56:16.648"></status>
+</kw>
+<kw name="Remove Network" library="Cleaner">
+<arguments>
+<arg>${network_name}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:16.654" starttime="20180520 23:56:16.651"></status>
+</kw>
+<status status="PASS" endtime="20180520 23:56:16.655" starttime="20180520 23:56:16.647"></status>
+</kw>
+<doc>.....</doc>
+<tags>
+<tag>basic_suite</tag>
+<tag>multiple_networks_1</tag>
+<tag>sdn_workshop</tag>
+</tags>
+<status status="PASS" endtime="20180520 23:56:16.655" critical="yes" starttime="20180520 23:56:03.735"></status>
+</test>
+<test id="s1-t2" name="Remove in first add in second">
+<kw type="setup" name="Log To Console" library="BuiltIn">
+<doc>Logs the given message to the console.</doc>
+<arguments>
+<arg>Using Controller endpoint ${CONTROLLER_ENDPOINT}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:16.656" starttime="20180520 23:56:16.656"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>Network-A</arg>
+</arguments>
+<assign>
+<var>${network_a}</var>
+</assign>
+<msg timestamp="20180520 23:56:16.657" level="INFO">${network_a} = Network-A</msg>
+<status status="PASS" endtime="20180520 23:56:16.657" starttime="20180520 23:56:16.656"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>Network-B</arg>
+</arguments>
+<assign>
+<var>${network_b}</var>
+</assign>
+<msg timestamp="20180520 23:56:16.657" level="INFO">${network_b} = Network-B</msg>
+<status status="PASS" endtime="20180520 23:56:16.657" starttime="20180520 23:56:16.657"></status>
+</kw>
+<kw name="Create Network" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>192.168.0.0/24</arg>
+</arguments>
+<msg timestamp="20180520 23:56:16.658" level="INFO">Sending request to http://172.20.128.10:8090/create/network</msg>
+<msg timestamp="20180520 23:56:16.665" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:16.665" starttime="20180520 23:56:16.657"></status>
+</kw>
+<kw name="Create Logical Port" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:16.666" level="INFO">Sending request to http://172.20.128.10:8090/create/logical_port</msg>
+<msg timestamp="20180520 23:56:17.860" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:17.861" starttime="20180520 23:56:16.665"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.0.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:17.868" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:17.868" starttime="20180520 23:56:17.861"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:17.868" starttime="20180520 23:56:17.868"></status>
+</kw>
+<kw name="Remove Logical Port" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:17.869" level="INFO">Sending request to http://172.20.128.10:8090/remove/logical_port</msg>
+<msg timestamp="20180520 23:56:19.400" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:19.400" starttime="20180520 23:56:17.869"></status>
+</kw>
+<kw name="Create Network" library="Controller">
+<arguments>
+<arg>${network_b}</arg>
+<arg>192.168.1.0/24</arg>
+</arguments>
+<msg timestamp="20180520 23:56:19.401" level="INFO">Sending request to http://172.20.128.10:8090/create/network</msg>
+<msg timestamp="20180520 23:56:19.406" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:19.406" starttime="20180520 23:56:19.400"></status>
+</kw>
+<kw name="Create Logical Port" library="Controller">
+<arguments>
+<arg>${network_b}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:19.406" level="INFO">Sending request to http://172.20.128.10:8090/create/logical_port</msg>
+<msg timestamp="20180520 23:56:20.630" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:20.630" starttime="20180520 23:56:19.406"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>127.0.0.1</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:20.635" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:20.635" starttime="20180520 23:56:20.630"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:20.636" starttime="20180520 23:56:20.636"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.1.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:20.642" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:20.642" starttime="20180520 23:56:20.636"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:20.643" starttime="20180520 23:56:20.642"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.0.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:20.650" level="INFO">${result} = False</msg>
+<status status="PASS" endtime="20180520 23:56:20.650" starttime="20180520 23:56:20.643"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${True}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:20.651" starttime="20180520 23:56:20.650"></status>
+</kw>
+<kw type="teardown" name="Perform Teardown Two Networks">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${network_b}</arg>
+</arguments>
+<kw name="Clean Data" library="Controller">
+<msg timestamp="20180520 23:56:20.652" level="INFO">Sending request to http://172.20.128.10:8090/force_clean</msg>
+<msg timestamp="20180520 23:56:20.655" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:20.655" starttime="20180520 23:56:20.652"></status>
+</kw>
+<kw name="Remove Network" library="Cleaner">
+<arguments>
+<arg>${network_name_a}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:20.659" starttime="20180520 23:56:20.656"></status>
+</kw>
+<kw name="Remove Network" library="Cleaner">
+<arguments>
+<arg>${network_name_b}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:22.185" starttime="20180520 23:56:20.659"></status>
+</kw>
+<status status="PASS" endtime="20180520 23:56:22.186" starttime="20180520 23:56:20.651"></status>
+</kw>
+<doc>.....</doc>
+<tags>
+<tag>basic_suite</tag>
+<tag>multiple_networks_2</tag>
+<tag>sdn_workshop</tag>
+</tags>
+<status status="PASS" endtime="20180520 23:56:22.186" critical="yes" starttime="20180520 23:56:16.655"></status>
+</test>
+<test id="s1-t3" name="One cotainer two networks">
+<kw type="setup" name="Log To Console" library="BuiltIn">
+<doc>Logs the given message to the console.</doc>
+<arguments>
+<arg>Using Controller endpoint ${CONTROLLER_ENDPOINT}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:22.187" starttime="20180520 23:56:22.187"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>Network-A</arg>
+</arguments>
+<assign>
+<var>${network_a}</var>
+</assign>
+<msg timestamp="20180520 23:56:22.187" level="INFO">${network_a} = Network-A</msg>
+<status status="PASS" endtime="20180520 23:56:22.187" starttime="20180520 23:56:22.187"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>Network-B</arg>
+</arguments>
+<assign>
+<var>${network_b}</var>
+</assign>
+<msg timestamp="20180520 23:56:22.188" level="INFO">${network_b} = Network-B</msg>
+<status status="PASS" endtime="20180520 23:56:22.188" starttime="20180520 23:56:22.187"></status>
+</kw>
+<kw name="Create Network" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>192.168.0.0/24</arg>
+</arguments>
+<msg timestamp="20180520 23:56:22.188" level="INFO">Sending request to http://172.20.128.10:8090/create/network</msg>
+<msg timestamp="20180520 23:56:22.194" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:22.194" starttime="20180520 23:56:22.188"></status>
+</kw>
+<kw name="Create Logical Port" library="Controller">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:22.195" level="INFO">Sending request to http://172.20.128.10:8090/create/logical_port</msg>
+<msg timestamp="20180520 23:56:23.428" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:23.428" starttime="20180520 23:56:22.194"></status>
+</kw>
+<kw name="Create Network" library="Controller">
+<arguments>
+<arg>${network_b}</arg>
+<arg>192.168.1.0/24</arg>
+</arguments>
+<msg timestamp="20180520 23:56:23.429" level="INFO">Sending request to http://172.20.128.10:8090/create/network</msg>
+<msg timestamp="20180520 23:56:23.434" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:23.434" starttime="20180520 23:56:23.429"></status>
+</kw>
+<kw name="Create Logical Port" library="Controller">
+<arguments>
+<arg>${network_b}</arg>
+<arg>${AGENT_ALA_ID}</arg>
+<arg>${AGENT_ALA_IP}</arg>
+</arguments>
+<msg timestamp="20180520 23:56:23.435" level="INFO">Sending request to http://172.20.128.10:8090/create/logical_port</msg>
+<msg timestamp="20180520 23:56:24.530" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:24.531" starttime="20180520 23:56:23.435"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>127.0.0.1</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:24.536" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:24.536" starttime="20180520 23:56:24.531"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:24.537" starttime="20180520 23:56:24.537"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.0.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:24.543" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:24.543" starttime="20180520 23:56:24.537"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:24.543" starttime="20180520 23:56:24.543"></status>
+</kw>
+<kw name="Ping" library="Checker">
+<arguments>
+<arg>${AGENT_ALA_IP}:${AGENT_ALA_PORT}</arg>
+<arg>192.168.1.2</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180520 23:56:24.549" level="INFO">${result} = True</msg>
+<status status="PASS" endtime="20180520 23:56:24.549" starttime="20180520 23:56:24.543"></status>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<arguments>
+<arg>${result} == ${False}</arg>
+<arg>Fail</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:24.550" starttime="20180520 23:56:24.550"></status>
+</kw>
+<kw type="teardown" name="Perform Teardown Two Networks">
+<arguments>
+<arg>${network_a}</arg>
+<arg>${network_b}</arg>
+</arguments>
+<kw name="Clean Data" library="Controller">
+<msg timestamp="20180520 23:56:24.551" level="INFO">Sending request to http://172.20.128.10:8090/force_clean</msg>
+<msg timestamp="20180520 23:56:24.554" level="INFO">Request success Success
+</msg>
+<status status="PASS" endtime="20180520 23:56:24.554" starttime="20180520 23:56:24.551"></status>
+</kw>
+<kw name="Remove Network" library="Cleaner">
+<arguments>
+<arg>${network_name_a}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:26.087" starttime="20180520 23:56:24.554"></status>
+</kw>
+<kw name="Remove Network" library="Cleaner">
+<arguments>
+<arg>${network_name_b}</arg>
+</arguments>
+<status status="PASS" endtime="20180520 23:56:27.655" starttime="20180520 23:56:26.087"></status>
+</kw>
+<status status="PASS" endtime="20180520 23:56:27.655" starttime="20180520 23:56:24.550"></status>
+</kw>
+<doc>.....</doc>
+<tags>
+<tag>basic_suite</tag>
+<tag>multiple_networks_3</tag>
+<tag>sdn_workshop</tag>
+</tags>
+<status status="PASS" endtime="20180520 23:56:27.655" critical="yes" starttime="20180520 23:56:22.186"></status>
+</test>
+<status status="PASS" endtime="20180520 23:56:27.656" starttime="20180520 23:56:03.603"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="0" pass="3">Critical Tests</stat>
+<stat fail="0" pass="3">All Tests</stat>
+</total>
+<tag>
+<stat fail="0" pass="3">basic_suite</stat>
+<stat fail="0" pass="1">multiple_networks_1</stat>
+<stat fail="0" pass="1">multiple_networks_2</stat>
+<stat fail="0" pass="1">multiple_networks_3</stat>
+<stat fail="0" pass="3">sdn_workshop</stat>
+</tag>
+<suite>
+<stat fail="0" id="s1" name="Multiple Nets" pass="3">Multiple Nets</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

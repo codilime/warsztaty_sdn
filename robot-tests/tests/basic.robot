@@ -23,7 +23,7 @@ Perform Teardown
 Simplest VPN
     [Tags]   simple_vpn_1
     [Documentation]  Tests simple vpn 1-network-1-lp
-    ${mynetwork}    Set Variable    Network-111
+    ${mynetwork}        NetSet Variablework-111
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
     Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
 
