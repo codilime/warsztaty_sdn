@@ -12,17 +12,19 @@ class Controller(object):
         self.docker_client = docker_client
         self.ipam_pools = {}
         self.networks = {}  # [overlay network name] is Network class instance
-        self.underlay_networks = {}  # [overlay network name, agent name] is UnderlayNetworkInfo class instance
+        self.used_ipam_pools = set()
+        self.underlay_networks = {}  # [overlay network name][agent name] is UnderlayNetworkInfo class instance
 
     def clean(self):
         self.ipam_pools = {}
         self.networks = {}
+        self.used_ipam_pools = set()
+        self.underlay_networks = {}
 
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
         subnets = netaddr.IPNetwork(n.ip).subnet(29)
-        self.ipam_pools[n.id] = itertools.islice(subnets, 3) # we've got at most 2 subnets
-        # todo
+        self.ipam_pools[n.id] = itertools.cycle(subnets)
 
         # if n.id in self.underlay_networks:
         #     raise ValueError("Overlay network %s already exists", n.id)
@@ -36,9 +38,8 @@ class Controller(object):
 
     def add_logical_port(self, p):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
-        pool = next(self.ipam_pools[p.network.id])
-
-        # todo
+        #pool = next(self.ipam_pools[p.network.id])
+        pool = self.acquire_ipam_pool(overlay_network_id=p.network.id)
 
         hosts = pool.iter_hosts()
         next(hosts) #skip docker default gateway
@@ -54,6 +55,7 @@ class Controller(object):
                                        router_underlay_ip=router_ip,
                                        agent_id=p.container.id,
                                        agent_underlay_ip=container_ip,
+                                       ipam_pool=pool
                                        )
         self.underlay_networks[p.network.id][p.container.id] = und_netw
 
@@ -68,13 +70,12 @@ class Controller(object):
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)
 
-
     def remove_logical_port(self, port):
         logger.info("Removing logical port on %s for %s", port.network.id, port.container.id)
         del_netw_info = self.underlay_networks[port.network.id][port.container.id]
+        self.release_ipam_pool(underlay_network_info=del_netw_info)
 
         self.remove_underlay_network(port.network.id, del_netw_info)
-
 
     def remove_underlay_network(self, network_overlay_id, netw_info):
         del self.underlay_networks[network_overlay_id][netw_info.agent_id]
@@ -88,13 +89,30 @@ class Controller(object):
 
         del_netw.remove()
 
+    def acquire_ipam_pool(self, overlay_network_id):
+        first_pool = next(self.ipam_pools[overlay_network_id])
+        pool = first_pool
+
+        while True:
+            if pool not in self.used_ipam_pools:
+                break
+            pool = next(self.ipam_pools[overlay_network_id])
+            if pool == first_pool:
+                raise StopIteration("Run out of ipam pools")
+        self.used_ipam_pools.add(pool)
+        return pool
+
+    def release_ipam_pool(self, underlay_network_info):
+        self.used_ipam_pools.remove(underlay_network_info.ipam_pool)
+
 
 class UnderlayNetworkInfo(object):
-    def __init__(self, network_underlay_id, router_id, router_underlay_ip, agent_id, agent_underlay_ip):
+    def __init__(self, network_underlay_id, router_id, router_underlay_ip, agent_id, agent_underlay_ip, ipam_pool):
         #self.overlay_id = network_overlay_id
         self.underlay_id = network_underlay_id
         self.router_id = router_id
         self.router_underlay_ip = router_underlay_ip
         self.agent_id = agent_id
         self.agent_underlay_ip = agent_underlay_ip
+        self.ipam_pool = ipam_pool
 
