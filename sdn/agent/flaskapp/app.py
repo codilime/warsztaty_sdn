@@ -9,6 +9,7 @@ app = Flask('Agent')
 config = get_config()
 debug_mode = config.getboolean('agent', 'debug')
 logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 @app.route('/ping/<path:target>', methods=['GET'])
@@ -25,8 +26,11 @@ def create_logical_port():
                          net_ip=data.get('net_ip'),
                          router_ip=data.get('router_ip'),
                          local_ip=data.get('ip'))
+
     new_lp.create(CommandExecutor())
     return 'Success\n'
+
+
 
 app.run(config.get('agent','listen_address'),
         config.getint('agent', 'listen_port'),

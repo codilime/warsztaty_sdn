@@ -15,6 +15,7 @@ app = Flask('Controller')
 config = get_config()
 debug_mode = config.getboolean('controller', 'debug')
 logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 controller = Controller(Router(id=config.get('router', 'docker_id'),
                                ip='http://%s:%s' % (config.get('router', 'docker_ip'),
@@ -69,8 +70,14 @@ def create_network():
 
     try:
         data = request.get_json()
-        new_network = Network(net_id=data.get('name'),
-                              ip=data.get('cidr'))
+
+        _net_id = data.get('name')
+        _ip = data.get('cidr')
+
+        if not _net_id:
+            raise ValueError("Incorrect network name")
+
+        new_network = Network(net_id=_net_id, ip=_ip)
         controller.add_network(new_network)
         return 'Success\n'
     except:
@@ -95,6 +102,32 @@ def create_logical_port():
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error creating logical port',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+
+@app.route('/remove/logical_port', methods=['POST'])
+def remove_logical_port():
+    """"""
+    _assert_proper_request(request)
+
+
+    try:
+        data = request.get_json()
+        raw_container = data.get('container')
+
+        container = Container(id=raw_container.get('id'),
+                              ip=raw_container.get('ip'),
+                              poster=requests)
+
+        network = controller.get_network(data.get('net_id'))
+        rem_lp = LogicalPort(container=container, network=network)
+
+        controller.remove_logical_port(rem_lp)
+
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error while removing logical port',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
