@@ -10,5 +10,13 @@
 
 ./scripts/blue/add_kasia.sh
 
+./scripts/clean.sh
+
+
+#./scripts/red/remove_ala.sh
+
+#./scripts/red/remove_ola.sh
+
+#./scripts/blue/remove_kasia.sh
 
 

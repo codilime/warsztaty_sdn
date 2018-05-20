@@ -18,8 +18,11 @@ class Controller(object):
     def clean(self):
         self.ipam_pools = {}
         self.networks = {}
-        self.used_ipam_pools = set()
-        self.underlay_networks = {}
+        # self.used_ipam_pools = set()
+        # self.underlay_networks = {}
+        for network_id in list(self.underlay_networks):
+            for underlay_network_info in list(self.underlay_networks[network_id].values()):
+                self.remove_underlay_network(network_overlay_id=network_id, netw_info=underlay_network_info)
 
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
@@ -73,13 +76,14 @@ class Controller(object):
     def remove_logical_port(self, port):
         logger.info("Removing logical port on %s for %s", port.network.id, port.container.id)
         del_netw_info = self.underlay_networks[port.network.id][port.container.id]
-        self.release_ipam_pool(underlay_network_info=del_netw_info)
 
         self.remove_underlay_network(port.network.id, del_netw_info)
 
     def remove_underlay_network(self, network_overlay_id, netw_info):
         del self.underlay_networks[network_overlay_id][netw_info.agent_id]
         del_netw = self.docker_client.networks.get(network_id=netw_info.underlay_id)
+
+        self.release_ipam_pool(underlay_network_info=netw_info)
 
         self.router.remove_logical_port(network_overlay_id, netw_info.router_underlay_ip)
         #port.container.remove_logical_port(port)
