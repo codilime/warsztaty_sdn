@@ -103,7 +103,7 @@ Standard VPN With Two Networks
     ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${True}    Fail
 
-    [Teardown]    Run Keywords    Controller.Clean Data
+    [Teardown]     Run Keywords    Controller.Clean Data
     ...           AND    Cleaner.Remove Network    ${mynetwork_1}
     ...           AND    Cleaner.Remove Network    ${mynetwork_2}
 
