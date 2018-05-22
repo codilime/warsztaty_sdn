@@ -71,7 +71,7 @@ Threeway VPN
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${False}    Fail
 
-    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.20
+    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.19
     Run Keyword If    ${result} == ${False}    Fail
 
     [Teardown]    Perform Teardown    ${mynetwork}
