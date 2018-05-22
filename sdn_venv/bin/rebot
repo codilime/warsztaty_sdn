@@ -1,0 +1,9 @@
+#!/home/vagrant/Desktop/save/warsztaty_sdn/sdn_venv/bin/python3.5
+
+import sys
+from robot import rebot_cli
+
+# Multiprocessing guard
+# https://github.com/robotframework/robotframework/issues/2315
+if __name__ == '__main__':
+    rebot_cli(sys.argv[1:])

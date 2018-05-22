@@ -19,8 +19,8 @@ class Controller(object):
 
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
-        subnets = netaddr.IPNetwork(n.ip).subnet(29)
-        self.ipam_pools[n.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        subnets = netaddr.IPNetwork(n.ip).subnet(24)
+        self.ipam_pools[n.id] = itertools.islice(subnets, 3) # we've got at most 3 subnets
 
         self.router.add_network(n)
         self.networks[n.id] = n

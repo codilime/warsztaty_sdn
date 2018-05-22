@@ -89,7 +89,7 @@ def create_logical_port():
         container = Container(id=raw_container.get('id'),
                               ip=raw_container.get('ip'),
                               poster=requests)
-        network = controller.get_network(data.get('net_id'))
+        network = controller.get_network(data.get(id))
         new_lp = LogicalPort(container=container, network=network)
         controller.add_logical_port(new_lp)
         return 'Success\n'
@@ -97,7 +97,6 @@ def create_logical_port():
         raise ServerError(message='Internal server error creating logical port',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
-
 
 app.run(config.get('controller','listen_address'),
         config.getint('controller', 'listen_port'),

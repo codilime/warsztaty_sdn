@@ -1,0 +1,6 @@
+#!/home/vagrant/Desktop/save/warsztaty_sdn/sdn_venv/bin/python3.5
+
+import sys
+from robot import run_cli
+
+run_cli(sys.argv[1:])
