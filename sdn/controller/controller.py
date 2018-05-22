@@ -29,10 +29,6 @@ class Controller(object):
         subnets = netaddr.IPNetwork(n.ip).subnet(29)
         self.ipam_pools[n.id] = itertools.cycle(subnets)
 
-        # logger.debug("PPPPPPPPPPPPPPPPPPPP next: %s", list(
-        #     (next(self.ipam_pools[n.id] for x in range(0, 20)))
-        # ))
-
         # if n.id in self.underlay_networks:
         #     raise ValueError("Overlay network %s already exists", n.id)
 
@@ -46,14 +42,8 @@ class Controller(object):
     def add_logical_port(self, p):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
 
-
-        logger.debug("CCCCCCCCC self.used_ipam_pools: %s", list(self.used_ipam_pools))
-
-
         #pool = next(self.ipam_pools[p.network.id])
         pool = self.acquire_ipam_pool(overlay_network_id=p.network.id)
-
-
 
         hosts = pool.iter_hosts()
         next(hosts) #skip docker default gateway
