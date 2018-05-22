@@ -34,7 +34,6 @@ Network Positive Validation
     [Teardown]    Perform Teardown    ${mynetwork}
 
 
-
 Network Negative Validation Wrong CIDR 1
     [Tags]   net_validation_2
     [Documentation]  Tests network negative validation wrong mask

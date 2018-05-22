@@ -57,7 +57,7 @@ Basic VPN
 
 
 Threeway VPN
-    [Tags]   simple_vpn_3    exclude_todo
+    [Tags]   simple_vpn_3
     [Documentation]  Tests simple vpn 1-network-3-lp
     ${mynetwork}    Set Variable    Network-113
     Controller.Create Network    ${mynetwork}    192.168.0.0/24
@@ -71,7 +71,7 @@ Threeway VPN
     ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${False}    Fail
 
-    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.20
+    ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.19
     Run Keyword If    ${result} == ${False}    Fail
 
     [Teardown]    Perform Teardown    ${mynetwork}
@@ -103,10 +103,9 @@ Standard VPN With Two Networks
     ${result}    Checker.Ping    ${AGENT_KASIA_IP}:${AGENT_KASIA_PORT}    192.168.0.11
     Run Keyword If    ${result} == ${True}    Fail
 
-    [Teardown]     Run Keywords    Controller.Clean Data
+    [Teardown]    Run Keywords    Controller.Clean Data
     ...           AND    Cleaner.Remove Network    ${mynetwork_1}
     ...           AND    Cleaner.Remove Network    ${mynetwork_2}
-
 
 
 Standard VPN Witffffh Two Networks
@@ -114,3 +113,55 @@ Standard VPN Witffffh Two Networks
     Cleaner.Remove Network    Network-200
     Cleaner.Remove Network    Network-200
     Cleaner.Remove Network    Network-300
+
+
+Logical Port removing test
+    [Tags]   simple_vpn_6
+    [Documentation]  Tests removing logical port 1-network 1-lp
+    ${mynetwork}    Set Variable    Network-114
+
+    Controller.Create Network    ${mynetwork}    192.168.0.0/24
+    Controller.Create Logical Port    ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    Controller.Remove Logical Port   ${mynetwork}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${True}    Fail
+
+    [Teardown]    Perform Teardown    ${mynetwork}
+
+
+Logical Port removing test 2
+    [Tags]   simple_vpn_7
+    [Documentation]  Tests removing logical port 2-network 1-lp
+    ${mynetwork_1}    Set Variable    Network-200
+    ${mynetwork_2}    Set Variable    Network-300
+
+    Controller.Create Network    ${mynetwork_1}    192.168.0.0/24
+    Controller.Create Network    ${mynetwork_2}    192.168.100.0/24
+
+    Controller.Create Logical Port    ${mynetwork_1}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    Controller.Remove Logical Port   ${mynetwork_1}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${True}    Fail
+
+    Controller.Create Logical Port    ${mynetwork_2}    ${AGENT_ALA_ID}    ${AGENT_ALA_IP}
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.100.2
+    Run Keyword If    ${result} == ${False}    Fail
+
+    ${result}    Checker.Ping    ${AGENT_ALA_IP}:${AGENT_ALA_PORT}    192.168.0.2
+    Run Keyword If    ${result} == ${True}    Fail
+
+    [Teardown]    Run Keywords    Controller.Clean Data
+    ...           AND    Cleaner.Remove Network    ${mynetwork_1}
+    ...           AND    Cleaner.Remove Network    ${mynetwork_2}
+    
