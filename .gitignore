@@ -7,3 +7,5 @@ vm/ready_vm/.vagrant/
 *.orig
 vm/ready_vm/save/
 *.pyc
+
+sdn_venv/
