@@ -1,0 +1,27 @@
+---
+- name: Ensures /opt/sdn dir exists
+  file: path=/opt/sdn/ansible  state=directory
+  delegate_to: localhost
+  run_once: true
+
+- name: install compose
+  pip:
+    name: docker-compose
+    state: present
+  delegate_to: localhost
+  run_once: true
+
+- name: Create docker compose
+  template:
+    src: docker-compose.yml.j2
+    dest: "/opt/sdn/ansible/docker-compose.yml"
+  delegate_to: localhost
+  run_once: true
+
+- name: Run docker compose
+  docker_service:
+    project_src: sdn
+    files: "/opt/sdn/ansible/docker-compose.yml"
+    state: present
+  delegate_to: localhost
+  run_once: true

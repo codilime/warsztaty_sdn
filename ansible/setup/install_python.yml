@@ -1,0 +1,3 @@
+---
+- name: install python 2
+  raw: test -e /usr/bin/python || (yum -y update && yum install -y python-minimal) || (apt -y update && apt install -y python-minimal)

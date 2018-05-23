@@ -1,0 +1,11 @@
+all:
+  hosts:
+    172.77.0.2:
+      ansible_user: root
+      ansible_ssh_pass: root
+    172.77.0.3:
+      ansible_user: root
+      ansible_ssh_pass: root
+    172.77.0.4:
+      ansible_user: root
+      ansible_ssh_pass: root

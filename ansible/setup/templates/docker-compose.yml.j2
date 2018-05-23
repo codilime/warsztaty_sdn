@@ -1,0 +1,29 @@
+---
+version: '2'
+
+services:
+    ssh-malwina:
+        restart: always
+        image: rastasheep/ubuntu-sshd
+        networks:
+          static-network:
+            ipv4_address: 172.77.0.2
+    ssh-karolina:
+        restart: always
+        image: rastasheep/ubuntu-sshd
+        networks:
+          static-network:
+            ipv4_address: 172.77.0.3
+    ssh-monika:
+        restart: always
+        image: rastasheep/ubuntu-sshd
+        networks:
+          static-network:
+            ipv4_address: 172.77.0.4
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.77.0.0/16
+          ip_range: 172.77.0.0/24
