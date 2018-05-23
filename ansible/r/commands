@@ -1,0 +1,8 @@
+#setup
+cd setup
+ansible-playbook -i inv.yml config.yml
+ansible-playbook -i inv.yml run.yml
+
+#start
+ansible -i inv.yml all -m ping
+ansible -i inv.yml all -m shell -a 'hostname'

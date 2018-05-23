@@ -1,0 +1,4 @@
+path_file: /etc/test
+file_name: cpu_percent
+time_sleep: 1
+range: 10

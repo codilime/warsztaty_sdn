@@ -1,0 +1,47 @@
+---
+#http://docs.ansible.com/ansible/latest/modules/apt_module.html
+- name: install pip
+  apt:
+    name: python-pip
+    state: present
+    update_cache: yes
+
+#http://docs.ansible.com/ansible/latest/modules/pip_module.html
+- name: pip packages
+  pip:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - psutil
+
+#http://docs.ansible.com/ansible/latest/modules/file_module.html#file-module
+- name: create dir
+  file:
+    path: /etc/test
+    state: directory
+
+#http://docs.ansible.com/ansible/latest/modules/copy_module.html
+- name: copy result file
+  copy:
+    src: cpu_percent
+    dest: '{{ path_file }}/{{ file_name }}'
+
+#http://docs.ansible.com/ansible/latest/modules/template_module.html
+- name: push program
+  template:
+    src: program.py.j2
+    dest: '{{ path_file }}/program.py'
+
+#http://docs.ansible.com/ansible/latest/modules/shell_module.html
+- name: run program
+  shell: 'python {{ path_file }}/program.py'
+
+#http://docs.ansible.com/ansible/latest/modules/shell_module.html
+- name: check result
+  shell: 'cat {{ path_file }}/{{ file_name }}'
+  register: result
+
+#http://docs.ansible.com/ansible/latest/modules/debug_module.html
+- name: show result
+  debug:
+    msg: '{{result.stdout}}'
