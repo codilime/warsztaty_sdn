@@ -15,6 +15,9 @@ class LogicalPort(object):
         logger.info("Creating logical port on %s, my IP is %s", self.net, self.local_ip)
         cmd_executor.execute(['ip', 'route', 'add', self.net_ip[0], 'via', self.router_ip])
 
+    def remove(self, cmd_executor):
+        logger.info("Removing logical port on %s, my IP is %s", self.net, self.local_ip)
+        cmd_executor.execute(['ip', 'route', 'remove', self.net_ip[0], 'via', self.router_ip])
 
 class CommandExecutor(object):
     @staticmethod

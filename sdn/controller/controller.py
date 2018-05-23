@@ -20,7 +20,7 @@ class Controller(object):
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
         subnets = netaddr.IPNetwork(n.ip).subnet(29)
-        self.ipam_pools[n.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        self.ipam_pools[n.id] = itertools.islice(subnets, 3) # we've got at most 3 subnets
 
         self.router.add_network(n)
         self.networks[n.id] = n
@@ -48,3 +48,16 @@ class Controller(object):
         p.underlay_network_ip = self.get_network(p.network.id).ip
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)
+
+    def remove_logical_port(self, p):
+        logger.info("Removing logical port on %s for %s", p.network.id, p.container.id)
+
+        logger.debug("Notifying router and container")
+        self.router.remove_logical_port(p)
+        p.container.remove_logical_port(p)
+
+        logger.debug("Removing docker networks")
+        docker_net = self.docker_client.networks.get(p.network.id)
+        docker_net.disconnect(self.router.id)
+        docker_net.disconnect(p.container.id)
+

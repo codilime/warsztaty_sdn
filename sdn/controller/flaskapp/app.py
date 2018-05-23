@@ -69,8 +69,12 @@ def create_network():
 
     try:
         data = request.get_json()
-        new_network = Network(net_id=data.get('name'),
-                              ip=data.get('cidr'))
+        curl_name = data.get('name')
+        curl_ip = data.get('cidr')
+        if not curl_name:
+            raise ValueError("Incorrect network name")
+        new_network = Network(net_id=curl_name,
+                              ip=curl_ip)
         controller.add_network(new_network)
         return 'Success\n'
     except:
@@ -92,6 +96,25 @@ def create_logical_port():
         network = controller.get_network(data.get('net_id'))
         new_lp = LogicalPort(container=container, network=network)
         controller.add_logical_port(new_lp)
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error creating logical port',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+@app.route('/remove/logical_port', methods=['POST'])
+def remove_logical_port():
+    _assert_proper_request(request)
+
+    try:
+        data = request.get_json()
+        raw_container = data.get('container')
+        container = Container(id=raw_container.get('id'),
+                              ip=raw_container.get('ip'),
+                              poster=requests)
+        network = controller.get_network(data.get('net_id'))
+        last_lp = LogicalPort(container=container, network=network)
+        controller.remove_logical_port(last_lp)
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error creating logical port',

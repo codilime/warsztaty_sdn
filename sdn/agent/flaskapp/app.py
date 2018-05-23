@@ -28,6 +28,17 @@ def create_logical_port():
     new_lp.create(CommandExecutor())
     return 'Success\n'
 
+@app.route('/remove/logical_port', methods=['POST'])
+def remove_logical_port():
+    data = request.get_json()
+    logging.debug("Received %s", str(data))
+    log_port = LogicalPort(net=data.get('net'),
+                         net_ip=data.get('net_ip'),
+                         router_ip=data.get('router_ip'),
+                         local_ip=data.get('ip'))
+    log_port.remove(CommandExecutor())
+    return 'Success\n'
+
 app.run(config.get('agent','listen_address'),
         config.getint('agent', 'listen_port'),
         debug_mode)
