@@ -1,0 +1,30 @@
+---
+#http://docs.ansible.com/ansible/latest/modules/apt_module.html
+- name: install pip
+
+#http://docs.ansible.com/ansible/latest/modules/pip_module.html
+- name: pip packages
+
+
+#http://docs.ansible.com/ansible/latest/modules/file_module.html#file-module
+- name: create dir
+
+
+#http://docs.ansible.com/ansible/latest/modules/copy_module.html
+- name: copy result file
+
+
+#http://docs.ansible.com/ansible/latest/modules/template_module.html
+- name: push program
+
+
+#http://docs.ansible.com/ansible/latest/modules/shell_module.html
+- name: run program
+
+
+#http://docs.ansible.com/ansible/latest/modules/shell_module.html
+- name: check result
+
+
+#http://docs.ansible.com/ansible/latest/modules/debug_module.html
+- name: show result
