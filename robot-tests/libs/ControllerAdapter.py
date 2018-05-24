@@ -46,3 +46,7 @@ class ControllerAdapter(object):
                     'ip': docker_ip
                 }}
         self._post(url_path='create/logical_port', data=data)
+
+    def remove_logical_port(self, net_id, container_name):
+        data = {'container_name': container_name, 'net_id': net_id}
+        self._post('remove/logical_port', data)
