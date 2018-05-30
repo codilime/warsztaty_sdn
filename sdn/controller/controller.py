@@ -20,7 +20,7 @@ class Controller(object):
     def add_network(self, n):
         logger.info("Adding network %s", n.ip)
         subnets = netaddr.IPNetwork(n.ip).subnet(29)
-        self.ipam_pools[n.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        self.ipam_pools[n.id] = itertools.islice(subnets, 3)
 
         self.router.add_network(n)
         self.networks[n.id] = n
@@ -32,7 +32,7 @@ class Controller(object):
         logger.info("Adding logical port on %s for %s", p.network.id, p.container.id)
         pool = next(self.ipam_pools[p.network.id])
         hosts = pool.iter_hosts()
-        next(hosts) #skip docker default gateway
+        next(hosts)  # skip docker default gateway
         router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
@@ -48,3 +48,24 @@ class Controller(object):
         p.underlay_network_ip = self.get_network(p.network.id).ip
         self.router.add_logical_port(p)
         p.container.add_logical_port(p)
+
+    def remove_logical_port(self, net_id, container_name):
+        logger.info("Removing logical port id: %s, ip: %s", net_id, container_name)
+
+        logger.debug("Notifying router and container")
+        lp = self.router.get_logical_port(container_name, net_id)
+        lp.container.remove_logical_port(lp)
+        self.router.remove_logical_port(lp)
+
+        logger.debug("Removing docker networks")
+        docker_net = next(net for net in self.docker_client.networks.list(names=[net_id])
+                          if any(cont.name == container_name for cont in net.containers))
+        for container in docker_net.containers:
+            logger.debug("Disconnecting %s from %s", container.name, docker_net.name)
+            docker_net.disconnect(container)
+        docker_net.remove()
+
+        network = self.get_network(net_id)
+        subnets = netaddr.IPNetwork(network.ip).subnet(29)
+        self.ipam_pools[net_id] = itertools.chain(self.ipam_pools[net_id],
+                                                  (i for i in subnets if lp.container_ip in i))

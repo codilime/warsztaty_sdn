@@ -66,9 +66,11 @@ def force_clean():
 @app.route('/create/network', methods=['POST'])
 def create_network():
     _assert_proper_request(request)
-
     try:
         data = request.get_json()
+        if not data.get('name'):
+            raise NameError('Network name cannot be empty.')
+
         new_network = Network(net_id=data.get('name'),
                               ip=data.get('cidr'))
         controller.add_network(new_network)
@@ -98,6 +100,21 @@ def create_logical_port():
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
+
+@app.route('/remove/logical_port', methods=['POST'])
+def remove_logical_port():
+    _assert_proper_request(request)
+
+    try:
+        data = request.get_json()
+        container_name = data.get('container_name')
+        controller.remove_logical_port(data.get('net_id'), container_name)
+
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error removing logical port',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
 
 app.run(config.get('controller','listen_address'),
         config.getint('controller', 'listen_port'),
