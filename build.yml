@@ -1,20 +1,25 @@
 ---
 
-- name: Build sdn-base
-  docker_image:
-    name: sdn-base
-    path: '.'
-    dockerfile: Dockerfile.base
-    tag: latest
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Build sdn-base
+      docker_image:
+        name: sdn-base
+        path: '.'
+        dockerfile: Dockerfile.base
+        tag: latest
+        nocache: true
 
-- name: Build images
-  docker_image:
-    name: '{{ item }}'
-    path: 'sdn'
-    dockerfile: 'build/Dockerfile.{{ item }}'
-    pull: false
-    tag: latest
-  with_items:
-    - router
-    - controller
-    - agent
+    - name: Build images
+      docker_image:
+        name: '{{ item }}'
+        path: 'sdn'
+        dockerfile: 'build/Dockerfile.{{ item }}'
+        pull: false
+        tag: latest
+        nocache: true
+      with_items:
+        - router
+        - controller
+        - agent
