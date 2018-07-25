@@ -14,8 +14,6 @@
       with_items:
         - ppa:jonathonf/python-3.6
         - ppa:ansible/ansible
-        - ppa:webupd8team/atom
-        - ppa:mystic-mirage/pycharm
 
     - name: install components
       apt:
@@ -28,8 +26,6 @@
         - python-dev
         - build-essential
         - docker.io
-        - atom
-        - pycharm-community
       become: true
 
     - name: piping
@@ -40,8 +36,5 @@
         - docker
       become: true
 
-    - name: pull repo
-      git:
-        repo: 'https://gitlab.com/Kopka/polibuda.git'
-        dest: '/home/vagrant/Desktop/save/sdn'
+
 

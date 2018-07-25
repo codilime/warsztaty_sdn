@@ -1,15 +1,29 @@
 ### Ważne komendy
-1) budowanie images
+0) Tworzenie vmki
+```bash
+cd vm/build_vm
+vagrant up
+```
+
+Kredki ubuntu/ubuntu
+
+1) Wchodzenie do vm
+```bash
+cd vm/build_vm
+vagrant ssh
+```
+
+2) budowanie images
 ```bash
 ansible-playbook -i inv.yml build.yml
 ```
 
-2) Uruchamianie kontroller i rutera
+3) Uruchamianie kontroller i rutera
 ```bash
 ansible-playbook -i inv.yml run.yml
 ```
 
-2) Restartowanie kontroller i rutera
+4) Restartowanie kontroller i rutera
 ```bash
 docker-compose restart
 ```
