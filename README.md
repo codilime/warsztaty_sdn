@@ -1,4 +1,23 @@
-## Przygtowanie 
+### Ważne komendy
+1) budowanie images
+```bash
+ansible-playbook -i inv.yml build.yml
+```
+
+2) Uruchamianie kontroller i rutera
+```bash
+ansible-playbook -i inv.yml run.yml
+```
+
+2) Restartowanie kontroller i rutera
+```bash
+docker-compose restart
+```
+
+
+
+### Tu jest starte i nie ważne
+## Przygtowanie
 
 1) Ściągnij vagrant z [vagrant](https://www.vagrantup.com/downloads.html)
 
