@@ -1,5 +1,5 @@
 flask
 flask_script
-docker
+docker>=3.0.0,<3.0.1
 netaddr
 requests

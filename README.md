@@ -134,3 +134,13 @@ pip3 install -r sdn/router/requirements.txt
 cd /home/vagrant/Desktop/save/warsztaty_sdn/sdn
 python3 -m unittest discover
 ```
+
+## Znane problemy
+
+TypeError: load_config() got an unexpected keyword argument 'config_dict'
+
+```apt remove python-docker
+pip install --upgrade pip
+pip uninstall docker
+pip install 'docker>=3.0.0,<3.0.1'
+```
