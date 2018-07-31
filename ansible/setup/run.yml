@@ -1,9 +1,0 @@
----
-
-- hosts: all
-  gather_facts: no
-  become: yes
-  tasks:
-  - import_tasks: compose.yml
-  - import_tasks: install_python.yml
-
