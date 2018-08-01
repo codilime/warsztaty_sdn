@@ -21,7 +21,7 @@ controller = Controller(Router(id=config.get('router', 'docker_id'),
                                                     config.get('router', 'listen_port')),
                                poster=requests),
                         DockerClient(base_url=config.get('docker', 'docker_socket')))
-
+print(controller)
 
 class ServerError(Exception):
 
@@ -74,8 +74,8 @@ def create_network():
 
     try:
         data = request.get_json()
-        new_network = Network(net_id=data.get('name'),
-                              ip=data.get('cidr'))
+        new_network = Network(net_id=data['name'],
+                              ip=data['cidr'])
         controller.add_network(new_network)
         return 'Success\n'
     except:
@@ -90,18 +90,13 @@ def create_logical_port():
 
     try:
         data = request.get_json()
-        print(data)
         raw_container = data.get('container')
-        print(raw_container)
-        container = Container(id=raw_container.get('id'),
-                              ip=raw_container.get('ip'),
+        container = Container(id=raw_container['id'],
+                              ip=raw_container['ip'],
                               poster=requests)
-        print(container)
         network = controller.get_network(data.get('net_id'))
         new_lp = LogicalPort(container=container, network=network)
-        print('before')
         controller.add_logical_port(new_lp)
-        print('after')
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error creating logical port',

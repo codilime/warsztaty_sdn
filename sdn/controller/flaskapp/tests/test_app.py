@@ -1,7 +1,8 @@
 import unittest
 import json
-from ..app import app, ServerError, _assert_proper_request, controller
-from unittest.mock import patch
+from ..app import app, ServerError, _assert_proper_request, controller, Controller
+from unittest.mock import patch, MagicMock
+
 from ...logical_port import LogicalPort
 from ...container import Container
 from ...router import Router
@@ -23,6 +24,7 @@ class TestControllerFlaskaap(unittest.TestCase):
     CONTAINER_GREEN_ID = "green-id"
 
     def setUp(self):
+        controller.add_logical_port = MagicMock(return_value=1)
         self.client = app.test_client()
 
     def test_hello(self):
@@ -66,29 +68,57 @@ class TestControllerFlaskaap(unittest.TestCase):
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
 
+
     def test_create_network(self):
-        data = {
+        with patch.object(controller, 'add_network') as mock:
+            data = {
+                'name': 'ala',
+                'cidr': '192.168.0.0/24'
+            }
+            rv = self.client.post('/create/network', data=json.dumps(data),
+                                  content_type='application/json')
+            self.assertEqual(b'Success\n', rv.data)
+            self.assertEqual(200, rv.status_code)
+
+    def test_create_network_fail(self):
+        with patch.object(controller, 'add_network') as mock:
+            data = {
+                'name': 'ala'
+            }
+            rv = self.client.post('/create/network', data=json.dumps(data),
+                                  content_type='application/json')
+            self.assertEqual(500, rv.status_code)
+            data = json.loads(rv.data.decode('utf-8'))
+            self.assertTrue('Internal server error creating network' in data['message'])
+
+
+    @patch.object(controller, 'add_logical_port')
+    @patch.object(controller, 'get_network')
+    @patch.object(controller, 'add_network')
+    def test_create_logical_port(self, mock, mock2, mock3):
+        data_net = {
             'name': 'ala',
             'cidr': '192.168.0.0/24'
         }
-        rv = self.client.post('/create/network', data=json.dumps(data),
+        rv = self.client.post('/create/network', data=json.dumps(data_net),
+                              content_type='application/json')
+        data = {
+            'net_id': 'ala',
+            'container':
+                {'id': 'kot',
+                 'ip': '192.168.0.77'}
+        }
+        rv = self.client.post('/create/logical_port', data=json.dumps(data),
                               content_type='application/json')
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
 
-    def test_create_network_fail(self):
-
-        data = {
-            'name': 'ala',
-        }
-        rv = self.client.post('/create/network', data=json.dumps(data),
-                              content_type='application/json')
-        self.assertEqual(500, rv.status_code)
-        data = json.loads(rv.data.decode('utf-8'))
-        self.assertTrue('Internal server error creating network' in data['message'])
-
-    def test_create_logical_port(self):
+    @patch.object(controller, 'add_logical_port')
+    @patch.object(controller, 'get_network')
+    @patch.object(controller, 'add_network')
+    def test_create_logical_port_fail(self,  mock, mock2, mock3):
         with patch.object(controller, 'add_logical_port') as mock:
+
 
             data_net = {
                 'name': 'ala',
@@ -99,30 +129,55 @@ class TestControllerFlaskaap(unittest.TestCase):
             data = {
                 'net_id': 'ala',
                 'container':
-                    {'id': 'kot',
-                     'ip': '192.168.0.77'}
-            }
-            rv = self.client.post('/create/logical_port', data=json.dumps(data),
-                                  content_type='application/json')
-            self.assertEqual(b'Success\n', rv.data)
-            self.assertEqual(200, rv.status_code)
-
-    def test_create_logical_port_fail(self):
-        with patch.object(controller, 'add_logical_port') as mock:
-            data_net = {
-                'name': 'ala',
-                'cidr': '192.168.0.0/24'
-            }
-            rv = self.client.post('/create/network', data=json.dumps(data_net),
-                                  content_type='application/json')
-            data = {
-                'net_id': 'ola',
-                'container':
-                    {'id': 'kot',
-                     'ip': '192.168.0.77'}
+                    {'id': 'kot'}
             }
             rv = self.client.post('/create/logical_port', data=json.dumps(data),
                                   content_type='application/json')
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
             self.assertTrue('Internal server error creating logical port' in data['message'])
+
+    # def test_create_logical_port_fail(self):
+    #
+    #     data = {
+    #         'name': 'ala',
+    #     }
+    #     rv = self.client.post('/create/network', data=json.dumps(data),
+    #                           content_type='application/json')
+    #     self.assertEqual(500, rv.status_code)
+    #     data = json.loads(rv.data.decode('utf-8'))
+    #     self.assertTrue('Internal server error creating network' in data['message'])
+
+    # def test_ping_target_8888(self):
+    #     """Start with a blank database."""
+    #     rv = self.client.get('/ping/8.8.8.8')
+    #     self.assertEqual(b'1', rv.data)
+    #     self.assertEqual(200, rv.status_code)
+    #
+    # def test_ping_target_12700257(self):
+    #     """Start with a blank database."""
+    #     rv = self.client.get('/ping/127.0.0.257')
+    #     self.assertEqual(b'0', rv.data)
+    #     self.assertEqual(200, rv.status_code)
+    #
+    # def test_create_logical_port(self):
+    #     """Start with a blank database."""
+    #     data = {
+    #         'net': 'ala',
+    #         'net_ip' : '192.168.0.0/24',
+    #         'router_ip': '10.0.0.1',
+    #         'local_ip': '192.168.0.11'
+    #     }
+    #     rv = self.client.post('/create/logical_port', data=json.dumps(data),
+    #                           content_type='application/json')
+    #     self.assertEqual(b'Success\n', rv.data)
+    #     self.assertEqual(200, rv.status_code)
+    #
+    # def test_create_logical_port_without_data(self):
+    #     """Start with a blank database."""
+    #     data = {}
+    #     rv = self.client.post('/create/logical_port', data=json.dumps(data),
+    #                           content_type='application/json')
+    #     print(rv.data)
+    #     self.assertEqual(b'Failed, not enough data\n', rv.data)
+    #     self.assertEqual(400, rv.status_code)

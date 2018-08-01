@@ -1,8 +1,8 @@
 import logging
 from flask import Flask, request
-from router.router import Router, CommandExecutor
-from router.interface_finder import InterfaceFinder
-from config.flask_config import get_config
+from sdn.router.router import Router, CommandExecutor
+from sdn.router.interface_finder import InterfaceFinder
+from sdn.config.flask_config import get_config
 
 
 app = Flask('Router')
@@ -11,6 +11,11 @@ debug_mode = config.getboolean('router', 'debug')
 logging.basicConfig(level=logging.DEBUG)
 
 router = Router(CommandExecutor, InterfaceFinder)
+
+
+@app.route('/hello', methods=['GET'])
+def hello():
+    return str('hello')
 
 
 @app.route('/create/network', methods=['POST'])
@@ -27,6 +32,8 @@ def create_logical_port():
                             ip=data['ip'])
     return 'Success\n'
 
-app.run(config.get('router','listen_address'),
-        config.getint('router', 'listen_port'),
-        debug_mode)
+
+if __name__ == '__main__':
+    app.run(config.get('router','listen_address'),
+            config.getint('router', 'listen_port'),
+            debug_mode)
