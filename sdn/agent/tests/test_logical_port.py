@@ -1,5 +1,5 @@
 import unittest
-from agent.logical_port import LogicalPort
+from ..logical_port import LogicalPort
 
 
 class MockCmdExecutor(object):

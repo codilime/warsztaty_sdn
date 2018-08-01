@@ -97,6 +97,22 @@ class ControllerTest(unittest.TestCase):
         mocked_network.connect.assert_any_call(self.ROUTER_ID, ipv4_address='192.168.0.2')
         mocked_network.connect.assert_any_call(self.CONTAINER_RED_ID, ipv4_address='192.168.0.3')
 
+    def test_clean(self):
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+        ctrl = Controller(r, MagicMock())
+
+        n = Network("net1", "192.168.0.0/24")
+        ctrl.add_network(n)
+
+        self.assertEqual(n, ctrl.networks['net1'])
+        self.assertNotEqual(ctrl.ipam_pools['net1'], {})
+
+        ctrl.clean()
+
+        self.assertEqual(ctrl.networks, {})
+        self.assertEqual(ctrl.networks, {})
+
 
 if __name__ == '__main__':
     unittest.main()

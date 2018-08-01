@@ -3,12 +3,12 @@ import requests
 import traceback
 from docker import DockerClient
 from flask import Flask, request, jsonify
-from controller.controller import Controller
-from controller.router import Router
-from controller.network import Network
-from controller.logical_port import LogicalPort
-from controller.container import Container
-from config.flask_config import get_config
+from sdn.controller.controller import Controller
+from sdn.controller.router import Router
+from sdn.controller.network import Network
+from sdn.controller.logical_port import LogicalPort
+from sdn.controller.container import Container
+from sdn.config.flask_config import get_config
 
 
 app = Flask('Controller')
@@ -44,6 +44,11 @@ def _assert_proper_request(req):
     if (req.content_type != 'application/json' or not hasattr(req, 'json')):
         raise ServerError(message='Malformed request, expected json payload and type',
                          status_code=400)
+
+
+@app.route('/hello', methods=['GET'])
+def hello():
+    return str('hello')
 
 
 @app.route('/')
@@ -85,13 +90,18 @@ def create_logical_port():
 
     try:
         data = request.get_json()
+        print(data)
         raw_container = data.get('container')
+        print(raw_container)
         container = Container(id=raw_container.get('id'),
                               ip=raw_container.get('ip'),
                               poster=requests)
+        print(container)
         network = controller.get_network(data.get('net_id'))
         new_lp = LogicalPort(container=container, network=network)
+        print('before')
         controller.add_logical_port(new_lp)
+        print('after')
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error creating logical port',
@@ -99,6 +109,7 @@ def create_logical_port():
                           payload=traceback.format_exc() if debug_mode else '')
 
 
-app.run(config.get('controller','listen_address'),
-        config.getint('controller', 'listen_port'),
-        debug_mode)
+if __name__ == '__main__':
+    app.run(config.get('controller', 'listen_address'),
+            config.getint('controller', 'listen_port'),
+            debug_mode)

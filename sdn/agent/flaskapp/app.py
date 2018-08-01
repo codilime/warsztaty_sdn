@@ -24,9 +24,7 @@ def ping_target(target):
 
 @app.route('/create/logical_port', methods=['POST'])
 def create_logical_port():
-
     data = request.get_json()
-    print(data)
     logging.debug("Received %s", str(data))
     try:
         new_lp = LogicalPort(net=data.get('net'),
