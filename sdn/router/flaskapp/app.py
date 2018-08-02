@@ -21,14 +21,14 @@ def hello():
 @app.route('/create/network', methods=['POST'])
 def create_network():
     data = request.get_json()
-    router.add_network(name=data['id'])
+    router.add_network(name=data['name'])
     return 'Success\n'
 
 
 @app.route('/create/logical_port', methods=['POST'])
 def create_logical_port():
     data = request.get_json()
-    router.add_logical_port(net=data['net_id'],
+    router.add_logical_port(net=data['name'],
                             ip=data['ip'])
     return 'Success\n'
 
