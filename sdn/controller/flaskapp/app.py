@@ -84,6 +84,36 @@ def create_network():
                           payload=traceback.format_exc() if debug_mode else '')
 
 
+@app.route('/create/container', methods=['POST'])
+def create_container():
+    _assert_proper_request(request)
+
+    try:
+        data = request.get_json()
+        container = Container(id=data['id'], ip='', poster=None) #FIXME this should be looked up in an in-memory db
+        container.start()
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error creating network',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+
+@app.route('/delete/container', methods=['POST'])
+def delete_container():
+    _assert_proper_request(request)
+
+    try:
+        data = request.get_json()
+        container = Container(id=data['id'], ip='', poster=None) #FIXME this should be looked up in an in-memory db
+        container.stop()
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error creating network',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+
 @app.route('/create/logical_port', methods=['POST'])
 def create_logical_port():
     _assert_proper_request(request)

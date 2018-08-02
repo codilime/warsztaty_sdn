@@ -1,13 +1,10 @@
 import unittest
 import json
-from ..app import app, ServerError, _assert_proper_request, controller, Controller
+from ..app import app, ServerError, _assert_proper_request, controller
 from unittest.mock import patch, MagicMock
 
-from ...logical_port import LogicalPort
-from ...container import Container
-from ...router import Router
-from ...controller import Controller
-from ...network import Network
+from sdn.controller.container import Container
+
 
 class Req(object):
     def __init__(self):
@@ -68,7 +65,6 @@ class TestControllerFlaskaap(unittest.TestCase):
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
 
-
     def test_create_network(self):
         with patch.object(controller, 'add_network') as mock:
             data = {
@@ -91,6 +87,25 @@ class TestControllerFlaskaap(unittest.TestCase):
             data = json.loads(rv.data.decode('utf-8'))
             self.assertTrue('Internal server error creating network' in data['message'])
 
+    @patch.object(Container, 'start')
+    def test_start_container(self, mock):
+        data = {
+            'id': 'ala',
+        }
+        rv = self.client.post('/create/container', data=json.dumps(data),
+                              content_type='application/json')
+        self.assertEqual(b'Success\n', rv.data)
+        self.assertEqual(200, rv.status_code)
+
+    @patch.object(Container, 'stop')
+    def test_start_container(self, mock):
+        data = {
+            'id': 'ala',
+        }
+        rv = self.client.post('/delete/container', data=json.dumps(data),
+                              content_type='application/json')
+        self.assertEqual(b'Success\n', rv.data)
+        self.assertEqual(200, rv.status_code)
 
     @patch.object(controller, 'add_logical_port')
     @patch.object(controller, 'get_network')
@@ -100,8 +115,8 @@ class TestControllerFlaskaap(unittest.TestCase):
             'name': 'ala',
             'cidr': '192.168.0.0/24'
         }
-        rv = self.client.post('/create/network', data=json.dumps(data_net),
-                              content_type='application/json')
+        self.client.post('/create/network', data=json.dumps(data_net),
+                              content_type='applicatilogical_porton/json')
         data = {
             'net_id': 'ala',
             'container':
@@ -123,7 +138,7 @@ class TestControllerFlaskaap(unittest.TestCase):
                 'name': 'ala',
                 'cidr': '192.168.0.0/24'
             }
-            rv = self.client.post('/create/network', data=json.dumps(data_net),
+            self.client.post('/create/network', data=json.dumps(data_net),
                                   content_type='application/json')
             data = {
                 'net_id': 'ala',
