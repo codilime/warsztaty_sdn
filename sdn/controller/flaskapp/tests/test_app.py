@@ -98,7 +98,7 @@ class TestControllerFlaskaap(unittest.TestCase):
         self.assertEqual(200, rv.status_code)
 
     @patch.object(Container, 'stop')
-    def test_start_container(self, mock):
+    def test_stop_container(self, mock):
         data = {
             'id': 'ala',
         }

@@ -13,12 +13,12 @@ logger = logging.getLogger(__name__)
 class Container(object):
     IMAGE = 'sdn-agent'
 
-    def __init__(self, id: str, ip: str, poster: requests) -> None:
+    def __init__(self, id: str, ip: str, poster: requests, docker_client: docker.DockerClient) -> None:
         self.id = id
         self.ip = ip
         self.poster = poster
         self.logical_ports = []
-        self.docker_client = None
+        self.docker_client = docker_client
 
     # TODO commented not to use LogicalPort in typing, which currently causes looped imports
     # def add_logical_port(self, port: LogicalPort) -> None:
@@ -38,18 +38,13 @@ class Container(object):
 
     def start(self):
         logger.info("Starting %s based on %s image", self.id, Container.IMAGE)
-        self.__get_docker_client().containers.run(Container.IMAGE, name=self.id, detach=True, remove=True)
+        self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True)
 
     def stop(self):
-        logger.info("Removing containter %s", self.id)
-        client = self.__get_docker_client()
+        logger.info("Removing container %s", self.id)
         try:
-            c = client.containers.get(self.id)
+            c = self.docker_client.containers.get(self.id)
             c.remove(force=True)
         except docker.errors.NotFound:
             logger.info("Container %s already removed", self.id)
 
-    def __get_docker_client(self):
-        if self.docker_client is None:
-            self.docker_client = docker.from_env()
-        return self.docker_client

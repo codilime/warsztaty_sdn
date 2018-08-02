@@ -43,7 +43,7 @@ class ControllerTest(unittest.TestCase):
     def test_should_post_logical_port_to_router(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock())
+        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock(), MagicMock())
         ctrl = Controller(r, MagicMock())
 
         n = Network("net1", "192.168.0.0/24")
@@ -61,7 +61,7 @@ class ControllerTest(unittest.TestCase):
     def test_should_post_logical_port_to_container(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, MagicMock())
-        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, poster)
+        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, poster, MagicMock())
         ctrl = Controller(r, MagicMock())
 
         n = Network("net1", "192.168.0.0/24")
@@ -77,7 +77,7 @@ class ControllerTest(unittest.TestCase):
     def test_should_attach_logical_port_to_network(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock())
+        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock(), MagicMock())
         docker_client = MagicMock()
         ctrl = Controller(r, docker_client)
 
@@ -96,6 +96,15 @@ class ControllerTest(unittest.TestCase):
         )
         mocked_network.connect.assert_any_call(self.ROUTER_ID, ipv4_address='192.168.0.2')
         mocked_network.connect.assert_any_call(self.CONTAINER_RED_ID, ipv4_address='192.168.0.3')
+
+    def test_should_start_containers(self):
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+        docker_client = MagicMock()
+        ctrl = Controller(r, docker_client)
+        ctrl.add_container('container-id')
+
+        docker_client.containers.run.assert_called()
 
     def test_clean(self):
         poster = MagicMock()

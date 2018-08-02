@@ -37,7 +37,7 @@ class ContainerTests(unittest.TestCase):
 
     def test_should_start_stop_container(self):
         self.register_cleanup(self.CONTAINER_ID)
-        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock())
+        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock(), self.docker_client)
 
         c.start()
         self.assertRunning(self.CONTAINER_ID)
@@ -46,7 +46,7 @@ class ContainerTests(unittest.TestCase):
         self.assertNoContainer(self.CONTAINER_ID)
 
     def test_should_store_single_logical_port(self):
-        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock())
+        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock(), MagicMock())
         p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
         p.container_ip = '192.168.0.2'
         p.router_ip = '192.168.0.1'
@@ -58,7 +58,7 @@ class ContainerTests(unittest.TestCase):
 
     def test_should_post_logical_port(self):
         poster = MagicMock()
-        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, poster)
+        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, poster, MagicMock())
         p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
         p.container_ip = '192.168.0.2'
         p.router_ip = '192.168.0.1'

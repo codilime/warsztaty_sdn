@@ -6,6 +6,7 @@ import logging
 from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
 from sdn.controller.router import Router
+from sdn.controller.container import Container
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -53,3 +54,7 @@ class Controller(object):
         port.underlay_network_ip = self.get_network(port.network.id).ip
         self.router.add_logical_port(port)
         port.container.add_logical_port(port)
+
+    def add_container(self, id: str) -> None:
+        container = Container(id=id, ip='', poster=None, docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
+        container.start()

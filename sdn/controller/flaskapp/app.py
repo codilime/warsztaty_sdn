@@ -90,8 +90,7 @@ def create_container():
 
     try:
         data = request.get_json()
-        container = Container(id=data['id'], ip='', poster=None) #FIXME this should be looked up in an in-memory db
-        container.start()
+        controller.add_container(id=data['id'])
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error creating network',
@@ -105,7 +104,7 @@ def delete_container():
 
     try:
         data = request.get_json()
-        container = Container(id=data['id'], ip='', poster=None) #FIXME this should be looked up in an in-memory db
+        container = Container(id=data['id'], ip='', poster=None, docker_client=controller.docker_client) #FIXME this should be looked up in an in-memory db
         container.stop()
         return 'Success\n'
     except:
@@ -123,7 +122,8 @@ def create_logical_port():
         raw_container = data.get('container')
         container = Container(id=raw_container['id'],
                               ip=raw_container['ip'],
-                              poster=requests)
+                              poster=requests,
+                              docker_client=controller.docker_client)
         network = controller.get_network(data.get('net_id'))
         new_lp = LogicalPort(container=container, network=network)
         controller.add_logical_port(new_lp)
