@@ -38,6 +38,5 @@ class TestAgentFlaskaap(unittest.TestCase):
         data = {}
         rv = self.client.post('/create/logical_port', data=json.dumps(data),
                               content_type='application/json')
-        print(rv.data)
         self.assertEqual(b'Failed, not enough data\n', rv.data)
         self.assertEqual(400, rv.status_code)
