@@ -1,6 +1,6 @@
 certifi==2018.4.16
 chardet==3.0.4
-docker==3.3.0
+docker>=3.0.0,<3.0.1
 docker-pycreds==0.2.3
 idna==2.6
 requests==2.18.4
