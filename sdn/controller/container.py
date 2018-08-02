@@ -1,3 +1,4 @@
+import docker
 import logging
 import json
 
@@ -14,6 +15,7 @@ class Container(object):
         self.ip = ip
         self.poster = poster
         self.logical_ports = []
+        self.__container = None
 
     # TODO commented not to use LogicalPort in typing, which currently causes looped imports
     # def add_logical_port(self, port: LogicalPort) -> None:
@@ -30,3 +32,10 @@ class Container(object):
                          headers={"content-type": "application/json"},
                          data=data)
         self.logical_ports.append(port)
+
+    def start(self):
+        client = docker.from_env()
+        self.__container = client.containers.run('sdn-agent', name=self.id, detach=True, remove=True)
+
+    def stop(self):
+        self.__container.stop()
