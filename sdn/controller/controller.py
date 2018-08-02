@@ -9,17 +9,18 @@ from sdn.controller.router import Router
 from sdn.controller.container import Container
 from typing import Optional
 
+from docker.client import DockerClient
 logger = logging.getLogger(__name__)
 
 
 class Controller(object):
-    def __init__(self, router: Router, docker_client: Optional[docker.DockerClient] = None) -> None:
+    def __init__(self, router: Router, docker_client: Optional[DockerClient] = None) -> None:
         self.router = router
         self.docker_client = docker_client
         self.ipam_pools = {}
         self.networks = {}
 
-    def clean(self):
+    def clean(self) -> None:
         self.ipam_pools = {}
         self.networks = {}
 

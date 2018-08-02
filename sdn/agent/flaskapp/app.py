@@ -5,6 +5,7 @@ from sdn.agent.logical_port import LogicalPort, CommandExecutor
 from sdn.config.flask_config import get_config
 
 
+from typing import Tuple
 app = Flask('Agent')
 config = get_config()
 debug_mode = config.getboolean('agent', 'debug')
@@ -12,18 +13,18 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/hello', methods=['GET'])
-def hello():
+def hello() -> str:
     return str('hello')
 
 
 @app.route('/ping/<path:target>', methods=['GET'])
-def ping_target(target):
+def ping_target(target: str) -> str:
     sweeper = PingSweep()
     return str(sweeper.sweep(target=target))
 
 
 @app.route('/create/logical_port', methods=['POST'])
-def create_logical_port():
+def create_logical_port() -> Tuple[str, int]:
     data = request.get_json()
     logging.debug("Received %s", str(data))
     try:

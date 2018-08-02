@@ -1,8 +1,8 @@
+import json
+import logging
+
 import docker
 import docker.errors
-import logging
-import json
-
 import requests
 
 # TODO Add this to typing information
@@ -25,26 +25,25 @@ class Container(object):
     def add_logical_port(self, port) -> None:
         logger.info("Creating logical port on network %s on %s", port.network.ip, self.id)
         data = json.dumps({
-                             "net_id": port.network.id,
-                             "net_ip": str(port.underlay_network_ip),
-                             "router_ip": str(port.router_ip),
-                             "ip": str(port.container_ip)},
-                        sort_keys=True)
+            "net_id": port.network.id,
+            "net_ip": str(port.underlay_network_ip),
+            "router_ip": str(port.router_ip),
+            "ip": str(port.container_ip)},
+            sort_keys=True)
         logging.debug("Sending %s to %s", data, self.ip)
         self.poster.post("http://" + self.ip + ":8090/create/logical_port",
                          headers={"content-type": "application/json"},
                          data=data)
         self.logical_ports.append(port)
 
-    def start(self):
+    def start(self) -> None:
         logger.info("Starting %s based on %s image", self.id, Container.IMAGE)
         self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True)
 
-    def stop(self):
+    def stop(self) -> None:
         logger.info("Removing container %s", self.id)
         try:
             c = self.docker_client.containers.get(self.id)
             c.remove(force=True)
         except docker.errors.NotFound:
             logger.info("Container %s already removed", self.id)
-

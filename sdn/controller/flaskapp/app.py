@@ -1,15 +1,18 @@
 import logging
-import requests
 import traceback
+from typing import Dict, Optional
+
+import requests
 from docker import DockerClient
 from flask import Flask, request, jsonify
-from sdn.controller.controller import Controller
-from sdn.controller.router import Router
-from sdn.controller.network import Network
-from sdn.controller.logical_port import LogicalPort
-from sdn.controller.container import Container
-from sdn.config.flask_config import get_config
+from flask.wrappers import Response
 
+from sdn.config.flask_config import get_config
+from sdn.controller.container import Container
+from sdn.controller.controller import Controller
+from sdn.controller.logical_port import LogicalPort
+from sdn.controller.network import Network
+from sdn.controller.router import Router
 
 app = Flask('Controller')
 config = get_config()
@@ -25,35 +28,35 @@ controller = Controller(Router(id=config.get('router', 'docker_id'),
 
 class ServerError(Exception):
 
-    def __init__(self, message, status_code, payload=None):
+    def __init__(self, message: str, status_code: int, payload: Optional[str] = None) -> None:
         Exception.__init__(self)
         self.message, self.status_code, self.payload = message, status_code, payload
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, str]:
         return {'message': self.message, 'payload': self.payload or {}}
 
 
 @app.errorhandler(ServerError)
-def handle_invalid_usage(error):
+def handle_invalid_usage(error: ServerError) -> Response:
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
 
-
-def _assert_proper_request(req):
-    if (req.content_type != 'application/json' or not hasattr(req, 'json')):
+# TODO What type does req have?
+def _assert_proper_request(req) -> None:
+    if req.content_type != 'application/json' or not hasattr(req, 'json'):
         raise ServerError(message='Malformed request, expected json payload and type',
-                         status_code=400)
+                          status_code=400)
 
 
 @app.route('/hello', methods=['GET'])
-def hello():
+def hello() -> str:
     return str('hello')
 
 
 @app.route('/')
 @app.route('/index')
-def get_index():
+def get_index() -> str:
     return '<br/><br/>'.join([
         '<b>Available endpoints:</b>',
         '<ul><li>/create/network <br>POST - {"name": "xyz", "cidr": "10.20.0.0/16"}</li>',
@@ -63,13 +66,13 @@ def get_index():
 
 
 @app.route('/force_clean', methods=['POST'])
-def force_clean():
+def force_clean() -> str:
     controller.clean()
     return 'Success\n'
 
 
 @app.route('/create/network', methods=['POST'])
-def create_network():
+def create_network() -> str:
     _assert_proper_request(request)
 
     try:
@@ -85,7 +88,7 @@ def create_network():
 
 
 @app.route('/create/container', methods=['POST'])
-def create_container():
+def create_container() -> str:
     _assert_proper_request(request)
 
     try:
@@ -99,12 +102,13 @@ def create_container():
 
 
 @app.route('/delete/container', methods=['POST'])
-def delete_container():
+def delete_container() -> str:
     _assert_proper_request(request)
 
     try:
         data = request.get_json()
-        container = Container(id=data['id'], ip='', poster=None, docker_client=controller.docker_client) #FIXME this should be looked up in an in-memory db
+        container = Container(id=data['id'], ip='', poster=None,
+                              docker_client=controller.docker_client)  # FIXME this should be looked up in an in-memory db
         container.stop()
         return 'Success\n'
     except:
@@ -114,7 +118,7 @@ def delete_container():
 
 
 @app.route('/create/logical_port', methods=['POST'])
-def create_logical_port():
+def create_logical_port() -> str:
     _assert_proper_request(request)
 
     try:

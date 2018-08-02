@@ -1,5 +1,4 @@
 import logging
-import re
 import subprocess
 
 logger = logging.getLogger(__name__)
@@ -7,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 class PingSweep(object):
     @staticmethod
-    def sweep(target):
+    def sweep(target: str) -> int:
         logger.info("Checking availability of %s", target)
         result = subprocess.run(['ping', '-c1', target])
         logging.debug('Stdout: %s', result.stdout)
