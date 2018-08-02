@@ -15,19 +15,19 @@ vagrant ssh
 
 2) budowanie images
 ```bash
-cd vm/playbooks
+cd vm/build_vm/playbooks
 ansible-playbook -i inv.yml build.yml
 ```
 
 3) Uruchamianie kontroller i rutera
 ```bash
-cd vm/playbooks
+cd vm/build_vm/playbooks
 ansible-playbook -i inv.yml run.yml
 ```
 
 4) Restartowanie kontroller i rutera
 ```bash
-cd vm/playbooks
+cd vm/build_vm/playbooks
 docker-compose restart
 ```
 
