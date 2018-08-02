@@ -3,7 +3,7 @@ import json
 from ..app import app
 
 
-class TestAgentFlaskaap(unittest.TestCase):
+class TestAgentFlaskapp(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
 
