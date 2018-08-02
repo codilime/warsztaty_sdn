@@ -3,11 +3,16 @@ import netaddr
 import itertools
 import logging
 
+from controller.logical_port import LogicalPort
+from controller.network import Network
+from controller.router import Router
+from typing import Optional
+
 logger = logging.getLogger(__name__)
 
 
 class Controller(object):
-    def __init__(self, router, docker_client=None):
+    def __init__(self, router: Router, docker_client: Optional[docker.DockerClient] = None) -> None:
         self.router = router
         self.docker_client = docker_client
         self.ipam_pools = {}
@@ -17,18 +22,18 @@ class Controller(object):
         self.ipam_pools = {}
         self.networks = {}
 
-    def add_network(self, network):
+    def add_network(self, network: Network) -> None:
         logger.info("Adding network %s", network.ip)
         subnets = netaddr.IPNetwork(network.ip).subnet(29)
-        self.ipam_pools[network.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        self.ipam_pools[nnetwork.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
 
         self.router.add_network(network)
         self.networks[network.id] = network
 
-    def get_network(self, id):
+    def get_network(self, id: str) -> Network:
         return self.networks[id]
 
-    def add_logical_port(self, port):
+    def add_logical_port(self, port: LogicalPort) -> None:
         logger.info("Adding logical port on %s for %s", port.network.id, port.container.id)
         pool = next(self.ipam_pools[port.network.id])
         hosts = pool.iter_hosts()
