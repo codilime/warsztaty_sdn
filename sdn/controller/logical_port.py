@@ -1,6 +1,6 @@
 # TODO Add this to typing information
 # from controller.container import Container
-from controller.network import Network
+from sdn.controller.network import Network
 
 
 class LogicalPort(object):

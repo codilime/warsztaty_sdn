@@ -49,7 +49,6 @@ class Container(object):
         except docker.errors.NotFound:
             logger.info("Container %s already removed", self.id)
 
-
     def __get_docker_client(self):
         if self.docker_client is None:
             self.docker_client = docker.from_env()

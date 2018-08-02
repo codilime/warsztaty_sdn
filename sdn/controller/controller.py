@@ -3,9 +3,9 @@ import netaddr
 import itertools
 import logging
 
-from controller.logical_port import LogicalPort
-from controller.network import Network
-from controller.router import Router
+from sdn.controller.logical_port import LogicalPort
+from sdn.controller.network import Network
+from sdn.controller.router import Router
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ class Controller(object):
     def add_network(self, network: Network) -> None:
         logger.info("Adding network %s", network.ip)
         subnets = netaddr.IPNetwork(network.ip).subnet(29)
-        self.ipam_pools[nnetwork.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        self.ipam_pools[network.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
 
         self.router.add_network(network)
         self.networks[network.id] = network

@@ -2,8 +2,8 @@ import json
 import logging
 
 import requests
-from controller.logical_port import LogicalPort
-from controller.network import Network
+from sdn.controller.logical_port import LogicalPort
+from sdn.controller.network import Network
 
 logger = logging.getLogger(__name__)
 
