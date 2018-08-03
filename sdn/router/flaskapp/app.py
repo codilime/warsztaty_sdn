@@ -14,19 +14,19 @@ router = Router(CommandExecutor, InterfaceFinder)
 
 
 @app.route('/hello', methods=['GET'])
-def hello():
+def hello() -> str:
     return str('hello')
 
 
 @app.route('/create/network', methods=['POST'])
-def create_network():
+def create_network() -> str:
     data = request.get_json()
     router.add_network(name=data['name'])
     return 'Success\n'
 
 
 @app.route('/create/logical_port', methods=['POST'])
-def create_logical_port():
+def create_logical_port() -> str:
     data = request.get_json()
     router.add_logical_port(net=data['name'],
                             ip=data['ip'])
