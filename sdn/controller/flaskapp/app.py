@@ -5,8 +5,7 @@ from typing import Dict, Optional
 import requests
 from docker import DockerClient
 from flask import Flask, request, jsonify
-from flask.wrappers import Response
-
+from flask.wrappers import Response, Request
 from sdn.config.flask_config import get_config
 from sdn.controller.container import Container
 from sdn.controller.controller import Controller
@@ -42,8 +41,8 @@ def handle_invalid_usage(error: ServerError) -> Response:
     response.status_code = error.status_code
     return response
 
-# TODO What type does req have?
-def _assert_proper_request(req) -> None:
+
+def _assert_proper_request(req: Request) -> None:
     if req.content_type != 'application/json' or not hasattr(req, 'json'):
         raise ServerError(message='Malformed request, expected json payload and type',
                           status_code=400)
