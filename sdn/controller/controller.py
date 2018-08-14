@@ -7,7 +7,7 @@ from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
 from sdn.controller.router import Router
 from sdn.controller.container import Container
-from typing import Optional, ValuesView, Sequence
+from typing import Optional, Sequence
 
 from docker.client import DockerClient
 

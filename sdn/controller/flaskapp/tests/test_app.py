@@ -5,6 +5,7 @@ from unittest.mock import patch, MagicMock
 
 from sdn.controller.container import Container
 from sdn.controller.router import Router
+from docker.client import DockerClient
 
 
 class Req(object):
@@ -22,7 +23,6 @@ class TestControllerFlaskaap(unittest.TestCase):
     CONTAINER_GREEN_ID = "green-id"
 
     def setUp(self):
-        controller.add_logical_port = MagicMock(return_value=1)
         self.client = app.test_client()
 
     def test_hello(self):
@@ -168,8 +168,8 @@ class TestControllerFlaskaap(unittest.TestCase):
                               content_type='application/json')
 
         data_net = {
-            'name': 'ala',
-            'cidr': '192.168.0.0/24'
+            'id': 'ala',
+            'ip': '192.168.0.0/24'
         }
         self.client.post('/create/network', data=json.dumps(data_net),
                               content_type='application/json')
@@ -189,8 +189,8 @@ class TestControllerFlaskaap(unittest.TestCase):
     def test_create_logical_port_fail_without_container(self,  mock, mock2, mock3):
         with patch.object(controller, 'add_logical_port') as mock:
             data_net = {
-                'name': 'ala',
-                'cidr': '192.168.0.0/24'
+                'id': 'ala',
+                'ip': '192.168.0.0/24'
             }
             self.client.post('/create/network', data=json.dumps(data_net),
                                   content_type='application/json')
@@ -203,3 +203,38 @@ class TestControllerFlaskaap(unittest.TestCase):
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
             self.assertTrue('Internal server error creating logical port' in data['message'])
+
+    @patch.object(DockerClient, 'networks')
+    @patch.object(Router, 'add_network')
+    @patch.object(Router, 'add_logical_port')
+    @patch.object(Container, 'start')
+    @patch.object(Container, 'add_logical_port')
+    def test_should_list_logical_ports(self, mock, mock2, mock3, mock4, mock5):
+        data = {
+            'id': 'kot',
+        }
+        self.client.post('/create/container', data=json.dumps(data),
+                              content_type='application/json')
+
+        data_net = {
+            'id': 'ala',
+            'ip': '192.168.0.0/24'
+        }
+        rv = self.client.post('/create/network', data=json.dumps(data_net),
+                              content_type='application/json')
+        self.assertEqual(200, rv.status_code)
+
+        data_lp = {
+            'net_id': 'ala',
+            'container':
+                {'id': 'kot'}
+        }
+        rv = self.client.post('/create/logical_port', data=json.dumps(data_lp),
+                              content_type='application/json')
+        self.assertEqual(200, rv.status_code)
+
+        rv = self.client.get('/logical_ports')
+
+        self.assertEqual(200, rv.status_code)
+        response = json.loads(rv.data.decode('utf-8'))
+        self.assertEqual([data_lp], response)

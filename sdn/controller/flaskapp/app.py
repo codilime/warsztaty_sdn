@@ -43,6 +43,13 @@ class DictJsonEncoder(JSONEncoder):
             return {"id": o.id}
         elif isinstance(o, Network):
             return o.__dict__
+        elif isinstance(o, LogicalPort):
+            return {
+                "net_id": o.network.id,
+                "container": {
+                     "id": o.container.id
+                }
+            }
         return super(DictJsonEncoder, self).default(o)
 
 @app.errorhandler(ServerError)
@@ -161,6 +168,15 @@ def create_logical_port() -> str:
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
+
+@app.route('/logical_ports', methods=['GET'])
+def list_logical_ports() -> str:
+    try:
+        return json.dumps(controller.list_logical_ports(), cls=DictJsonEncoder)
+    except:
+        raise ServerError(message='Internal server error when listing logical_ports',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
 
 if __name__ == '__main__':
     app.run(config.get('controller', 'listen_address'),
