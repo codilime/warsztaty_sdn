@@ -153,6 +153,13 @@ class ControllerTest(unittest.TestCase):
 
     def test_should_list_containers(self):
         ctrl = Controller(MagicMock(), MagicMock())
+        ctrl.add_container('c1')
+        ctrl.add_container('c2')
+
+        containers = ctrl.list_containers()
+
+        self.assertIn(Container('c1', MagicMock(), MagicMock(), MagicMock()), containers)
+        self.assertIn(Container('c2', MagicMock(), MagicMock(), MagicMock()), containers)
 
 
 if __name__ == '__main__':

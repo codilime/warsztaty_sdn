@@ -7,7 +7,7 @@ from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
 from sdn.controller.router import Router
 from sdn.controller.container import Container
-from typing import Optional
+from typing import Optional, ValuesView
 
 from docker.client import DockerClient
 
@@ -74,3 +74,6 @@ class Controller(object):
 
     def get_container(self, id: str) -> Container:
         return self.containers[id]
+
+    def list_containers(self) -> ValuesView[Container]:
+        return self.containers.values()

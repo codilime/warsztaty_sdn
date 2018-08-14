@@ -74,5 +74,13 @@ class ContainerTests(unittest.TestCase):
                                                        sort_keys=True),
                                        headers={'content-type': 'application/json'})
 
+    def test_should_compare_by_id(self):
+        same1 = Container(self.CONTAINER_ID, '10.0.0.1', MagicMock(), MagicMock())
+        same2 = Container(self.CONTAINER_ID, '', MagicMock(), MagicMock())
+        other = Container('other-id', '', MagicMock(), MagicMock())
+
+        self.assertEqual(same1, same2)
+        self.assertNotEqual(same1, other)
+
 if __name__ == '__main__':
     unittest.main()

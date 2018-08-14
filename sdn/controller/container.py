@@ -20,6 +20,9 @@ class Container(object):
         self.logical_ports = []
         self.docker_client = docker_client
 
+    def __eq__(self, other) -> bool:
+        return self.id == other.id
+
     # TODO commented not to use LogicalPort in typing, which currently causes looped imports
     # def add_logical_port(self, port: LogicalPort) -> None:
     def add_logical_port(self, port) -> None:
