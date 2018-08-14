@@ -95,7 +95,7 @@ def create_container() -> str:
         controller.add_container(id=data['id'])
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error creating network',
+        raise ServerError(message='Internal server error creating container',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
@@ -106,12 +106,10 @@ def delete_container() -> str:
 
     try:
         data = request.get_json()
-        container = Container(id=data['id'], ip='', poster=None,
-                              docker_client=controller.docker_client)  # FIXME this should be looked up in an in-memory db
-        container.stop()
+        controller.remove_container(id=data['id'])
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error creating network',
+        raise ServerError(message='Internal server error deleting a container',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 

@@ -61,3 +61,7 @@ class Controller(object):
         container = Container(id=id, ip='', poster=None,
                               docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
         container.start()
+
+    def remove_container(self, id: str) -> None:
+        container = Container(id=id, ip='', poster=None, docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
+        container.stop()

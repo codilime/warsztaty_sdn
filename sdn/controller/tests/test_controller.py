@@ -110,6 +110,17 @@ class ControllerTest(unittest.TestCase):
 
         docker_client.containers.run.assert_called()
 
+    def test_should_stop_containers(self):
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+        container_mock = MagicMock()
+        docker_client = MagicMock()
+        docker_client.containers.get = MagicMock(return_value=container_mock)
+        ctrl = Controller(r, docker_client)
+        ctrl.remove_container('container-id')
+
+        container_mock.remove.assert_called()
+
     def test_clean(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
