@@ -9,3 +9,8 @@ class LogicalPort(object):
     def __init__(self, container, network: Network) -> None:
         self.container = container
         self.network = network
+
+        # Will be filled in later
+        self.router_ip: str = None
+        self.container_ip: str = None
+        self.underlay_network_ip: str = None

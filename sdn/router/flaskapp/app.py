@@ -4,7 +4,6 @@ from sdn.router.router import Router, CommandExecutor
 from sdn.router.interface_finder import InterfaceFinder
 from sdn.config.flask_config import get_config
 
-
 app = Flask('Router')
 config = get_config()
 debug_mode = config.getboolean('router', 'debug')
@@ -34,6 +33,6 @@ def create_logical_port() -> str:
 
 
 if __name__ == '__main__':
-    app.run(config.get('router','listen_address'),
+    app.run(config.get('router', 'listen_address'),
             config.getint('router', 'listen_port'),
             debug_mode)

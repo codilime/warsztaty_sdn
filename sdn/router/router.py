@@ -1,6 +1,6 @@
 import logging
 import subprocess
-from typing import List
+from typing import List, Type
 
 from .interface_finder import InterfaceFinder
 
@@ -15,7 +15,7 @@ class CommandExecutor(object):
 
 class Router(object):
 
-    def __init__(self, command_executor: CommandExecutor, interface_finder: InterfaceFinder) -> None:
+    def __init__(self, command_executor: Type[CommandExecutor], interface_finder: Type[InterfaceFinder]) -> None:
         self.command_executor = command_executor
         self.interface_finder = interface_finder
         self.networks = {}

@@ -1,7 +1,6 @@
 import os
 from configparser import ConfigParser
 
-
 CONFIG_FILE = 'global.conf'
 
 

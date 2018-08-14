@@ -35,10 +35,10 @@ class RouterTests(unittest.TestCase):
 
         r.add_network(n)
 
-        poster.post.assert_called_with(self.ROUTER_URL+"/create/network",
+        poster.post.assert_called_with(self.ROUTER_URL + "/create/network",
                                        data=json.dumps({"id": "net1"}, sort_keys=True),
                                        headers={'content-type': 'application/json'},
-        )
+                                       )
 
     def test_should_store_single_logical_port(self):
         p = LogicalPort(None, Network('net1', '192.168.0.0/24'))

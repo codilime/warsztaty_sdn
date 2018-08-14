@@ -25,7 +25,7 @@ class TestAgentFlaskapp(unittest.TestCase):
     def test_create_logical_port(self):
         data = {
             'net': 'ala',
-            'net_ip' : '192.168.0.0/24',
+            'net_ip': '192.168.0.0/24',
             'router_ip': '10.0.0.1',
             'local_ip': '192.168.0.11'
         }

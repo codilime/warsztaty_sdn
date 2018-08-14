@@ -28,8 +28,11 @@ class RouterTest(unittest.TestCase):
         r.add_logical_port("net1", "10.0.0.1")
         r.add_logical_port("net1", "10.0.1.1")
 
-        self.assertListEqual(cmds.commands[0], ['iptables', '-A', 'FORWARD', '-i', 'eth0', '-o', 'eth1', '-j', 'ACCEPT'])
-        self.assertListEqual(cmds.commands[1], ['iptables', '-A', 'FORWARD', '-i', 'eth1', '-o', 'eth0', '-j', 'ACCEPT'])
+        self.assertListEqual(cmds.commands[0],
+                             ['iptables', '-A', 'FORWARD', '-i', 'eth0', '-o', 'eth1', '-j', 'ACCEPT'])
+        self.assertListEqual(cmds.commands[1],
+                             ['iptables', '-A', 'FORWARD', '-i', 'eth1', '-o', 'eth0', '-j', 'ACCEPT'])
+
 
 if __name__ == '__main__':
     unittest.main()

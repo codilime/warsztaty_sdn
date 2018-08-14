@@ -10,6 +10,7 @@ from sdn.controller.container import Container
 from typing import Optional
 
 from docker.client import DockerClient
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,7 +28,7 @@ class Controller(object):
     def add_network(self, network: Network) -> None:
         logger.info("Adding network %s", network.ip)
         subnets = netaddr.IPNetwork(network.ip).subnet(29)
-        self.ipam_pools[network.id] = itertools.islice(subnets, 2) # we've got at most 2 subnets
+        self.ipam_pools[network.id] = itertools.islice(subnets, 2)  # we've got at most 2 subnets
 
         self.router.add_network(network)
         self.networks[network.id] = network
@@ -39,7 +40,7 @@ class Controller(object):
         logger.info("Adding logical port on %s for %s", port.network.id, port.container.id)
         pool = next(self.ipam_pools[port.network.id])
         hosts = pool.iter_hosts()
-        next(hosts) #skip docker default gateway
+        next(hosts)  # skip docker default gateway
         router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
@@ -57,5 +58,6 @@ class Controller(object):
         port.container.add_logical_port(port)
 
     def add_container(self, id: str) -> None:
-        container = Container(id=id, ip='', poster=None, docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
+        container = Container(id=id, ip='', poster=None,
+                              docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
         container.start()
