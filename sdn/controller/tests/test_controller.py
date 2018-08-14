@@ -40,6 +40,18 @@ class ControllerTest(unittest.TestCase):
         stored_net = ctrl.get_network("net1")
         self.assertEqual(n, stored_net)
 
+    def test_should_list_networks(self):
+        ctrl = Controller(MagicMock(), MagicMock())
+        n1 = Network('n1', '10.0.0.0/24')
+        n2 = Network('n2', '10.0.1.0/24')
+        ctrl.add_network(n1)
+        ctrl.add_network(n2)
+
+        networks = ctrl.list_networks()
+
+        self.assertIn(n1, networks)
+        self.assertIn(n2, networks)
+
     def test_should_post_logical_port_to_router(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
@@ -100,6 +112,22 @@ class ControllerTest(unittest.TestCase):
         )
         mocked_network.connect.assert_any_call(self.ROUTER_ID, ipv4_address='192.168.0.2')
         mocked_network.connect.assert_any_call(self.CONTAINER_RED_ID, ipv4_address='192.168.0.3')
+
+    def test_should_list_logical_ports(self):
+        ctrl = Controller(MagicMock(), MagicMock())
+        n = Network("net1", "192.168.0.0/24")
+        ctrl.add_network(n)
+        c1 = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock(), MagicMock())
+        c2 = Container(self.CONTAINER_GREEN_ID, self.CONTAINER_GREEN_URL, MagicMock(), MagicMock())
+        p1 = LogicalPort(c1, n)
+        p2 = LogicalPort(c2, n)
+        ctrl.add_logical_port(p1)
+        ctrl.add_logical_port(p2)
+
+        ports = ctrl.list_logical_ports()
+
+        self.assertIn(p1, ports)
+        self.assertIn(p2, ports)
 
     def test_should_start_containers(self):
         docker_client = MagicMock()

@@ -7,7 +7,7 @@ from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
 from sdn.controller.router import Router
 from sdn.controller.container import Container
-from typing import Optional, ValuesView
+from typing import Optional, ValuesView, Sequence
 
 from docker.client import DockerClient
 
@@ -21,6 +21,7 @@ class Controller(object):
         self.ipam_pools = {}
         self.networks = {}
         self.containers = {}
+        self.logical_ports = []
 
     def clean(self) -> None:
         self.ipam_pools = {}
@@ -39,6 +40,9 @@ class Controller(object):
 
     def get_network(self, id: str) -> Network:
         return self.networks[id]
+
+    def list_networks(self) -> ValuesView[Network]:
+        return self.networks.values()
 
     def add_logical_port(self, port: LogicalPort) -> None:
         logger.info("Adding logical port on %s for %s", port.network.id, port.container.id)
@@ -60,6 +64,11 @@ class Controller(object):
         port.underlay_network_ip = self.get_network(port.network.id).ip
         self.router.add_logical_port(port)
         port.container.add_logical_port(port)
+
+        self.logical_ports.append(port)
+
+    def list_logical_ports(self) -> Sequence[LogicalPort]:
+        return self.logical_ports
 
     def add_container(self, id: str) -> None:
         container = Container(id=id, ip='', poster=None,
