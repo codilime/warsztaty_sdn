@@ -150,6 +150,19 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(ctrl.networks, {})
         self.assertEqual(ctrl.networks, {})
 
+    def test_should_remove_containers_when_cleaned(self):
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+        container_mock = MagicMock()
+        docker_client = MagicMock()
+        docker_client.containers.get = MagicMock(return_value=container_mock)
+        ctrl = Controller(r, docker_client)
+        ctrl.add_container('container-id')
+
+        ctrl.clean()
+
+        container_mock.remove.assert_called()
+
 
 if __name__ == '__main__':
     unittest.main()

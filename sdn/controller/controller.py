@@ -25,6 +25,9 @@ class Controller(object):
     def clean(self) -> None:
         self.ipam_pools = {}
         self.networks = {}
+        for _, container in self.containers.items():
+            container.stop()
+        self.containers.clear()
 
     def add_network(self, network: Network) -> None:
         logger.info("Adding network %s", network.ip)

@@ -98,16 +98,20 @@ class TestControllerFlaskaap(unittest.TestCase):
         self.assertEqual(200, rv.status_code)
         mock.assert_called()
 
+    @patch.object(Container, 'start')
     @patch.object(Container, 'stop')
-    def test_stop_container(self, mock):
+    def test_stop_container(self, start_mock, stop_mock):
         data = {
             'id': 'ala',
         }
+        self.client.post('/create/container', data=json.dumps(data),
+                         content_type='application/json')
+
         rv = self.client.post('/delete/container', data=json.dumps(data),
                               content_type='application/json')
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
-        mock.assert_called()
+        stop_mock.assert_called()
 
     @patch.object(controller, 'add_logical_port')
     @patch.object(controller, 'get_network')
