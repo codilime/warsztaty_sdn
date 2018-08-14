@@ -7,11 +7,13 @@ import json
 from docker import DockerClient
 from flask import Flask, request, jsonify
 from flask.wrappers import Response, Request
+from flask.json import JSONEncoder
 from sdn.config.flask_config import get_config
 from sdn.controller.controller import Controller
 from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
 from sdn.controller.router import Router
+from sdn.controller.container import Container
 
 app = Flask('Controller')
 config = get_config()
@@ -35,9 +37,13 @@ class ServerError(Exception):
         return {'message': self.message, 'payload': self.payload or {}}
 
 
-class DictJsonEncoder(json.JSONEncoder):
+class DictJsonEncoder(JSONEncoder):
     def default(self, o):
-        return o.__dict__
+        if isinstance(o, Container):
+            return {"id": o.id}
+        elif isinstance(o, Network):
+            return o.__dict__
+        return super(DictJsonEncoder, self).default(o)
 
 @app.errorhandler(ServerError)
 def handle_invalid_usage(error: ServerError) -> Response:
@@ -95,7 +101,7 @@ def list_networks() -> str:
     try:
         return json.dumps(controller.list_networks(), cls=DictJsonEncoder)
     except:
-        raise ServerError(message='Internal server error creating network',
+        raise ServerError(message='Internal server error when listing networks',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
@@ -124,6 +130,16 @@ def delete_container() -> str:
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error deleting a container',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+
+@app.route('/containers', methods=['GET'])
+def list_containers() -> str:
+    try:
+        return json.dumps(controller.list_containers(), cls=DictJsonEncoder)
+    except:
+        raise ServerError(message='Internal server error when listing containers',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 

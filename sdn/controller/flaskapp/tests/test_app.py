@@ -121,6 +121,27 @@ class TestControllerFlaskaap(unittest.TestCase):
         mock.assert_called()
 
     @patch.object(Container, 'start')
+    def test_should_list_containers(self, mock):
+        c1 = {
+            'id': 'ala',
+        }
+        self.client.post('/create/container', data=json.dumps(c1),
+                              content_type='application/json')
+        c2 = {
+            'id': 'ola',
+        }
+        self.client.post('/create/container', data=json.dumps(c2),
+                              content_type='application/json')
+
+        rv = self.client.get('/containers')
+
+        self.assertEqual(200, rv.status_code)
+
+        response = json.loads(rv.data.decode('utf-8'))
+        self.assertIn(c1, response)
+        self.assertIn(c2, response)
+
+    @patch.object(Container, 'start')
     @patch.object(Container, 'stop')
     def test_stop_container(self, start_mock, stop_mock):
         data = {
