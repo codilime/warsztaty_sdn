@@ -117,9 +117,22 @@ class ControllerTest(unittest.TestCase):
         docker_client = MagicMock()
         docker_client.containers.get = MagicMock(return_value=container_mock)
         ctrl = Controller(r, docker_client)
+        ctrl.add_container('container-id')
         ctrl.remove_container('container-id')
 
         container_mock.remove.assert_called()
+        self.assertEqual(ctrl.containers, {})
+
+    def test_should_lookup_containers_by_id(self):
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+        docker_client = MagicMock()
+        ctrl = Controller(r, docker_client)
+        ctrl.add_container('container-id')
+
+        container = ctrl.get_container('container-id')
+
+        self.assertEqual(container.id, 'container-id')
 
     def test_clean(self):
         poster = MagicMock()

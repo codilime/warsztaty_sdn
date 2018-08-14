@@ -20,6 +20,7 @@ class Controller(object):
         self.docker_client = docker_client
         self.ipam_pools = {}
         self.networks = {}
+        self.containers = {}
 
     def clean(self) -> None:
         self.ipam_pools = {}
@@ -59,9 +60,14 @@ class Controller(object):
 
     def add_container(self, id: str) -> None:
         container = Container(id=id, ip='', poster=None,
-                              docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
+                              docker_client=self.docker_client)
         container.start()
+        self.containers[id] = container
 
     def remove_container(self, id: str) -> None:
-        container = Container(id=id, ip='', poster=None, docker_client=self.docker_client)  # FIXME this should be looked up in an in-memory db
+        container = self.containers[id]
         container.stop()
+        del self.containers[id]
+
+    def get_container(self, id: str) -> Container:
+        return self.containers[id]
