@@ -112,18 +112,24 @@ class TestControllerFlaskaap(unittest.TestCase):
     @patch.object(controller, 'add_logical_port')
     @patch.object(controller, 'get_network')
     @patch.object(controller, 'add_network')
-    def test_create_logical_port(self, mock, mock2, mock3):
+    @patch.object(Container, 'start')
+    def test_create_logical_port(self, mock, mock2, mock3, mock_start):
+        data = {
+            'id': 'kot',
+        }
+        self.client.post('/create/container', data=json.dumps(data),
+                              content_type='application/json')
+
         data_net = {
             'name': 'ala',
             'cidr': '192.168.0.0/24'
         }
         self.client.post('/create/network', data=json.dumps(data_net),
-                              content_type='applicatilogical_porton/json')
+                              content_type='application/json')
         data = {
             'net_id': 'ala',
             'container':
-                {'id': 'kot',
-                 'ip': '192.168.0.77'}
+                {'id': 'kot'}
         }
         rv = self.client.post('/create/logical_port', data=json.dumps(data),
                               content_type='application/json')
@@ -133,9 +139,8 @@ class TestControllerFlaskaap(unittest.TestCase):
     @patch.object(controller, 'add_logical_port')
     @patch.object(controller, 'get_network')
     @patch.object(controller, 'add_network')
-    def test_create_logical_port_fail(self,  mock, mock2, mock3):
+    def test_create_logical_port_fail_without_container(self,  mock, mock2, mock3):
         with patch.object(controller, 'add_logical_port') as mock:
-
             data_net = {
                 'name': 'ala',
                 'cidr': '192.168.0.0/24'
@@ -144,8 +149,7 @@ class TestControllerFlaskaap(unittest.TestCase):
                                   content_type='application/json')
             data = {
                 'net_id': 'ala',
-                'container':
-                    {'id': 'kot'}
+                # container data is missing
             }
             rv = self.client.post('/create/logical_port', data=json.dumps(data),
                                   content_type='application/json')

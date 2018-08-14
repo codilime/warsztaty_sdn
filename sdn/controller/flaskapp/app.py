@@ -121,10 +121,7 @@ def create_logical_port() -> str:
     try:
         data = request.get_json()
         raw_container = data.get('container')
-        container = Container(id=raw_container['id'],
-                              ip=raw_container['ip'],
-                              poster=requests,
-                              docker_client=controller.docker_client)
+        container = controller.get_container(raw_container['id'])
         network = controller.get_network(data.get('net_id'))
         new_lp = LogicalPort(container=container, network=network)
         controller.add_logical_port(new_lp)
