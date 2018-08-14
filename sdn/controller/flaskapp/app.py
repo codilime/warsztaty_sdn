@@ -3,11 +3,11 @@ import traceback
 from typing import Dict, Optional
 
 import requests
+import json
 from docker import DockerClient
 from flask import Flask, request, jsonify
 from flask.wrappers import Response, Request
 from sdn.config.flask_config import get_config
-from sdn.controller.container import Container
 from sdn.controller.controller import Controller
 from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
@@ -34,6 +34,10 @@ class ServerError(Exception):
     def to_dict(self) -> Dict[str, str]:
         return {'message': self.message, 'payload': self.payload or {}}
 
+
+class DictJsonEncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
 
 @app.errorhandler(ServerError)
 def handle_invalid_usage(error: ServerError) -> Response:
@@ -76,10 +80,20 @@ def create_network() -> str:
 
     try:
         data = request.get_json()
-        new_network = Network(net_id=data['name'],
-                              ip=data['cidr'])
+        new_network = Network(net_id=data['id'],
+                              ip=data['ip'])
         controller.add_network(new_network)
         return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error creating network',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+
+@app.route('/networks', methods=['GET'])
+def list_networks() -> str:
+    try:
+        return json.dumps(controller.list_networks(), cls=DictJsonEncoder)
     except:
         raise ServerError(message='Internal server error creating network',
                           status_code=500,

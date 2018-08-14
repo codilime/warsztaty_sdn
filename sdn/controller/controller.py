@@ -41,8 +41,8 @@ class Controller(object):
     def get_network(self, id: str) -> Network:
         return self.networks[id]
 
-    def list_networks(self) -> ValuesView[Network]:
-        return self.networks.values()
+    def list_networks(self) -> Sequence[Network]:
+        return list(self.networks.values())
 
     def add_logical_port(self, port: LogicalPort) -> None:
         logger.info("Adding logical port on %s for %s", port.network.id, port.container.id)
@@ -84,5 +84,5 @@ class Controller(object):
     def get_container(self, id: str) -> Container:
         return self.containers[id]
 
-    def list_containers(self) -> ValuesView[Container]:
-        return self.containers.values()
+    def list_containers(self) -> Sequence[Container]:
+        return list(self.containers.values())

@@ -4,6 +4,7 @@ from ..app import app, ServerError, _assert_proper_request, controller
 from unittest.mock import patch, MagicMock
 
 from sdn.controller.container import Container
+from sdn.controller.router import Router
 
 
 class Req(object):
@@ -68,8 +69,8 @@ class TestControllerFlaskaap(unittest.TestCase):
     def test_create_network(self):
         with patch.object(controller, 'add_network') as mock:
             data = {
-                'name': 'ala',
-                'cidr': '192.168.0.0/24'
+                'id': 'ala',
+                'ip': '192.168.0.0/24'
             }
             rv = self.client.post('/create/network', data=json.dumps(data),
                                   content_type='application/json')
@@ -79,13 +80,34 @@ class TestControllerFlaskaap(unittest.TestCase):
     def test_create_network_fail(self):
         with patch.object(controller, 'add_network') as mock:
             data = {
-                'name': 'ala'
+                'id': 'ala'
             }
             rv = self.client.post('/create/network', data=json.dumps(data),
                                   content_type='application/json')
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
             self.assertTrue('Internal server error creating network' in data['message'])
+
+    @patch.object(Router, 'add_network')
+    def test_should_list_networks(self, router_mock):
+        n1 = {
+            'id': 'ala',
+            'ip': '192.168.0.0/24'
+        }
+        self.client.post('/create/network', data=json.dumps(n1),
+                            content_type='application/json')
+        n2 = {
+            'id': 'ola',
+            'ip': '192.168.1.0/24'
+        }
+        self.client.post('/create/network', data=json.dumps(n2),
+                            content_type='application/json')
+
+        rv = self.client.get('/networks')
+        self.assertEqual(200, rv.status_code)
+        response = json.loads(rv.data.decode('utf-8'))
+        self.assertIn(n1, response)
+        self.assertIn(n2, response)
 
     @patch.object(Container, 'start')
     def test_start_container(self, mock):
