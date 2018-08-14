@@ -102,21 +102,17 @@ class ControllerTest(unittest.TestCase):
         mocked_network.connect.assert_any_call(self.CONTAINER_RED_ID, ipv4_address='192.168.0.3')
 
     def test_should_start_containers(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
         docker_client = MagicMock()
-        ctrl = Controller(r, docker_client)
+        ctrl = Controller(MagicMock(), docker_client)
         ctrl.add_container('container-id')
 
         docker_client.containers.run.assert_called()
 
     def test_should_stop_containers(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
         container_mock = MagicMock()
         docker_client = MagicMock()
         docker_client.containers.get = MagicMock(return_value=container_mock)
-        ctrl = Controller(r, docker_client)
+        ctrl = Controller(MagicMock(), docker_client)
         ctrl.add_container('container-id')
         ctrl.remove_container('container-id')
 
@@ -124,10 +120,7 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(ctrl.containers, {})
 
     def test_should_lookup_containers_by_id(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        docker_client = MagicMock()
-        ctrl = Controller(r, docker_client)
+        ctrl = Controller(MagicMock(), MagicMock())
         ctrl.add_container('container-id')
 
         container = ctrl.get_container('container-id')
@@ -135,9 +128,7 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(container.id, 'container-id')
 
     def test_clean(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        ctrl = Controller(r, MagicMock())
+        ctrl = Controller(MagicMock(), MagicMock())
 
         n = Network("net1", "192.168.0.0/24")
         ctrl.add_network(n)
@@ -148,20 +139,20 @@ class ControllerTest(unittest.TestCase):
         ctrl.clean()
 
         self.assertEqual(ctrl.networks, {})
-        self.assertEqual(ctrl.networks, {})
 
     def test_should_remove_containers_when_cleaned(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
         container_mock = MagicMock()
         docker_client = MagicMock()
         docker_client.containers.get = MagicMock(return_value=container_mock)
-        ctrl = Controller(r, docker_client)
+        ctrl = Controller(MagicMock(), docker_client)
         ctrl.add_container('container-id')
 
         ctrl.clean()
 
         container_mock.remove.assert_called()
+
+    def test_should_list_containers(self):
+        ctrl = Controller(MagicMock(), MagicMock())
 
 
 if __name__ == '__main__':
