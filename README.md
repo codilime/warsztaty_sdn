@@ -13,21 +13,28 @@ cd vm/build_vm
 vagrant ssh
 ```
 
-2) budowanie images
+
+1.1) Git clone (vm)
 ```bash
-cd vm/build_vm/playbooks
-ansible-playbook -i inv.yml build.yml
+cd /home/vagrant/Desktop/save/
+git clone https://github.com/codilime/warsztaty_sdn
 ```
 
-3) Uruchamianie kontroller i rutera
+2) budowanie images (vm)
 ```bash
-cd vm/build_vm/playbooks
-ansible-playbook -i inv.yml run.yml
+cd /home/vagrant/Desktop/save/warsztaty_sdn
+ansible-playbook playbooks/build.yml
 ```
 
-4) Restartowanie kontroller i rutera
+3) Uruchamianie kontroller i rutera (vm)
 ```bash
-cd vm/build_vm/playbooks
+cd /home/vagrant/Desktop/save/warsztaty_sdn
+ansible-playbook playbook/run.yml
+```
+
+4) Restartowanie kontroller i rutera (vm)
+```bash
+cd /home/vagrant/Desktop/save/warsztaty_sdn/playbooks
 docker-compose restart
 ```
 
