@@ -34,7 +34,7 @@ ansible-playbook -i inv.yml playbooks/run.yml
 
 4) Restartowanie kontroller i rutera (vm)
 ```bash
-cd /home/vagrant/Desktop/save/warsztaty_sdn/playbooks
+cd /home/vagrant/Desktop/save/warsztaty_sdn
 docker-compose restart
 ```
 
