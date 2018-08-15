@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class Container(object):
-    IMAGE = 'sdn-agent'
+    IMAGE = 'agent'
 
     def __init__(self, id: str, ip: str, poster: requests, docker_client: docker.DockerClient) -> None:
         self.id = id
