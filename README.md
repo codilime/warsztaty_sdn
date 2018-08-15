@@ -23,13 +23,13 @@ git clone https://github.com/codilime/warsztaty_sdn
 2) budowanie images (vm)
 ```bash
 cd /home/vagrant/Desktop/save/warsztaty_sdn
-ansible-playbook playbooks/build.yml
+ansible-playbook -i inv.yml playbooks/build.yml
 ```
 
 3) Uruchamianie kontroller i rutera (vm)
 ```bash
 cd /home/vagrant/Desktop/save/warsztaty_sdn
-ansible-playbook playbook/run.yml
+ansible-playbook -i inv.yml playbooks/run.yml
 ```
 
 4) Restartowanie kontroller i rutera (vm)
