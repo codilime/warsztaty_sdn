@@ -132,7 +132,7 @@ class ControllerTest(unittest.TestCase):
     def test_should_start_containers(self):
         docker_client = MagicMock()
         ctrl = Controller(MagicMock(), docker_client)
-        ctrl.add_container('container-id', '../..')
+        ctrl.add_container('container-id', 'sdn')
 
         docker_client.containers.run.assert_called()
 
@@ -141,7 +141,7 @@ class ControllerTest(unittest.TestCase):
         docker_client = MagicMock()
         docker_client.containers.get = MagicMock(return_value=container_mock)
         ctrl = Controller(MagicMock(), docker_client)
-        ctrl.add_container('container-id', '../..')
+        ctrl.add_container('container-id', 'sdn')
         ctrl.remove_container('container-id')
 
         container_mock.remove.assert_called()
@@ -149,7 +149,7 @@ class ControllerTest(unittest.TestCase):
 
     def test_should_lookup_containers_by_id(self):
         ctrl = Controller(MagicMock(), MagicMock())
-        ctrl.add_container('container-id', '../..')
+        ctrl.add_container('container-id', 'sdn')
 
         container = ctrl.get_container('container-id')
 
@@ -173,7 +173,7 @@ class ControllerTest(unittest.TestCase):
         docker_client = MagicMock()
         docker_client.containers.get = MagicMock(return_value=container_mock)
         ctrl = Controller(MagicMock(), docker_client)
-        ctrl.add_container('container-id', '../..')
+        ctrl.add_container('container-id', 'sdn')
 
         ctrl.clean()
 
@@ -181,8 +181,8 @@ class ControllerTest(unittest.TestCase):
 
     def test_should_list_containers(self):
         ctrl = Controller(MagicMock(), MagicMock())
-        ctrl.add_container('c1', '../..')
-        ctrl.add_container('c2', '../..')
+        ctrl.add_container('c1', 'sdn')
+        ctrl.add_container('c2', 'sdn')
 
         containers = ctrl.list_containers()
 

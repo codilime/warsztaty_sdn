@@ -39,7 +39,7 @@ class ContainerTests(unittest.TestCase):
         self.register_cleanup(self.CONTAINER_ID)
         c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock(), self.docker_client)
 
-        c.start(code_path='../..')
+        c.start(code_path='sdn')
         self.assertRunning(self.CONTAINER_ID)
 
         c.stop()

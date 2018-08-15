@@ -42,7 +42,7 @@ class Container(object):
 
     def start(self, code_path: str) -> None:
         abs_code_path = os.path.abspath(code_path)
-        logger.info("Starting %s based on %s image", self.id, Container.IMAGE)
+        logger.info("Starting %s based on %s image with code in %s", self.id, Container.IMAGE, abs_code_path)
         self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True,
                                           volumes={abs_code_path: {'bind': '/opt/sdn', 'mode': 'ro'}})
 
