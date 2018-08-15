@@ -11,9 +11,9 @@ class LogicalPort(object):
         self.network = network
 
         # Will be filled in later
-        self.router_ip: str = None
-        self.container_ip: str = None
-        self.underlay_network_ip: str = None
+        self.router_ip = None # str
+        self.container_ip = None # str
+        self.underlay_network_ip = None # str
 
     def __eq__(self, other) -> bool:
         return self.container == other.container and self.network == other.network
