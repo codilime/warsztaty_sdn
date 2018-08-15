@@ -7,4 +7,4 @@ ENV FLASK_APP=/opt/agent/flaskapp/app.py
 ENV PYTHONPATH=/opt/
 
 WORKDIR /opt
-CMD python3 -m agent.flaskapp.app
+CMD python3 -m sdn.agent.flaskapp.app
