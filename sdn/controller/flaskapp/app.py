@@ -119,7 +119,7 @@ def create_container() -> str:
 
     try:
         data = request.get_json()
-        controller.add_container(id=data['id'])
+        controller.add_container(id=data['id'], code_path=config.get('agent', 'sdn_path'))
         return 'Success\n'
     except:
         raise ServerError(message='Internal server error creating container',

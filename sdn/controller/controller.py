@@ -70,10 +70,10 @@ class Controller(object):
     def list_logical_ports(self) -> Sequence[LogicalPort]:
         return self.logical_ports
 
-    def add_container(self, id: str) -> None:
+    def add_container(self, id: str, code_path: str) -> None:
         container = Container(id=id, ip='', poster=None,
                               docker_client=self.docker_client)
-        container.start()
+        container.start(code_path)
         self.containers[id] = container
 
     def remove_container(self, id: str) -> None:

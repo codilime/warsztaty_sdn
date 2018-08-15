@@ -4,6 +4,7 @@ import logging
 import docker
 import docker.errors
 import requests
+import os
 
 # TODO Add this to typing information
 # from controller.logical_port import LogicalPort
@@ -39,9 +40,11 @@ class Container(object):
                          data=data)
         self.logical_ports.append(port)
 
-    def start(self) -> None:
+    def start(self, code_path: str) -> None:
+        abs_code_path = os.path.abspath(code_path)
         logger.info("Starting %s based on %s image", self.id, Container.IMAGE)
-        self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True)
+        self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True,
+                                          volumes={abs_code_path: {'bind': '/opt/sdn', 'mode': 'ro'}})
 
     def stop(self) -> None:
         logger.info("Removing container %s", self.id)
