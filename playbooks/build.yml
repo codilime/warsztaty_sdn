@@ -1,12 +1,12 @@
 ---
-
-- hosts: all
+- hosts: localhost
   gather_facts: no
+  become: true
   tasks:
     - name: Build sdn-base
       docker_image:
         name: sdn-base
-        path: '.'
+        path: '../'
         dockerfile: Dockerfile.base
         tag: latest
         nocache: true
@@ -14,7 +14,7 @@
     - name: Build images
       docker_image:
         name: '{{ item }}'
-        path: 'sdn'
+        path: '../sdn'
         dockerfile: 'build/Dockerfile.{{ item }}'
         pull: false
         tag: latest
