@@ -17,3 +17,10 @@
     project_src: '.'
     files: "{{inventory_dir}}/docker-compose.yml"
     state: present
+
+- name: Add sdn dir to global.config
+  ini_file:
+    path: "{{inventory_dir}}/sdn/config/global.conf"
+    section: agent
+    option: sdn_path
+    value: "{{inventory_dir}}/sdn/"
