@@ -4,7 +4,7 @@ all:
       ansible_connection: local
 
   vars:
-    warsztaty_path: "{{ playbook_dir }}"
+    warsztaty_path: "{{ inventory_dir }}"
     sdn_path: "{{ warsztaty_path }}/sdn"
     router_path: "{{ sdn_path }}/router"
     controller_path: "{{ sdn_path }}/controller"
