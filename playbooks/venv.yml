@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  gather_facts: no
+  become: true
+  tasks:
+    - name: Manually create the initial virtualenv
+      command: "python3.6 -m venv {{inventory_dir}}/venv/"
+
+    - name: Install python3.6-dev
+      apt:
+        name: python3.6-dev
+        state: present
+
+    - name: Install requirements
+      pip:
+        requirements: '{{inventory_dir}}/sdn/{{item}}/requirements.txt'
+        virtualenv: "{{inventory_dir}}/venv/"
+      with_items:
+        - controller
+        - router
+        - agent
