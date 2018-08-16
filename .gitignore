@@ -8,3 +8,4 @@ vm/ready_vm/.vagrant/
 vm/ready_vm/save/
 *.pyc
 docker-compose.yml
+venv
