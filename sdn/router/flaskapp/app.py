@@ -32,6 +32,11 @@ def create_logical_port() -> str:
     return 'Success\n'
 
 
+@app.route('/help', methods=['GET'])
+def list_routes():
+    return '\n'.join(['%s' % rule for rule in app.url_map.iter_rules()])
+
+
 if __name__ == '__main__':
     app.run(config.get('router', 'listen_address'),
             config.getint('router', 'listen_port'),

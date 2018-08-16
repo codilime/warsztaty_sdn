@@ -38,6 +38,11 @@ def create_logical_port() -> Tuple[str, int]:
         return 'Failed, not enough data\n', 400
 
 
+@app.route('/help', methods=['GET'])
+def list_routes():
+    return '\n'.join(['%s' % rule for rule in app.url_map.iter_rules()])
+
+
 if __name__ == '__main__':
     app.run(config.get('agent', 'listen_address'),
             config.getint('agent', 'listen_port'),

@@ -178,6 +178,11 @@ def list_logical_ports() -> str:
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
+@app.route('/help', methods=['GET'])
+def list_routes():
+    return '\n'.join(['%s' % rule for rule in app.url_map.iter_rules()])
+
+
 if __name__ == '__main__':
     app.run(config.get('controller', 'listen_address'),
             config.getint('controller', 'listen_port'),
