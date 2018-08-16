@@ -71,8 +71,7 @@ class Controller(object):
         return self.logical_ports
 
     def add_container(self, id: str, code_path: str) -> None:
-        container = Container(id=id, ip='', poster=None,
-                              docker_client=self.docker_client)
+        container = Container(id=id, poster=None, docker_client=self.docker_client)
         container.start(code_path)
         self.containers[id] = container
 

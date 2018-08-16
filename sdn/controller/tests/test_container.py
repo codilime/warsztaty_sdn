@@ -37,16 +37,17 @@ class ContainerTests(unittest.TestCase):
 
     def test_should_start_stop_container(self):
         self.register_cleanup(self.CONTAINER_ID)
-        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock(), self.docker_client)
+        c = Container(self.CONTAINER_ID, MagicMock(), self.docker_client)
 
         c.start(code_path='sdn')
         self.assertRunning(self.CONTAINER_ID)
+        self.assertNotEqual(c.ip, '')
 
         c.stop()
         self.assertNoContainer(self.CONTAINER_ID)
 
     def test_should_store_single_logical_port(self):
-        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, MagicMock(), MagicMock())
+        c = Container(self.CONTAINER_ID, MagicMock(), MagicMock())
         p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
         p.container_ip = '192.168.0.2'
         p.router_ip = '192.168.0.1'
@@ -58,7 +59,8 @@ class ContainerTests(unittest.TestCase):
 
     def test_should_post_logical_port(self):
         poster = MagicMock()
-        c = Container(self.CONTAINER_ID, self.CONTAINER_URL, poster, MagicMock())
+        c = Container(self.CONTAINER_ID, poster, MagicMock())
+        c.ip = self.CONTAINER_URL
         p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
         p.container_ip = '192.168.0.2'
         p.router_ip = '192.168.0.1'
@@ -75,9 +77,9 @@ class ContainerTests(unittest.TestCase):
                                        headers={'content-type': 'application/json'})
 
     def test_should_compare_by_id(self):
-        same1 = Container(self.CONTAINER_ID, '10.0.0.1', MagicMock(), MagicMock())
-        same2 = Container(self.CONTAINER_ID, '', MagicMock(), MagicMock())
-        other = Container('other-id', '', MagicMock(), MagicMock())
+        same1 = Container(self.CONTAINER_ID, MagicMock(), MagicMock())
+        same2 = Container(self.CONTAINER_ID, MagicMock(), MagicMock())
+        other = Container('other-id', MagicMock(), MagicMock())
 
         self.assertEqual(same1, same2)
         self.assertNotEqual(same1, other)

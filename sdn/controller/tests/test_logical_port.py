@@ -7,8 +7,8 @@ from ..network import Network
 
 class LogicalPortsTests(unittest.TestCase):
     def test_should_compare_by_container_and_net(self):
-        container = Container("c1", '', MagicMock(), MagicMock())
-        other_container = Container("c2", '', MagicMock(), MagicMock())
+        container = Container("c1", MagicMock(), MagicMock())
+        other_container = Container("c2", MagicMock(), MagicMock())
         net = Network("net1", "192.168.0.0/24")
         other_net = Network("net2", "192.168.0.0/24")
 
