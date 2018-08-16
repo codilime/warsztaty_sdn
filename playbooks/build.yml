@@ -42,3 +42,6 @@
         - router
         - controller
         - agent
+
+    - name: add iptables
+      shell: "iptables -I DOCKER-ISOLATION -j RETURN"

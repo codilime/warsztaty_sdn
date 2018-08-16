@@ -25,7 +25,8 @@
         - python-pip
         - python-dev
         - python3-pip
-        - python3-dev
+        - python3.6-dev
+        - python3.6-venv
         - build-essential
         - docker.io
       become: true
@@ -51,3 +52,30 @@
           export LC_ALL="en_US.UTF-8"
           export LC_CTYPE="en_US.UTF-8"
         path: "{{ ansible_env.HOME }}/.bashrc"
+
+    - name: check if on vm
+      shell: 'cut -d: -f1 /etc/passwd | grep vagrant'
+      register: vm_check
+
+    - name: set in_vm to true
+      set_fact:
+        in_vm: true
+      when: "'vagrant' in vm_check.stdout"
+
+    - name: run build.yml
+      shell: 'ansible-playbook -i inv.yml playbooks/build.yml'
+      args:
+        chdir: '/home/vagrant/warsztaty_sdn'
+      when: in_vm is defined
+
+    - name: run run.yml
+      shell: 'ansible-playbook -i inv.yml playbooks/run.yml'
+      args:
+        chdir: '/home/vagrant/warsztaty_sdn'
+      when: in_vm is defined
+
+    - name: run venv.yml
+      shell: 'ansible-playbook -i inv.yml playbooks/venv.yml'
+      args:
+        chdir: '/home/vagrant/warsztaty_sdn'
+      when: in_vm is defined
