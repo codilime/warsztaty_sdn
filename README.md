@@ -14,27 +14,21 @@ vagrant ssh
 ```
 
 
-1.1) Git clone (vm)
-```bash
-cd /home/vagrant/Desktop/save/
-git clone https://github.com/codilime/warsztaty_sdn
-```
-
 2) budowanie images (vm)
 ```bash
-cd /home/vagrant/Desktop/save/warsztaty_sdn
+cd /home/vagrant/warsztaty_sdn
 ansible-playbook -i inv.yml playbooks/build.yml
 ```
 
 3) Uruchamianie kontroller i rutera (vm)
 ```bash
-cd /home/vagrant/Desktop/save/warsztaty_sdn
+cd /home/vagrant/warsztaty_sdn
 ansible-playbook -i inv.yml playbooks/run.yml
 ```
 
 4) Restartowanie kontroller i rutera (vm)
 ```bash
-cd /home/vagrant/Desktop/save/warsztaty_sdn
+cd /home/vagrant/warsztaty_sdn
 docker-compose restart
 ```
 

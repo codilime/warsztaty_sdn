@@ -2,7 +2,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/xenial64"
   config.vm.define "polibuda-sdn"
-  config.vm.synced_folder "save/", "/home/vagrant/Desktop/save"
+  config.vm.synced_folder "../../../warsztaty_sdn/", "/home/vagrant/warsztaty_sdn"
   config.vm.provider "virtualbox" do |vb|
     vb.name = "polibuda-sdn"
     vb.gui = true
