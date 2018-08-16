@@ -44,7 +44,8 @@ class Container(object):
         abs_code_path = os.path.abspath(code_path)
         logger.info("Starting %s based on %s image with code in %s", self.id, Container.IMAGE, abs_code_path)
         self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True,
-                                          volumes={abs_code_path: {'bind': '/opt/sdn', 'mode': 'ro'}})
+                                          volumes={abs_code_path: {'bind': '/opt/sdn', 'mode': 'ro'}},
+                                          cap_add=["NET_ADMIN"])
         c = self.docker_client.containers.get(self.id)
         self.ip = c.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
 
