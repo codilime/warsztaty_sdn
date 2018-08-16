@@ -1,16 +1,19 @@
 import logging
-import time
 from docker import DockerClient
+from docker.errors import APIError, NotFound
 
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger('Cleaner')
 
 
-class Cleaner(object):
+class Cleaner:
     def __init__(self):
         self.docker_client = DockerClient(base_url='unix://var/run/docker.sock')
 
     def remove_network(self, net_name):
+        if not net_name:
+            return True
+
         net_to_delete = None
         guard = True
 
@@ -36,3 +39,14 @@ class Cleaner(object):
             except:
                 pass
         return True
+
+    def remove_agent(self, agent_name):
+        if not agent_name:
+            return True
+
+        try:
+            pass
+            # container = self.docker_client.containers.get(agent_name)
+            # container.remove(force=True)
+        except (NotFound, APIError):
+            raise RuntimeError(f'Could not remove {agent_name}')
