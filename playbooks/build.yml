@@ -3,6 +3,33 @@
   gather_facts: no
   become: true
   tasks:
+    - name: remove all docker containers
+      shell: docker rm -f $(docker ps -a -q)
+      ignore_errors: true
+
+    - name: remove all docker network
+      shell: docker network rm $(docker network ls -q)
+      ignore_errors: true
+      
+#    - name: Remove sdn-base
+#      docker_image:
+#        name: sdn-base
+#        path: '../'
+#        dockerfile: Dockerfile.base
+#        tag: latest
+#        nocache: true
+#        state: absent
+
+    - name: Remove images
+      docker_image:
+        name: '{{ item }}'
+        force: true
+        state: absent
+      with_items:
+        - router
+        - controller
+        - agent
+
     - name: Build sdn-base
       docker_image:
         name: sdn-base
