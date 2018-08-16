@@ -24,7 +24,8 @@ controller = Controller(Router(id=config.get('router', 'docker_id'),
                                ip='http://%s:%s' % (config.get('router', 'docker_ip'),
                                                     config.get('router', 'listen_port')),
                                poster=requests),
-                        DockerClient(base_url=config.get('docker', 'docker_socket')))
+                        DockerClient(base_url=config.get('docker', 'docker_socket')),
+                        poster=requests)
 
 
 class ServerError(Exception):

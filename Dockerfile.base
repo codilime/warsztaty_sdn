@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt-get update
-RUN apt-get install python3-pip python3-dev build-essential net-tools nmap iputils-ping inetutils-traceroute tcpdump iptables -y
+RUN apt-get install python3-pip python3-dev build-essential net-tools nmap iputils-ping inetutils-traceroute tcpdump iptables curl -y
 
 COPY requirements_base.txt .
 RUN pip3 install -r requirements_base.txt

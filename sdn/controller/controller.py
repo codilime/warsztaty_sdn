@@ -2,6 +2,7 @@ import docker.types
 import netaddr
 import itertools
 import logging
+import requests
 
 from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
@@ -15,13 +16,14 @@ logger = logging.getLogger(__name__)
 
 
 class Controller(object):
-    def __init__(self, router: Router, docker_client: Optional[DockerClient] = None) -> None:
+    def __init__(self, router: Router, docker_client: Optional[DockerClient] = None, poster: requests = None) -> None:
         self.router = router
         self.docker_client = docker_client
         self.ipam_pools = {}
         self.networks = {}
         self.containers = {}
         self.logical_ports = []
+        self.poster = poster
 
     def clean(self) -> None:
         self.ipam_pools = {}
@@ -71,7 +73,7 @@ class Controller(object):
         return self.logical_ports
 
     def add_container(self, id: str, code_path: str) -> None:
-        container = Container(id=id, poster=None, docker_client=self.docker_client)
+        container = Container(id=id, poster=self.poster, docker_client=self.docker_client)
         container.start(code_path)
         self.containers[id] = container
 

@@ -20,12 +20,12 @@ class Router(object):
         logger.info("Creating network %s", n.id)
         self.poster.post(self.ip + "/create/network",
                          headers={"content-type": "application/json"},
-                         data=json.dumps({"id": n.id}))
+                         data=json.dumps({"name": n.id}))
         self.networks.append(n)
 
     def add_logical_port(self, p: LogicalPort) -> None:
         logger.info("Creating logical port on %s", p.network.id)
         self.poster.post(self.ip + "/create/logical_port",
                          headers={"content-type": "application/json"},
-                         data=json.dumps({"net_id": p.network.id, "ip": str(p.router_ip)}, sort_keys=True))
+                         data=json.dumps({"name": p.network.id, "ip": str(p.router_ip)}, sort_keys=True))
         self.logical_ports.append(p)

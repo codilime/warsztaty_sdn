@@ -27,7 +27,7 @@ class ControllerTest(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/network",
-            data='{"id": "net1"}',
+            data='{"name": "net1"}',
             headers={'content-type': 'application/json'}
         )
 
@@ -66,7 +66,7 @@ class ControllerTest(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/logical_port",
-            data=json.dumps({"net_id": "net1", "ip": "192.168.0.2"}, sort_keys=True),
+            data=json.dumps({"name": "net1", "ip": "192.168.0.2"}, sort_keys=True),
             headers={'content-type': 'application/json'}
         )
 
@@ -109,7 +109,7 @@ class ControllerTest(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/logical_port",
-            data=json.dumps({"net_id": "net1", "ip": "192.168.0.2"}, sort_keys=True),
+            data=json.dumps({"name": "net1", "ip": "192.168.0.2"}, sort_keys=True),
             headers={'content-type': 'application/json'}
         )
         mocked_network.connect.assert_any_call(self.ROUTER_ID, ipv4_address='192.168.0.2')
