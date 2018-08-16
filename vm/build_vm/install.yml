@@ -44,3 +44,10 @@
         groups: docker
         append: yes
       become: true
+
+    - name: Set locales
+      blockinfile:
+        block: |
+          export LC_ALL="en_US.UTF-8"
+          export LC_CTYPE="en_US.UTF-8"
+        path: "{{ ansible_env.HOME }}/.bashrc"
