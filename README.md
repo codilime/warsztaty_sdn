@@ -19,7 +19,7 @@ cd vm/build_vm
 vagrant ssh
 ```
 
-
+Opcjonalne
 3) budowanie images (vm)
 ```bash
 cd /home/vagrant/warsztaty_sdn

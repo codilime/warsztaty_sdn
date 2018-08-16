@@ -14,3 +14,8 @@
         - controller
         - router
         - agent
+
+    - name: Install robotrequirements
+      pip:
+        requirements: '{{inventory_dir}}/robot-tests/requirements.txt'
+        virtualenv: "{{inventory_dir}}/venv/"

@@ -24,3 +24,6 @@
     section: agent
     option: sdn_path
     value: "{{inventory_dir}}/sdn/"
+
+- name: add iptables
+  shell: "iptables -I DOCKER-ISOLATION -j RETURN"
