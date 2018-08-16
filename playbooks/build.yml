@@ -10,15 +10,6 @@
     - name: remove all docker network
       shell: docker network rm $(docker network ls -q)
       ignore_errors: true
-      
-#    - name: Remove sdn-base
-#      docker_image:
-#        name: sdn-base
-#        path: '../'
-#        dockerfile: Dockerfile.base
-#        tag: latest
-#        nocache: true
-#        state: absent
 
     - name: Remove images
       docker_image:
@@ -29,6 +20,7 @@
         - router
         - controller
         - agent
+#        - sdn-base # uncomment if You want rm sdn-base image
 
     - name: Build sdn-base
       docker_image:
