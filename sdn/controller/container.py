@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 class Container(object):
     IMAGE = 'agent'
 
-    def __init__(self, id: str, ip: str, poster: requests, docker_client: docker.DockerClient) -> None:
+    def __init__(self, id: str, poster: requests, docker_client: docker.DockerClient) -> None:
         self.id = id
-        self.ip = ip
+        self.ip = ''
         self.poster = poster
         self.logical_ports = []
         self.docker_client = docker_client
@@ -45,6 +45,8 @@ class Container(object):
         logger.info("Starting %s based on %s image with code in %s", self.id, Container.IMAGE, abs_code_path)
         self.docker_client.containers.run(Container.IMAGE, name=self.id, detach=True, remove=True,
                                           volumes={abs_code_path: {'bind': '/opt/sdn', 'mode': 'ro'}})
+        c = self.docker_client.containers.get(self.id)
+        self.ip = c.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
 
     def stop(self) -> None:
         logger.info("Removing container %s", self.id)

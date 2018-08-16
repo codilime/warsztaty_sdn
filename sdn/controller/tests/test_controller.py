@@ -55,7 +55,7 @@ class ControllerTest(unittest.TestCase):
     def test_should_post_logical_port_to_router(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock(), MagicMock())
+        c = Container(self.CONTAINER_RED_ID, MagicMock(), MagicMock())
         ctrl = Controller(r, MagicMock())
 
         n = Network("net1", "192.168.0.0/24")
@@ -73,7 +73,8 @@ class ControllerTest(unittest.TestCase):
     def test_should_post_logical_port_to_container(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, MagicMock())
-        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, poster, MagicMock())
+        c = Container(self.CONTAINER_RED_ID, poster, MagicMock())
+        c.ip = self.CONTAINER_RED_URL
         ctrl = Controller(r, MagicMock())
 
         n = Network("net1", "192.168.0.0/24")
@@ -93,7 +94,8 @@ class ControllerTest(unittest.TestCase):
     def test_should_attach_logical_port_to_network(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        c = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock(), MagicMock())
+        c = Container(self.CONTAINER_RED_ID, MagicMock(), MagicMock())
+        c.ip = self.CONTAINER_RED_URL
         docker_client = MagicMock()
         ctrl = Controller(r, docker_client)
 
@@ -117,8 +119,8 @@ class ControllerTest(unittest.TestCase):
         ctrl = Controller(MagicMock(), MagicMock())
         n = Network("net1", "192.168.0.0/24")
         ctrl.add_network(n)
-        c1 = Container(self.CONTAINER_RED_ID, self.CONTAINER_RED_URL, MagicMock(), MagicMock())
-        c2 = Container(self.CONTAINER_GREEN_ID, self.CONTAINER_GREEN_URL, MagicMock(), MagicMock())
+        c1 = Container(self.CONTAINER_RED_ID, MagicMock(), MagicMock())
+        c2 = Container(self.CONTAINER_GREEN_ID, MagicMock(), MagicMock())
         p1 = LogicalPort(c1, n)
         p2 = LogicalPort(c2, n)
         ctrl.add_logical_port(p1)
@@ -186,8 +188,8 @@ class ControllerTest(unittest.TestCase):
 
         containers = ctrl.list_containers()
 
-        self.assertIn(Container('c1', MagicMock(), MagicMock(), MagicMock()), containers)
-        self.assertIn(Container('c2', MagicMock(), MagicMock(), MagicMock()), containers)
+        self.assertIn(Container('c1', MagicMock(), MagicMock()), containers)
+        self.assertIn(Container('c2', MagicMock(), MagicMock()), containers)
 
 
 if __name__ == '__main__':
