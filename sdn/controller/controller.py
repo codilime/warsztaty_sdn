@@ -33,6 +33,9 @@ class Controller(object):
         self.containers.clear()
 
     def add_network(self, network: Network) -> None:
+        if network.id in self.networks:
+            raise RuntimeError(f'Duplicate network id {network.id}')
+
         logger.info("Adding network %s", network.ip)
         subnets = netaddr.IPNetwork(network.ip).subnet(29)
         self.ipam_pools[network.id] = itertools.islice(subnets, 2)  # we've got at most 2 subnets
