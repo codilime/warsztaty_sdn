@@ -34,7 +34,7 @@ class Controller(object):
 
     def add_network(self, network: Network) -> None:
         if network.id in self.networks:
-            raise RuntimeError(f'Duplicate network id {network.id}')
+            raise RuntimeError('Duplicate network id {network}'.format(network=network.id))
 
         logger.info("Adding network %s", network.ip)
         subnets = netaddr.IPNetwork(network.ip).subnet(29)
