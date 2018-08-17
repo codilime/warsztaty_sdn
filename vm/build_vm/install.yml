@@ -53,6 +53,20 @@
           export LC_CTYPE="en_US.UTF-8"
         path: "{{ ansible_env.HOME }}/.bashrc"
 
+    - name: Copy wrapper functions
+      copy:
+        src: .bash_functions
+        dest: ~/.bash_functions
+
+    - name: Load wrapper functions
+      blockinfile:
+        block: |
+          #Add .bash_functions if it exists
+          if [ -f ~/.bash_functions ]; then
+              . ~/.bash_functions
+          fi
+        path: "{{ ansible_env.HOME }}/.bashrc"
+
     - name: check if on vm
       shell: 'cut -d: -f1 /etc/passwd | grep vagrant'
       register: vm_check
