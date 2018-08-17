@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 function create_network {
   if [ "$#" -ne 2 ]; then
       echo "Usage: create_network <net_id> <ip>"
