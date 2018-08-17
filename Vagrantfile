@@ -1,8 +1,10 @@
 Vagrant.configure("2") do |config|
 
+  SDN_PATH = "/home/vagrant/warsztaty_sdn"
+
   config.vm.box = "ubuntu/xenial64"
   config.vm.define "polibuda-sdn"
-  config.vm.synced_folder "../../", "/home/vagrant/warsztaty_sdn"
+  config.vm.synced_folder ".", SDN_PATH
   config.vm.provider "virtualbox" do |vb|
     vb.name = "polibuda-sdn"
     vb.memory = 2048
@@ -13,7 +15,7 @@ Vagrant.configure("2") do |config|
     echo "ubuntu:ubuntu" | sudo chpasswd
   SHELL
   config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "install.yml"
+    ansible.playbook = "#{SDN_PATH}/install.yml"
   end
 
 end

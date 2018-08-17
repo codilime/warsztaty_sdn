@@ -7,7 +7,6 @@ sudo apt-get install vagrant
 
 1) Tworzenie vmki
 ```bash
-cd vm/build_vm
 vagrant up
 ```
 
@@ -15,7 +14,6 @@ Kredki ubuntu/ubuntu
 
 2) Wchodzenie do vm
 ```bash
-cd vm/build_vm
 vagrant ssh
 ```
 
@@ -46,4 +44,3 @@ docker-compose restart
 [vagrant](https://www.vagrantup.com/downloads.html)
 
 [virtualbox](https://www.virtualbox.org/wiki/Downloads)
-

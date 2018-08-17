@@ -1,11 +1,9 @@
-vm/build_vm/.vagrant/
-vm/build_vm/ubuntu-xenial-16.04-cloudimg-console.log
+*.vagrant/
+*.log
 .idea/
-vm/ready_vm/polibuda-sdn-ready.box
-vm/build_vm/install.retry
-vm/ready_vm/.vagrant/
+*.box
+*.retry
 *.orig
-vm/ready_vm/save/
 *.pyc
 docker-compose.yml
 venv

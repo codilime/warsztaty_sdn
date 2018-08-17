@@ -4,7 +4,7 @@ function create_network {
       echo "Usage: create_network <net_id> <ip>"
       echo 'Example: create_network "net_red" "192.168.0.0/24"'
   else
-    curl -X POST 172.20.128.10:8090/create/network -H "Content-Type: application/json" -d "{\"id\": \"$1\", \"ip\": \"$2\"}"
+    curl -X POST 172.20.128.10:8090/create/network -H "Content-Type: application/json" -d '{"id": "'$1'", "ip": "'$2'"}'
   fi
 }
 
@@ -14,7 +14,7 @@ function create_container {
       echo "Usage: create_container <id>"
       echo 'Example: create_container "ala"'
   else
-    curl -X POST 172.20.128.10:8090/create/container -H "Content-Type: application/json" -d "{\"id\": \"$1\"}"
+    curl -X POST 172.20.128.10:8090/create/container -H "Content-Type: application/json" -d '{"id": "'$1'"}'
   fi
 }
 
@@ -24,7 +24,7 @@ function create_logical_port {
       echo "Usage: create_logical_port <net_id> <container_id>"
       echo 'Example: create_logical_port "net_red" "ala"'
   else
-    curl -X POST 172.20.128.10:8090/create/logical_port -H "Content-Type: application/json" -d "{\"net_id\": \"$1\", \"container\": {\"id\": \"$2\"}}"
+    curl -X POST 172.20.128.10:8090/create/logical_port -H "Content-Type: application/json" -d '{"net_id": "'$1'", "container": {"id": "'$2'"}}'
   fi
 }
 
