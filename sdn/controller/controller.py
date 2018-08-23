@@ -60,7 +60,7 @@ class Controller(object):
         logger.debug("Creating underlay docker network")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
         net_name = "{}-{}".format(port.network.id, port.container.id)
-        docker_net = self.docker_client.networks.create(port.network.id, driver="bridge", ipam=ipam, name=net_name)
+        docker_net = self.docker_client.networks.create(net_name, driver="bridge", ipam=ipam)
         docker_net.connect(self.router.id, ipv4_address=router_ip.format())
         docker_net.connect(port.container.id, ipv4_address=container_ip.format())
 
