@@ -48,6 +48,7 @@ class DictJsonEncoder(JSONEncoder):
             return o.__dict__
         elif isinstance(o, LogicalPort):
             return {
+                "id": o.id,
                 "net_id": o.network.id,
                 "container": {
                      "id": o.container.id
@@ -102,7 +103,7 @@ def create_network() -> str:
         controller.add_network(new_network)
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error creating network',
+        raise ServerError(message='Internal server error when creating network',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
@@ -127,7 +128,7 @@ def create_container() -> str:
         controller.add_container(id=data['id'], code_path=config.get('agent', 'sdn_path'))
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error creating container',
+        raise ServerError(message='Internal server error when creating container',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
@@ -138,7 +139,7 @@ def delete_container_id(id) -> str:
         controller.remove_container(id=id)
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error deleting a container',
+        raise ServerError(message='Internal server error when deleting a container',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
@@ -152,7 +153,7 @@ def delete_container() -> str:
         controller.remove_container(id=data['id'])
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error deleting a container',
+        raise ServerError(message='Internal server error when deleting a container',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
@@ -181,7 +182,19 @@ def create_logical_port() -> str:
         controller.add_logical_port(new_lp)
         return 'Success\n'
     except:
-        raise ServerError(message='Internal server error creating logical port',
+        raise ServerError(message='Internal server error when creating logical port',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
+
+
+@app.route('/logical_port/<id>', methods=['DELETE'])
+def delete_logical_port(id) -> str:
+    try:
+        port = controller.logical_ports[id]
+        controller.delete_logical_port(port)
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error when deleting a logical port',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 

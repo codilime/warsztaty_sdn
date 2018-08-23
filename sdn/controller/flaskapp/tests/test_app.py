@@ -86,7 +86,7 @@ class TestControllerFlaskaap(unittest.TestCase):
                                   content_type='application/json')
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
-            self.assertTrue('Internal server error creating network' in data['message'])
+            self.assertTrue('Internal server error when creating network' in data['message'])
 
     @patch.object(Router, 'add_network')
     def test_should_list_networks(self, router_mock):
@@ -202,7 +202,7 @@ class TestControllerFlaskaap(unittest.TestCase):
                                   content_type='application/json')
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
-            self.assertTrue('Internal server error creating logical port' in data['message'])
+            self.assertTrue('Internal server error when creating logical port' in data['message'])
 
     @patch.object(DockerClient, 'networks')
     @patch.object(Router, 'add_network')
