@@ -38,6 +38,21 @@ def create_logical_port() -> Tuple[str, int]:
         return 'Failed, not enough data\n', 400
 
 
+@app.route('/logical_port', methods=['DELETE'])
+def delete_logical_port() -> Tuple[str, int]:
+    data = request.get_json()
+    logging.debug("Received %s", str(data))
+    try:
+        new_lp = LogicalPort(net=data.get('net'),
+                             net_ip=data.get('net_ip'),
+                             router_ip=data.get('router_ip'),
+                             local_ip=data.get('ip'))
+        new_lp.delete(CommandExecutor())
+        return 'Success\n', 200
+    except TypeError:
+        return 'Failed, not enough data\n', 400
+
+
 @app.route('/help', methods=['GET'])
 def list_routes():
     return '\n'.join(['%s' % rule for rule in app.url_map.iter_rules()])

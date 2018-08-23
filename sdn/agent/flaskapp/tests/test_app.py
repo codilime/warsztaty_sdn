@@ -40,3 +40,15 @@ class TestAgentFlaskapp(unittest.TestCase):
                               content_type='application/json')
         self.assertEqual(b'Failed, not enough data\n', rv.data)
         self.assertEqual(400, rv.status_code)
+
+    def test_delete_logical_port(self):
+        data = {
+            'net': 'ala',
+            'net_ip': '192.168.0.0/24',
+            'router_ip': '10.0.0.1',
+            'local_ip': '192.168.0.11'
+        }
+        rv = self.client.delete('/logical_port', data=json.dumps(data),
+                              content_type='application/json')
+        self.assertEqual(b'Success\n', rv.data)
+        self.assertEqual(200, rv.status_code)
