@@ -225,6 +225,7 @@ class TestControllerFlaskaap(unittest.TestCase):
         self.assertEqual(200, rv.status_code)
 
         data_lp = {
+            'id': 'kot-ala',
             'net_id': 'ala',
             'container':
                 {'id': 'kot'}
