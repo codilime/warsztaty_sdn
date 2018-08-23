@@ -102,20 +102,20 @@ def create_network() -> str:
                               ip=data['ip'])
         controller.add_network(new_network)
         return 'Success\n'
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when creating network',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/networks', methods=['GET'])
 def list_networks() -> str:
     try:
         return json.dumps(controller.list_networks(), cls=DictJsonEncoder)
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when listing networks',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/container', methods=['POST'])
@@ -127,10 +127,10 @@ def create_container() -> str:
         data = request.get_json()
         controller.add_container(id=data['id'], code_path=config.get('agent', 'sdn_path'))
         return 'Success\n'
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when creating container',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/container/<id>', methods=['DELETE'])
@@ -138,10 +138,10 @@ def delete_container_id(id) -> str:
     try:
         controller.remove_container(id=id)
         return 'Success\n'
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when deleting a container',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/delete/container', methods=['POST'])
@@ -152,20 +152,20 @@ def delete_container() -> str:
         data = request.get_json()
         controller.remove_container(id=data['id'])
         return 'Success\n'
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when deleting a container',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/containers', methods=['GET'])
 def list_containers() -> str:
     try:
         return json.dumps(controller.list_containers(), cls=DictJsonEncoder)
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when listing containers',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/logical_port', methods=['POST'])
@@ -181,7 +181,7 @@ def create_logical_port() -> str:
         new_lp = LogicalPort(container=container, network=network)
         controller.add_logical_port(new_lp)
         return 'Success\n'
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when creating logical port',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
@@ -193,20 +193,20 @@ def delete_logical_port(id) -> str:
         port = controller.logical_ports[id]
         controller.delete_logical_port(port)
         return 'Success\n'
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when deleting a logical port',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/logical_ports', methods=['GET'])
 def list_logical_ports() -> str:
     try:
         return json.dumps(controller.list_logical_ports(), cls=DictJsonEncoder)
-    except:
+    except Exception as e:
         raise ServerError(message='Internal server error when listing logical_ports',
                           status_code=500,
-                          payload=traceback.format_exc() if debug_mode else '')
+                          payload=traceback.format_exc() if debug_mode else str(e))
 
 
 @app.route('/help', methods=['GET'])

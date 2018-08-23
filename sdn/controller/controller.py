@@ -1,5 +1,6 @@
 import docker.types
 import netaddr
+import ipaddr
 import itertools
 import logging
 import requests
@@ -32,13 +33,29 @@ class Controller(object):
             container.stop()
         self.containers.clear()
 
-    def add_network(self, network: Network) -> None:
+    def _validate_network(self, network: Network) -> None:
         if network.id in self.networks:
-            raise RuntimeError('Duplicate network id {network}'.format(network=network.id))
+            raise RuntimeError('Duplicate network id {net_id}'.format(net_id=network.id))
 
-        logger.info("Adding network %s", network.ip)
-        subnets = netaddr.IPNetwork(network.ip).subnet(29)
-        self.ipam_pools[network.id] = itertools.islice(subnets, 2)  # we've got at most 2 subnets
+        try:
+            _ = ipaddr.IPNetwork(network.ip)
+        except ValueError:
+            raise RuntimeError('Invalid CIDR format for network {net_id} - {net_ip}'
+                               .format(net_id=network.id, net_ip=network.ip))
+
+        for net_id, net in self.networks.items():
+            existing_network = ipaddr.IPNetwork(net.ip)
+            new_network = ipaddr.IPNetwork(network.ip)
+            if existing_network.overlaps(new_network):
+                raise RuntimeError('Specified CIDR for network {new_net_id}-{new_net_ip} overlaps with {ex_net_id}-{ex_net_ip}'
+                                   .format(new_net_id=network.id, new_net_ip=network.ip,
+                                           ex_net_id=net.id, ex_net_ip=net.ip))
+
+    def add_network(self, network: Network) -> None:
+        self._validate_network(network)
+
+        logger.info('Adding network %s', network.ip)
+        self.ipam_pools[network.id] = netaddr.IPNetwork(network.ip).subnet(29)
 
         self.router.add_network(network)
         self.networks[network.id] = network
