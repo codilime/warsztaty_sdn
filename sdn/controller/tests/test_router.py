@@ -63,6 +63,21 @@ class RouterTests(unittest.TestCase):
             headers={'content-type': 'application/json'},
         )
 
+    def test_should_delete_logical_port(self):
+        p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
+        p.router_ip = "192.168.0.1"
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+
+        r.add_logical_port(p)
+        r.delete_logical_port(p)
+
+        poster.delete.assert_called_with(
+            self.ROUTER_URL + "/logical_port",
+            data=json.dumps({"name": "net1", "ip": "192.168.0.1"}, sort_keys=True),
+            headers={'content-type': 'application/json'},
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

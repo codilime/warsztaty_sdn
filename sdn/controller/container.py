@@ -40,6 +40,20 @@ class Container(object):
                          data=data)
         self.logical_ports.append(port)
 
+    def delete_logical_port(self, port) -> None:
+        logger.info("Deleting logical port on network %s on %s", port.network.ip, self.id)
+        data = json.dumps({
+            "net_id": port.network.id,
+            "net_ip": str(port.underlay_network_ip),
+            "router_ip": str(port.router_ip),
+            "ip": str(port.container_ip)},
+            sort_keys=True)
+        logging.debug("Sending %s to %s", data, self.ip)
+        self.poster.delete("http://" + self.ip + ":8090/logical_port",
+                         headers={"content-type": "application/json"},
+                         data=data)
+        self.logical_ports.append(port)
+
     def start(self, code_path: str) -> None:
         abs_code_path = os.path.abspath(code_path)
         logger.info("Starting %s based on %s image with code in %s", self.id, Container.IMAGE, abs_code_path)

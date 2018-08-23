@@ -29,3 +29,10 @@ class Router(object):
                          headers={"content-type": "application/json"},
                          data=json.dumps({"name": p.network.id, "ip": str(p.router_ip)}, sort_keys=True))
         self.logical_ports.append(p)
+
+    def delete_logical_port(self, p: LogicalPort) -> None:
+        logger.info("Deleting logical port on %s", p.network.id)
+        self.poster.delete(self.ip + "/logical_port",
+                         headers={"content-type": "application/json"},
+                         data=json.dumps({"name": p.network.id, "ip": str(p.router_ip)}, sort_keys=True))
+        self.logical_ports.remove(p)

@@ -76,6 +76,26 @@ class ContainerTests(unittest.TestCase):
                                                        sort_keys=True),
                                        headers={'content-type': 'application/json'})
 
+    def test_should_delete_logical_port(self):
+        poster = MagicMock()
+        c = Container(self.CONTAINER_ID, poster, MagicMock())
+        c.ip = self.CONTAINER_URL
+        p = LogicalPort(c, Network("net1", "192.168.0.0/24"))
+        p.container_ip = '192.168.0.2'
+        p.router_ip = '192.168.0.1'
+        p.underlay_network_ip = "192.168.0.0/24"
+
+        c.add_logical_port(p)
+        c.delete_logical_port(p)
+
+        poster.delete.assert_called_with("http://"+self.CONTAINER_URL + ":8090/logical_port",
+                                       data=json.dumps({"net_id": "net1",
+                                                        "net_ip": "192.168.0.0/24",
+                                                        "router_ip": "192.168.0.1",
+                                                        "ip": "192.168.0.2"},
+                                                       sort_keys=True),
+                                       headers={'content-type': 'application/json'})
+
     def test_should_compare_by_id(self):
         same1 = Container(self.CONTAINER_ID, MagicMock(), MagicMock())
         same2 = Container(self.CONTAINER_ID, MagicMock(), MagicMock())
