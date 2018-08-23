@@ -57,9 +57,10 @@ class Controller(object):
         router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
-        logger.debug("Creating docker networks")
+        logger.debug("Creating underlay docker network")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
-        docker_net = self.docker_client.networks.create(port.network.id, driver="bridge", ipam=ipam)
+        net_name = "{}-{}".format(port.network.id, port.container.id)
+        docker_net = self.docker_client.networks.create(port.network.id, driver="bridge", ipam=ipam, name=net_name)
         docker_net.connect(self.router.id, ipv4_address=router_ip.format())
         docker_net.connect(port.container.id, ipv4_address=container_ip.format())
 
@@ -71,6 +72,23 @@ class Controller(object):
         port.container.add_logical_port(port)
 
         self.logical_ports.append(port)
+
+    def delete_logical_port(self, port: LogicalPort) -> None:
+        logger.info("Deleting logical port on %s for %s", port.network.id, port.container.id)
+
+        logger.debug("Notifying router and container")
+        port.underlay_network_ip = self.get_network(port.network.id).ip
+        port.container.delete_logical_port(port)
+        self.router.delete_logical_port(port)
+
+        logger.debug("Deleting underlay docker network")
+        net_name = "{}-{}".format(port.network.id, port.container.id)
+        docker_net = self.docker_client.networks.get(net_name)
+        docker_net.disconnect(self.router.id)
+        docker_net.disconnect(port.container.id)
+        docker_net.remove()
+
+        self.logical_ports.remove(port)
 
     def list_logical_ports(self) -> Sequence[LogicalPort]:
         return self.logical_ports
