@@ -67,6 +67,21 @@
           fi
         path: "{{ ansible_env.HOME }}/.bashrc"
 
+    - name: Check if git is configured
+      command: '{{ item }}'
+      register: git_status
+      failed_when: false
+      with_items:
+        - 'git config --global user.email'
+        - 'git config --global user.name'
+
+    - name: Configure git
+      command: '{{ item }}'
+      when: '{{ 0 not in (git_status.results | map(attribute="rc")) }}'
+      with_items:
+      - 'git config --global user.email "you@example.com"'
+      - 'git config --global user.name "Your Name"'
+
     - name: check if on vm
       shell: 'cut -d: -f1 /etc/passwd | grep vagrant'
       register: vm_check
