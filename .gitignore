@@ -7,3 +7,6 @@
 *.pyc
 docker-compose.yml
 venv
+robot-tests/log.html
+robot-tests/output.xml
+robot-tests/report.html
