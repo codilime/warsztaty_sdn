@@ -89,6 +89,7 @@ def force_clean() -> str:
     controller.clean()
     return 'Success\n'
 
+
 @app.route('/network', methods=['POST'])
 @app.route('/create/network', methods=['POST'])
 def create_network() -> str:
@@ -130,6 +131,7 @@ def create_container() -> str:
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
+
 @app.route('/container/<id>', methods=['DELETE'])
 def delete_container_id(id) -> str:
     try:
@@ -139,6 +141,7 @@ def delete_container_id(id) -> str:
         raise ServerError(message='Internal server error deleting a container',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
+
 
 @app.route('/delete/container', methods=['POST'])
 def delete_container() -> str:
@@ -191,6 +194,7 @@ def list_logical_ports() -> str:
         raise ServerError(message='Internal server error when listing logical_ports',
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
+
 
 @app.route('/help', methods=['GET'])
 def list_routes():
