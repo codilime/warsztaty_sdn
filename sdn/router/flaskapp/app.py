@@ -32,6 +32,14 @@ def create_logical_port() -> str:
     return 'Success\n'
 
 
+@app.route('/logical_port', methods=['DELETE'])
+def delete_logical_port() -> str:
+    data = request.get_json()
+    router.remove_logical_port(net=data['name'],
+                            ip=data['ip'])
+    return 'Success\n'
+
+
 @app.route('/help', methods=['GET'])
 def list_routes():
     return '\n'.join(['%s' % rule for rule in app.url_map.iter_rules()])
