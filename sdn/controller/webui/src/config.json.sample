@@ -1,0 +1,5 @@
+{
+  "authDomain": "default",
+  "serverUrl": "https://__HOST__/keystone",
+  "filteredRoles": ["_member_", "device"]
+}

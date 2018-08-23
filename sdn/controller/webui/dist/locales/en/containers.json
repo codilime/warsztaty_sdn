@@ -1,0 +1,10 @@
+{
+  "title": "Containers",
+  "createButton": "New",
+  "table": {
+    "id": "Container ID"
+  },
+  "dialog": {
+    "remove": "Are you sure to remove {{name}} container?"
+  }
+}

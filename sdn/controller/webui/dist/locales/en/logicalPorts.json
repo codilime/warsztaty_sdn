@@ -1,0 +1,12 @@
+{
+  "title": "Logical ports",
+  "createButton": "New",
+  "table": {
+    "id": "Logical Port Id",
+    "container": "container",
+    "network": "network"
+  },
+  "dialog": {
+    "remove": "Are you sure to remove {{name}} logical port?"
+  }
+}
