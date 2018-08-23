@@ -10,6 +10,7 @@ function create_network {
 
 
 function create_container {
+
   if [ "$#" -ne 1 ]; then
       echo "Usage: create_container <id>"
       echo 'Example: create_container "ala"'
@@ -40,12 +41,17 @@ function containers {
 
 
 function logical_ports {
-  curl -X GET 172.20.128.10:8090/containers
+  curl -X GET 172.20.128.10:8090/logical_ports
 }
 
 
 function networks {
-  curl -X GET 172.20.128.10:8090/containers
+  curl -X GET 172.20.128.10:8090/networks
+}
+
+
+function force_clean {
+  curl -X POST 172.20.128.10:8090/force_clean
 }
 
 
