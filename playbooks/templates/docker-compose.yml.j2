@@ -21,6 +21,8 @@ services:
             - "/var/run/docker.sock:/var/run/docker.sock"
         cap_add:
           - NET_ADMIN
+        ports:
+          - "8090:8090"
         command: 'python3 -m sdn.controller.flaskapp.app'
         networks:
           static-network:
