@@ -22,7 +22,7 @@ class Controller(object):
         self.ipam_pools = {}
         self.networks = {}
         self.containers = {}
-        self.logical_ports = []
+        self.logical_ports = {}
         self.poster = poster
 
     def clean(self) -> None:
@@ -71,7 +71,7 @@ class Controller(object):
         self.router.add_logical_port(port)
         port.container.add_logical_port(port)
 
-        self.logical_ports.append(port)
+        self.logical_ports[port.id] = port
 
     def delete_logical_port(self, port: LogicalPort) -> None:
         logger.info("Deleting logical port on %s for %s", port.network.id, port.container.id)
@@ -88,10 +88,10 @@ class Controller(object):
         docker_net.disconnect(port.container.id)
         docker_net.remove()
 
-        self.logical_ports.remove(port)
+        del self.logical_ports[port.id]
 
     def list_logical_ports(self) -> Sequence[LogicalPort]:
-        return self.logical_ports
+        return list(self.logical_ports.values())
 
     def add_container(self, id: str, code_path: str) -> None:
         container = Container(id=id, poster=self.poster, docker_client=self.docker_client)

@@ -4,11 +4,15 @@ from unittest.mock import MagicMock
 from ..router import Router
 from ..network import Network
 from ..logical_port import LogicalPort
+from ..container import Container
 
 
 class RouterTests(unittest.TestCase):
     ROUTER_URL = "10.0.0.1:5000"
     ROUTER_ID = "router-id"
+
+    def setUp(self):
+        self.container = Container("test-container", MagicMock(), MagicMock())
 
     def test_should_store_single_network(self):
         n = Network("net1", "192.168.0.0/24")
@@ -41,7 +45,7 @@ class RouterTests(unittest.TestCase):
                                        )
 
     def test_should_store_single_logical_port(self):
-        p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
+        p = LogicalPort(self.container, Network('net1', '192.168.0.0/24'))
         p.router_ip = "192.168.0.1"
         r = Router(self.ROUTER_ID, self.ROUTER_URL, MagicMock())
 
@@ -50,7 +54,7 @@ class RouterTests(unittest.TestCase):
         self.assertListEqual(r.logical_ports, [p])
 
     def test_should_post_logical_port(self):
-        p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
+        p = LogicalPort(self.container, Network('net1', '192.168.0.0/24'))
         p.router_ip = "192.168.0.1"
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
@@ -64,7 +68,7 @@ class RouterTests(unittest.TestCase):
         )
 
     def test_should_delete_logical_port(self):
-        p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
+        p = LogicalPort(self.container, Network('net1', '192.168.0.0/24'))
         p.router_ip = "192.168.0.1"
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
