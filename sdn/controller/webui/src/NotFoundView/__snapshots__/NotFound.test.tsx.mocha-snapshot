@@ -1,0 +1,161 @@
+exports["should match snapshot(0)"] = {
+  "node": {
+    "nodeType": "class",
+    "type": "Card",
+    "props": {
+      "children": [
+        {
+          "type": "h2",
+          "props": {
+            "children": {
+              "type": "Trans",
+              "props": {
+                "i18nKey": "title"
+              },
+              "_store": {}
+            }
+          },
+          "_store": {}
+        },
+        {
+          "type": "p",
+          "props": {
+            "children": {
+              "type": "Trans",
+              "props": {
+                "i18nKey": "description"
+              },
+              "_store": {}
+            }
+          },
+          "_store": {}
+        }
+      ]
+    },
+    "rendered": [
+      {
+        "nodeType": "host",
+        "type": "h2",
+        "props": {
+          "children": {
+            "type": "Trans",
+            "props": {
+              "i18nKey": "title"
+            },
+            "_store": {}
+          }
+        },
+        "rendered": {
+          "nodeType": "class",
+          "type": "Trans",
+          "props": {
+            "i18nKey": "title"
+          }
+        }
+      },
+      {
+        "nodeType": "host",
+        "type": "p",
+        "props": {
+          "children": {
+            "type": "Trans",
+            "props": {
+              "i18nKey": "description"
+            },
+            "_store": {}
+          }
+        },
+        "rendered": {
+          "nodeType": "class",
+          "type": "Trans",
+          "props": {
+            "i18nKey": "description"
+          }
+        }
+      }
+    ]
+  },
+  "type": "Card",
+  "props": {},
+  "children": [
+    {
+      "node": {
+        "nodeType": "host",
+        "type": "h2",
+        "props": {
+          "children": {
+            "type": "Trans",
+            "props": {
+              "i18nKey": "title"
+            },
+            "_store": {}
+          }
+        },
+        "rendered": {
+          "nodeType": "class",
+          "type": "Trans",
+          "props": {
+            "i18nKey": "title"
+          }
+        }
+      },
+      "type": "h2",
+      "props": {},
+      "children": [
+        {
+          "node": {
+            "nodeType": "class",
+            "type": "Trans",
+            "props": {
+              "i18nKey": "title"
+            }
+          },
+          "type": "Trans",
+          "props": {
+            "i18nKey": "title"
+          }
+        }
+      ]
+    },
+    {
+      "node": {
+        "nodeType": "host",
+        "type": "p",
+        "props": {
+          "children": {
+            "type": "Trans",
+            "props": {
+              "i18nKey": "description"
+            },
+            "_store": {}
+          }
+        },
+        "rendered": {
+          "nodeType": "class",
+          "type": "Trans",
+          "props": {
+            "i18nKey": "description"
+          }
+        }
+      },
+      "type": "p",
+      "props": {},
+      "children": [
+        {
+          "node": {
+            "nodeType": "class",
+            "type": "Trans",
+            "props": {
+              "i18nKey": "description"
+            }
+          },
+          "type": "Trans",
+          "props": {
+            "i18nKey": "description"
+          }
+        }
+      ]
+    }
+  ]
+};
+

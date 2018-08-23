@@ -1,0 +1,11 @@
+{
+  "title": "Networks",
+  "createButton": "New",
+  "table": {
+    "id": "Network ID",
+    "ip": "IP"
+  },
+  "dialog": {
+    "remove": "Are you sure to remove {{name}} network?"
+  }
+}

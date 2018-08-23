@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "title": "",
+    "menu": {
+      "containers": "Containers",
+      "networks": "Networks",
+      "logical_ports": "Logical ports"
+    }
+  },
+  "navbar": {
+    "language": "Language"
+  },
+  "modal": {
+    "POST": "Create",
+    "PATCH": "Update",
+    "DELETE": "Delete",
+    "cancel": "Cancel"
+  }
+}
