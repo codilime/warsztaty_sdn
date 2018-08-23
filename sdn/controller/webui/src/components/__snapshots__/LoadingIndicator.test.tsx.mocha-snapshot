@@ -1,0 +1,61 @@
+exports["should match snapshot(0)"] = {
+  "node": {
+    "nodeType": "host",
+    "type": "div",
+    "props": {
+      "className": "loading",
+      "style": {
+        "textAlign": "center"
+      },
+      "children": {
+        "type": "Spin",
+        "props": {
+          "spinning": true,
+          "size": "large",
+          "prefixCls": "ant-spin",
+          "wrapperClassName": ""
+        },
+        "_store": {}
+      }
+    },
+    "rendered": {
+      "nodeType": "class",
+      "type": "Spin",
+      "props": {
+        "spinning": true,
+        "size": "large",
+        "prefixCls": "ant-spin",
+        "wrapperClassName": ""
+      }
+    }
+  },
+  "type": "div",
+  "props": {
+    "className": "loading",
+    "style": {
+      "textAlign": "center"
+    }
+  },
+  "children": [
+    {
+      "node": {
+        "nodeType": "class",
+        "type": "Spin",
+        "props": {
+          "spinning": true,
+          "size": "large",
+          "prefixCls": "ant-spin",
+          "wrapperClassName": ""
+        }
+      },
+      "type": "Spin",
+      "props": {
+        "spinning": true,
+        "size": "large",
+        "prefixCls": "ant-spin",
+        "wrapperClassName": ""
+      }
+    }
+  ]
+};
+

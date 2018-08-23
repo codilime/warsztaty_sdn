@@ -6,6 +6,7 @@ import requests
 import json
 from docker import DockerClient
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask.wrappers import Response, Request
 from flask.json import JSONEncoder
 from sdn.config.flask_config import get_config
@@ -16,6 +17,7 @@ from sdn.controller.router import Router
 from sdn.controller.container import Container
 
 app = Flask('Controller')
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 config = get_config()
 debug_mode = config.getboolean('controller', 'debug')
 logging.basicConfig(level=logging.DEBUG)
@@ -87,7 +89,7 @@ def force_clean() -> str:
     controller.clean()
     return 'Success\n'
 
-
+@app.route('/network', methods=['POST'])
 @app.route('/create/network', methods=['POST'])
 def create_network() -> str:
     _assert_proper_request(request)
@@ -114,6 +116,7 @@ def list_networks() -> str:
                           payload=traceback.format_exc() if debug_mode else '')
 
 
+@app.route('/container', methods=['POST'])
 @app.route('/create/container', methods=['POST'])
 def create_container() -> str:
     _assert_proper_request(request)
@@ -127,6 +130,15 @@ def create_container() -> str:
                           status_code=500,
                           payload=traceback.format_exc() if debug_mode else '')
 
+@app.route('/container/<id>', methods=['DELETE'])
+def delete_container_id(id) -> str:
+    try:
+        controller.remove_container(id=id)
+        return 'Success\n'
+    except:
+        raise ServerError(message='Internal server error deleting a container',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else '')
 
 @app.route('/delete/container', methods=['POST'])
 def delete_container() -> str:
@@ -152,6 +164,7 @@ def list_containers() -> str:
                           payload=traceback.format_exc() if debug_mode else '')
 
 
+@app.route('/logical_port', methods=['POST'])
 @app.route('/create/logical_port', methods=['POST'])
 def create_logical_port() -> str:
     _assert_proper_request(request)

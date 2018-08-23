@@ -1,0 +1,9 @@
+npm-debug.log
+config.json
+node_modules
+dist/*
+.sass-cache
+coverage/*
+doc/*
+.awcache
+*.orig

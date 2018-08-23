@@ -1,5 +1,6 @@
 flask
 flask_script
+flask_cors
 docker>=3.0.0,<3.0.1
 netaddr
 requests==2.18.4
