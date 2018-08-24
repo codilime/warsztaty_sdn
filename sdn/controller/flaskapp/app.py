@@ -9,7 +9,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask.wrappers import Response, Request
 from flask.json import JSONEncoder
-from sdn.config.flask_config import get_config
+from sdn.config.global_config import get_config
 from sdn.controller.controller import Controller
 from sdn.controller.logical_port import LogicalPort
 from sdn.controller.network import Network
