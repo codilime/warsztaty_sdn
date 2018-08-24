@@ -2,7 +2,7 @@ import logging
 from flask import Flask, request
 from sdn.router.router import Router, CommandExecutor
 from sdn.router.interface_finder import InterfaceFinder
-from sdn.config.flask_config import get_config
+from sdn.config.global_config import get_config
 
 app = Flask('Router')
 config = get_config()
@@ -21,6 +21,12 @@ def hello() -> str:
 def create_network() -> str:
     data = request.get_json()
     router.add_network(name=data['name'])
+    return 'Success\n'
+
+
+@app.route('/network/<name>', methods=['DELETE'])
+def delete_network(name) -> str:
+    router.remove_network(name=name)
     return 'Success\n'
 
 

@@ -4,11 +4,15 @@ from unittest.mock import MagicMock
 from ..router import Router
 from ..network import Network
 from ..logical_port import LogicalPort
+from ..container import Container
 
 
 class RouterTests(unittest.TestCase):
     ROUTER_URL = "10.0.0.1:5000"
     ROUTER_ID = "router-id"
+
+    def setUp(self):
+        self.container = Container("test-container", MagicMock(), MagicMock())
 
     def test_should_store_single_network(self):
         n = Network("net1", "192.168.0.0/24")
@@ -40,8 +44,19 @@ class RouterTests(unittest.TestCase):
                                        headers={'content-type': 'application/json'},
                                        )
 
+    def test_should_delete_network(self):
+        n = Network("net1", "192.168.0.0/24")
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+
+        r.add_network(n)
+        r.delete_network(n)
+
+        poster.delete.assert_called_with(self.ROUTER_URL + "/network/" + n.id,
+                                         headers={'content-type': 'application/json'})
+
     def test_should_store_single_logical_port(self):
-        p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
+        p = LogicalPort(self.container, Network('net1', '192.168.0.0/24'))
         p.router_ip = "192.168.0.1"
         r = Router(self.ROUTER_ID, self.ROUTER_URL, MagicMock())
 
@@ -50,7 +65,7 @@ class RouterTests(unittest.TestCase):
         self.assertListEqual(r.logical_ports, [p])
 
     def test_should_post_logical_port(self):
-        p = LogicalPort(None, Network('net1', '192.168.0.0/24'))
+        p = LogicalPort(self.container, Network('net1', '192.168.0.0/24'))
         p.router_ip = "192.168.0.1"
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
@@ -59,6 +74,21 @@ class RouterTests(unittest.TestCase):
 
         poster.post.assert_called_with(
             self.ROUTER_URL + "/create/logical_port",
+            data=json.dumps({"name": "net1", "ip": "192.168.0.1"}, sort_keys=True),
+            headers={'content-type': 'application/json'},
+        )
+
+    def test_should_delete_logical_port(self):
+        p = LogicalPort(self.container, Network('net1', '192.168.0.0/24'))
+        p.router_ip = "192.168.0.1"
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+
+        r.add_logical_port(p)
+        r.delete_logical_port(p)
+
+        poster.delete.assert_called_with(
+            self.ROUTER_URL + "/logical_port",
             data=json.dumps({"name": "net1", "ip": "192.168.0.1"}, sort_keys=True),
             headers={'content-type': 'application/json'},
         )

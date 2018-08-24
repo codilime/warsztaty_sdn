@@ -1,5 +1,6 @@
 import docker.types
 import netaddr
+import ipaddr
 import itertools
 import logging
 import requests
@@ -22,7 +23,7 @@ class Controller(object):
         self.ipam_pools = {}
         self.networks = {}
         self.containers = {}
-        self.logical_ports = []
+        self.logical_ports = {}
         self.poster = poster
 
     def clean(self) -> None:
@@ -32,16 +33,44 @@ class Controller(object):
             container.stop()
         self.containers.clear()
 
-    def add_network(self, network: Network) -> None:
+    def _validate_network(self, network: Network) -> None:
         if network.id in self.networks:
-            raise RuntimeError('Duplicate network id {network}'.format(network=network.id))
+            raise RuntimeError('Duplicate network id {net_id}'.format(net_id=network.id))
 
-        logger.info("Adding network %s", network.ip)
-        subnets = netaddr.IPNetwork(network.ip).subnet(29)
-        self.ipam_pools[network.id] = itertools.islice(subnets, 2)  # we've got at most 2 subnets
+        try:
+            _ = ipaddr.IPNetwork(network.ip)
+        except ValueError:
+            raise RuntimeError('Invalid CIDR format for network {net_id} - {net_ip}'
+                               .format(net_id=network.id, net_ip=network.ip))
+
+        for net_id, net in self.networks.items():
+            existing_network = ipaddr.IPNetwork(net.ip)
+            new_network = ipaddr.IPNetwork(network.ip)
+            if existing_network.overlaps(new_network):
+                raise RuntimeError('Specified CIDR for network {new_net_id}-{new_net_ip} overlaps with {ex_net_id}-{ex_net_ip}'
+                                   .format(new_net_id=network.id, new_net_ip=network.ip,
+                                           ex_net_id=net.id, ex_net_ip=net.ip))
+
+    def add_network(self, network: Network) -> None:
+        self._validate_network(network)
+
+        logger.info('Adding network %s', network.ip)
+        self.ipam_pools[network.id] = netaddr.IPNetwork(network.ip).subnet(29)
 
         self.router.add_network(network)
         self.networks[network.id] = network
+
+    def delete_network(self, id):
+        if id not in self.networks:
+            raise RuntimeError('Network with id {net_id} does not exist'.format(net_id=id))
+
+        for lp_id, lp in self.logical_ports.items():
+            if lp.network.id == id:
+                raise RuntimeError('Cannot remove network {net_id} - logical port is attached - {lp_id}'
+                                   .format(net_id=id, lp_id=lp.id))
+        # TODO - go to docker networks and delete
+        self.router.delete_network(self.networks[id])
+        del self.networks[id]
 
     def get_network(self, id: str) -> Network:
         return self.networks[id]
@@ -57,9 +86,10 @@ class Controller(object):
         router_ip, container_ip = next(hosts), next(hosts)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
-        logger.debug("Creating docker networks")
+        logger.debug("Creating underlay docker network")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
-        docker_net = self.docker_client.networks.create(port.network.id, driver="bridge", ipam=ipam)
+        net_name = "{}-{}".format(port.network.id, port.container.id)
+        docker_net = self.docker_client.networks.create(net_name, driver="bridge", ipam=ipam)
         docker_net.connect(self.router.id, ipv4_address=router_ip.format())
         docker_net.connect(port.container.id, ipv4_address=container_ip.format())
 
@@ -70,17 +100,34 @@ class Controller(object):
         self.router.add_logical_port(port)
         port.container.add_logical_port(port)
 
-        self.logical_ports.append(port)
+        self.logical_ports[port.id] = port
+
+    def delete_logical_port(self, port: LogicalPort) -> None:
+        logger.info("Deleting logical port on %s for %s", port.network.id, port.container.id)
+
+        logger.debug("Notifying router and container")
+        port.underlay_network_ip = self.get_network(port.network.id).ip
+        port.container.delete_logical_port(port)
+        self.router.delete_logical_port(port)
+
+        logger.debug("Deleting underlay docker network")
+        net_name = "{}-{}".format(port.network.id, port.container.id)
+        docker_net = self.docker_client.networks.get(net_name)
+        docker_net.disconnect(self.router.id)
+        docker_net.disconnect(port.container.id)
+        docker_net.remove()
+
+        del self.logical_ports[port.id]
 
     def list_logical_ports(self) -> Sequence[LogicalPort]:
-        return self.logical_ports
+        return list(self.logical_ports.values())
 
     def add_container(self, id: str, code_path: str) -> None:
         container = Container(id=id, poster=self.poster, docker_client=self.docker_client)
         container.start(code_path)
         self.containers[id] = container
 
-    def remove_container(self, id: str) -> None:
+    def delete_container(self, id: str) -> None:
         container = self.containers[id]
         container.stop()
         del self.containers[id]

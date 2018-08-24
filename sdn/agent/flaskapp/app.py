@@ -2,7 +2,7 @@ import logging
 from flask import Flask, request
 from sdn.agent.sweep import PingSweep
 from sdn.agent.logical_port import LogicalPort, CommandExecutor
-from sdn.config.flask_config import get_config
+from sdn.config.global_config import get_config
 
 
 from typing import Tuple

@@ -31,6 +31,16 @@ export class Root extends React.Component<IProps> {
                 <Route
                   exact={true}
                   strict={true}
+                  path="/"
+                  component={Loadable({
+                    loader: () =>
+                      import(/* webpackChunkName: "home" */ '../Home'),
+                    loading: LoadingIndicator,
+                  })}
+                />
+                <Route
+                  exact={true}
+                  strict={true}
                   path="/containers"
                   component={Loadable({
                     loader: () =>

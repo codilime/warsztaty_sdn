@@ -28,3 +28,8 @@
 - name: add iptables
   shell: "iptables -I DOCKER-ISOLATION -j RETURN"
 
+- name: start http server
+  shell: "python3 -m http.server 8080 &"
+  args:
+    chdir: /home/vagrant/warsztaty_sdn/sdn/controller/webui/dist
+

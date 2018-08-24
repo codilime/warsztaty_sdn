@@ -86,7 +86,33 @@ class TestControllerFlaskaap(unittest.TestCase):
                                   content_type='application/json')
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
-            self.assertTrue('Internal server error creating network' in data['message'])
+            self.assertTrue('Internal server error when creating network' in data['message'])
+
+
+    @patch.object(Router, 'add_network')
+    @patch.object(Router, 'delete_network')
+    def test_delete_network(self, router_add_mock, router_delete_mock):
+        network_id = 'new-network'
+        data = {
+            'id': network_id,
+            'ip': '1.1.1.1/32'
+        }
+        self.client.post('/create/network', data=json.dumps(data),
+                         content_type='application/json')
+
+        rv = self.client.delete('/network/{network_id}'.format(network_id=network_id),
+                                content_type='application/json')
+        self.assertEqual(200, rv.status_code)
+        self.assertEqual(b'Success\n', rv.data)
+
+
+    def test_delete_network_should_fail(self):
+        network_id = 'non-existing-network'
+        rv = self.client.delete('/network/{network_id}'.format(network_id=network_id),
+                                content_type='application/json')
+        self.assertEqual(rv.status_code, 500)
+        self.assertIn('Internal server error when deleting network', rv.data.decode('utf-8'))
+
 
     @patch.object(Router, 'add_network')
     def test_should_list_networks(self, router_mock):
@@ -144,14 +170,15 @@ class TestControllerFlaskaap(unittest.TestCase):
     @patch.object(Container, 'start')
     @patch.object(Container, 'stop')
     def test_stop_container(self, start_mock, stop_mock):
+        container_id = 'ala'
         data = {
-            'id': 'ala',
+            'id': container_id,
         }
         self.client.post('/create/container', data=json.dumps(data),
                          content_type='application/json')
 
-        rv = self.client.post('/delete/container', data=json.dumps(data),
-                              content_type='application/json')
+        rv = self.client.delete('/container/{container_id}'.format(container_id=container_id),
+                                content_type='application/json')
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
         stop_mock.assert_called()
@@ -202,7 +229,7 @@ class TestControllerFlaskaap(unittest.TestCase):
                                   content_type='application/json')
             self.assertEqual(500, rv.status_code)
             data = json.loads(rv.data.decode('utf-8'))
-            self.assertTrue('Internal server error creating logical port' in data['message'])
+            self.assertTrue('Internal server error when creating logical port' in data['message'])
 
     @patch.object(DockerClient, 'networks')
     @patch.object(Router, 'add_network')
@@ -225,6 +252,7 @@ class TestControllerFlaskaap(unittest.TestCase):
         self.assertEqual(200, rv.status_code)
 
         data_lp = {
+            'id': 'kot-ala',
             'net_id': 'ala',
             'container':
                 {'id': 'kot'}
