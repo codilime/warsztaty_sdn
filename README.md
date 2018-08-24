@@ -22,11 +22,9 @@ https://www.virtualbox.org/wiki/Downloads
 
 3) Ściągnij kod https://github.com/codilime/warsztaty_sdn
 
-4) Udostępnij folder z kodem do vm pod ścieżkę /home/vagrant/warsztaty_sdn
+4) Udostępnij folder z kodem do vm, jak nazwę podaj warsztaty_sdn
 * powinno wyglądać to tak jak w share.png
 
-5) Przekieruj port 8090 guest na  8090 host oraz  8080 guest na 8081 host
-* powinno wyglądać to tak jak w port.png
 
 Kredki ubuntu/ubuntu
 
