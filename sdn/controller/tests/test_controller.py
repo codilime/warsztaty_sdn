@@ -260,7 +260,7 @@ class ControllerTest(unittest.TestCase):
         ctrl.add_network(n)
 
         self.assertEqual(n, ctrl.networks['net1'])
-        self.assertNotEqual(ctrl.ipam_pools['net1'], {})
+        self.assertNotEqual(ctrl.underlay_subnets['net1'], {})
 
         ctrl.clean()
 
