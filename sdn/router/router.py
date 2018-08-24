@@ -22,27 +22,34 @@ class Router(object):
         self.networks = {}
 
     def add_network(self, name: str) -> None:
-        logger.info("Adding network %s", name)
+        logger.info("Adding network %s" % name)
         self.networks[name] = []
 
+    def remove_network(self, name: str) -> None:
+        logger.info("Removing network %s" % name)
+        if name in self.networks:
+            del self.networks[name]
+        else:
+            logger.warning('No %s network for removal' % name)
+
     def add_logical_port(self, net: str, ip: str) -> None:
-        logger.info("Adding logical port %s/%s", net, ip)
+        logger.info("Adding logical port %s/%s" % (net, ip))
         my_interface = self.interface_finder.find(ip)
         for peer in self.networks[net]:
             peer_interface = self.interface_finder.find(peer)
-            logger.debug("Configuring routing for %s <-> %s", my_interface, peer_interface)
+            logger.debug("Configuring routing for %s <-> %s" % (my_interface, peer_interface))
             self.command_executor.execute(self._build_start_routing_command(peer_interface, my_interface))
             self.command_executor.execute(self._build_start_routing_command(my_interface, peer_interface))
 
         self.networks[net].append(ip)
 
     def remove_logical_port(self, net: str, ip: str) -> None:
-        logger.info("Removing logical port %s/%s", net, ip)
+        logger.info("Removing logical port %s/%s" % (net, ip))
         my_interface = self.interface_finder.find(ip)
         self.networks[net].remove(ip)
         for peer in self.networks[net]:
             peer_interface = self.interface_finder.find(peer)
-            logger.debug("Deleting routing for %s <-> %s", my_interface, peer_interface)
+            logger.debug("Deleting routing for %s <-> %s" % (my_interface, peer_interface))
             self.command_executor.execute(self._build_stop_routing_command(peer_interface, my_interface))
             self.command_executor.execute(self._build_stop_routing_command(my_interface, peer_interface))
 

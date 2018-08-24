@@ -108,6 +108,17 @@ def create_network() -> str:
                           payload=traceback.format_exc() if debug_mode else str(e))
 
 
+@app.route('/network/<id>', methods=['DELETE'])
+def delete_network_id(id) -> str:
+    try:
+        controller.delete_network(id=id)
+        return 'Success\n'
+    except Exception as e:
+        raise ServerError(message='Internal server error when deleting network',
+                          status_code=500,
+                          payload=traceback.format_exc() if debug_mode else str(e))
+
+
 @app.route('/networks', methods=['GET'])
 def list_networks() -> str:
     try:
@@ -136,21 +147,7 @@ def create_container() -> str:
 @app.route('/container/<id>', methods=['DELETE'])
 def delete_container_id(id) -> str:
     try:
-        controller.remove_container(id=id)
-        return 'Success\n'
-    except Exception as e:
-        raise ServerError(message='Internal server error when deleting a container',
-                          status_code=500,
-                          payload=traceback.format_exc() if debug_mode else str(e))
-
-
-@app.route('/delete/container', methods=['POST'])
-def delete_container() -> str:
-    _assert_proper_request(request)
-
-    try:
-        data = request.get_json()
-        controller.remove_container(id=data['id'])
+        controller.delete_container(id=id)
         return 'Success\n'
     except Exception as e:
         raise ServerError(message='Internal server error when deleting a container',

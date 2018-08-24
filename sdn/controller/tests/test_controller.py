@@ -53,6 +53,21 @@ class ControllerTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             ctrl.add_network(n2)
 
+
+    def test_should_delete_network_from_router(self):
+        poster = MagicMock()
+        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
+        ctrl = Controller(r, MagicMock())
+
+        n = Network("new-network", "192.168.0.0/24")
+        ctrl.add_network(n)
+        ctrl.delete_network(n.id)
+
+        poster.delete.assert_called_with(
+            self.ROUTER_URL + "/network/" + n.id,
+            headers={'content-type': 'application/json'}
+        )
+
     def test_should_lookup_networks_by_id(self):
         ctrl = Controller(MagicMock(), MagicMock())
 
@@ -225,7 +240,7 @@ class ControllerTest(unittest.TestCase):
         docker_client.containers.get = MagicMock(return_value=container_mock)
         ctrl = Controller(MagicMock(), docker_client)
         ctrl.add_container('container-id', 'sdn')
-        ctrl.remove_container('container-id')
+        ctrl.delete_container('container-id')
 
         container_mock.remove.assert_called()
         self.assertEqual(ctrl.containers, {})

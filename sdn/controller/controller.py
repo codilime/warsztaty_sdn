@@ -60,6 +60,18 @@ class Controller(object):
         self.router.add_network(network)
         self.networks[network.id] = network
 
+    def delete_network(self, id):
+        if id not in self.networks:
+            raise RuntimeError('Network with id {net_id} does not exist'.format(net_id=id))
+
+        for lp_id, lp in self.logical_ports.items():
+            if lp.network.id == id:
+                raise RuntimeError('Cannot remove network {net_id} - logical port is attached - {lp_id}'
+                                   .format(net_id=id, lp_id=lp.id))
+        # TODO - go to docker networks and delete
+        self.router.delete_network(self.networks[id])
+        del self.networks[id]
+
     def get_network(self, id: str) -> Network:
         return self.networks[id]
 
@@ -115,7 +127,7 @@ class Controller(object):
         container.start(code_path)
         self.containers[id] = container
 
-    def remove_container(self, id: str) -> None:
+    def delete_container(self, id: str) -> None:
         container = self.containers[id]
         container.stop()
         del self.containers[id]

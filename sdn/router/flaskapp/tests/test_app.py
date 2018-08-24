@@ -24,6 +24,12 @@ class TestRouterFlaskaap(unittest.TestCase):
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
 
+    @patch.object(router, 'remove_network', return_value=None)
+    def test_delete_network(self, mock_remove_net):
+        rv = self.client.delete('/network/some-network', content_type='application/json')
+        self.assertEqual(b'Success\n', rv.data)
+        self.assertEqual(200, rv.status_code)
+
     @patch.object(router, 'add_logical_port', return_value=None)
     def test_create_logical_port(self, add_logical_port):
         data = {

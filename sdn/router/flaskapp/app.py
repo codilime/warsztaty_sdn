@@ -24,6 +24,12 @@ def create_network() -> str:
     return 'Success\n'
 
 
+@app.route('/network/<name>', methods=['DELETE'])
+def delete_network(name) -> str:
+    router.remove_network(name=name)
+    return 'Success\n'
+
+
 @app.route('/create/logical_port', methods=['POST'])
 def create_logical_port() -> str:
     data = request.get_json()
