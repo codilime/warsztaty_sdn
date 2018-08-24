@@ -86,25 +86,19 @@
       shell: 'cut -d: -f1 /etc/passwd | grep vagrant'
       register: vm_check
 
-    - name: set in_vm to true
-      set_fact:
-        in_vm: true
-      when: "'vagrant' in vm_check.stdout"
+    - when: "'vagrant' in vm_check.stdout"
+      block:
+        - name: run build.yml
+          shell: 'ansible-playbook -i inv.yml playbooks/build.yml'
+          args:
+            chdir: '/home/vagrant/warsztaty_sdn'
 
-    - name: run build.yml
-      shell: 'ansible-playbook -i inv.yml playbooks/build.yml'
-      args:
-        chdir: '/home/vagrant/warsztaty_sdn'
-      when: in_vm is defined
+        - name: run run.yml
+          shell: 'ansible-playbook -i inv.yml playbooks/run.yml'
+          args:
+            chdir: '/home/vagrant/warsztaty_sdn'
 
-    - name: run run.yml
-      shell: 'ansible-playbook -i inv.yml playbooks/run.yml'
-      args:
-        chdir: '/home/vagrant/warsztaty_sdn'
-      when: in_vm is defined
-
-    - name: run venv.yml
-      shell: 'ansible-playbook -i inv.yml playbooks/venv.yml'
-      args:
-        chdir: '/home/vagrant/warsztaty_sdn'
-      when: in_vm is defined
+        - name: run venv.yml
+          shell: 'ansible-playbook -i inv.yml playbooks/venv.yml'
+          args:
+            chdir: '/home/vagrant/warsztaty_sdn'
