@@ -4,6 +4,18 @@
   gather_facts: no
   become: true
   tasks:
+    - name: Check if warsztaty_sdn folder was shared on VBox
+      stat:
+        path: /media/sf_warsztaty_sdn
+      register: warsztaty_stat
+
+    - name: create symlink for non-vagrant users
+      file:
+        dest: /home/vagrant/warsztaty_sdn
+        src: /media/sf_warsztaty_sdn
+        state: link
+      when: warsztaty_stat.stat.exists
+
     - import_tasks: compose.yml
 
     - name: start http server
