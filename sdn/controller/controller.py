@@ -20,14 +20,14 @@ class Controller(object):
     def __init__(self, router: Router, docker_client: Optional[DockerClient] = None, poster: requests = None) -> None:
         self.router = router
         self.docker_client = docker_client
-        self.ipam_pools = {}
+        self.underlay_subnets = {}
         self.networks = {}
         self.containers = {}
         self.logical_ports = {}
         self.poster = poster
 
     def clean(self) -> None:
-        self.ipam_pools = {}
+        self.underlay_subnets = {}
         self.networks = {}
         for _, container in self.containers.items():
             container.stop()
@@ -55,10 +55,13 @@ class Controller(object):
         self._validate_network(network)
 
         logger.info('Adding network %s', network.ip)
-        self.ipam_pools[network.id] = netaddr.IPNetwork(network.ip).subnet(29)
+        self._create_underlay_subnets(network)
 
         self.router.add_network(network)
         self.networks[network.id] = network
+
+    def _create_underlay_subnets(self, overlay_network: Network) -> None:
+        self.underlay_subnets[overlay_network.id] = netaddr.IPNetwork(overlay_network.ip).subnet(29)
 
     def delete_network(self, id):
         if id not in self.networks:
@@ -80,18 +83,16 @@ class Controller(object):
 
     def add_logical_port(self, port: LogicalPort) -> None:
         logger.info("Adding logical port on %s for %s", port.network.id, port.container.id)
-        pool = next(self.ipam_pools[port.network.id])
-        hosts = pool.iter_hosts()
-        next(hosts)  # skip docker default gateway
-        router_ip, container_ip = next(hosts), next(hosts)
+        pool = self._allocate_network_pool(port.network.id)
+        router_ip, container_ip = self._allocate_router_and_container_ips(pool)
         logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
 
         logger.debug("Creating underlay docker network")
         ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
         net_name = "{}-{}".format(port.network.id, port.container.id)
-        docker_net = self.docker_client.networks.create(net_name, driver="bridge", ipam=ipam)
-        docker_net.connect(self.router.id, ipv4_address=router_ip.format())
-        docker_net.connect(port.container.id, ipv4_address=container_ip.format())
+        underlay_network = self.docker_client.networks.create(net_name, driver="bridge", ipam=ipam)
+        underlay_network.connect(self.router.id, ipv4_address=router_ip.format())
+        underlay_network.connect(port.container.id, ipv4_address=container_ip.format())
 
         logger.debug("Notifying router and container")
         port.router_ip = router_ip
@@ -102,6 +103,15 @@ class Controller(object):
 
         self.logical_ports[port.id] = port
 
+    def _allocate_network_pool(self, overlay_network_id: str) -> netaddr.IPNetwork:
+        return next(self.underlay_subnets[overlay_network_id])
+
+    @staticmethod
+    def _allocate_router_and_container_ips(pool: netaddr.IPNetwork) -> (netaddr.IPAddress, netaddr.IPAddress):
+        hosts = pool.iter_hosts()
+        next(hosts)  # skip docker default gateway
+        return next(hosts), next(hosts)
+
     def delete_logical_port(self, port: LogicalPort) -> None:
         logger.info("Deleting logical port on %s for %s", port.network.id, port.container.id)
 
@@ -111,11 +121,11 @@ class Controller(object):
         self.router.delete_logical_port(port)
 
         logger.debug("Deleting underlay docker network")
-        net_name = "{}-{}".format(port.network.id, port.container.id)
-        docker_net = self.docker_client.networks.get(net_name)
-        docker_net.disconnect(self.router.id)
-        docker_net.disconnect(port.container.id)
-        docker_net.remove()
+        underlay_network_name = "{}-{}".format(port.network.id, port.container.id)
+        underlay_network = self.docker_client.networks.get(underlay_network_name)
+        underlay_network.disconnect(self.router.id)
+        underlay_network.disconnect(port.container.id)
+        underlay_network.remove()
 
         del self.logical_ports[port.id]
 
