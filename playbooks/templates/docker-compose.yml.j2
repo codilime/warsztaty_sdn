@@ -8,6 +8,7 @@ services:
         volumes:
             - "{{ sdn_path }}:/opt/sdn"
         command: 'python3 -m sdn.router.flaskapp.app'
+        container_name: warsztaty_sdn_router_1
         cap_add:
           - NET_ADMIN
         networks:
@@ -19,6 +20,7 @@ services:
         volumes:
             - "{{ sdn_path }}:/opt/sdn"
             - "/var/run/docker.sock:/var/run/docker.sock"
+        container_name: warsztaty_sdn_controller_1
         cap_add:
           - NET_ADMIN
         ports:
