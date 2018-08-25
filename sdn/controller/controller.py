@@ -39,9 +39,6 @@ class Controller(object):
         self.containers.clear()
 
     def _validate_network(self, network: Network) -> None:
-        if network.id in self.networks:
-            raise RuntimeError('Duplicate network id {net_id}'.format(net_id=network.id))
-
         try:
             _ = ipaddr.IPNetwork(network.ip)
         except ValueError:
