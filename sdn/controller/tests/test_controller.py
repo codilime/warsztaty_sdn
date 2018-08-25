@@ -42,18 +42,6 @@ class ControllerTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             ctrl.add_network(n2)
 
-    def test_should_not_allow_duplicate_network_cidrs(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        ctrl = Controller(r, MagicMock())
-        n1 = Network("net1", "192.168.0.0/24")
-        ctrl.add_network(n1)
-
-        n2 = Network("net2", "192.168.0.0/24")
-        with self.assertRaises(RuntimeError):
-            ctrl.add_network(n2)
-
-
     def test_should_delete_network_from_router(self):
         poster = MagicMock()
         r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
