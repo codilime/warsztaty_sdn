@@ -66,7 +66,7 @@ class Controller(object):
         self.networks[network.id] = network
 
     def _create_underlay_subnets(self, overlay_network: Network) -> None:
-        self.underlay_subnets[overlay_network.id] = netaddr.IPNetwork(overlay_network.ip).subnet(29)
+        self.underlay_subnets[overlay_network.id] = None # store /29 subnets from the overlay_network here
 
     def delete_network(self, id):
         if id not in self.networks:
