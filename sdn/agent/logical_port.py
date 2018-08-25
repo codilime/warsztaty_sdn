@@ -29,17 +29,13 @@ class LogicalPort(object):
 
     def delete(self, cmd_executor: CommandExecutor) -> None:
         logger.info("Deleting logical port on %s", self.net)
-        cmd_executor.execute(self._del_route_cmd())
+        # execute ip route del ...
 
     def _add_route_cmd(self) -> List[str]:
         return self._ip_route_cmd(self.IpRouteAction.ADD)
 
-    def _del_route_cmd(self) -> List[str]:
-        return self._ip_route_cmd(self.IpRouteAction.DEL)
-
     class IpRouteAction(Enum):
         ADD = "add"
-        DEL = "del"
 
     def _ip_route_cmd(self, action: IpRouteAction) -> List[str]:
         return ['ip', 'route', action.value, self.net_ip[0], 'via', self.router_ip]
