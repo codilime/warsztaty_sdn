@@ -116,9 +116,7 @@ class Controller(object):
 
     @staticmethod
     def _allocate_router_and_container_ips(pool: netaddr.IPNetwork) -> (netaddr.IPAddress, netaddr.IPAddress):
-        hosts = pool.iter_hosts()
-        next(hosts)  # skip docker default gateway
-        return next(hosts), next(hosts)
+        return "192.168.0.1", "192.168.0.2"
 
     def delete_logical_port(self, port: LogicalPort) -> None:
         logger.info("Deleting logical port on %s for %s", port.network.id, port.container.id)
