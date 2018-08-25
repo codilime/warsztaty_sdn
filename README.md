@@ -1,3 +1,7 @@
+### Prezentacja
+
+https://docs.google.com/presentation/d/18hOvMN4SPlAg2picEBo6aZsduvRZjTtfypohgnNWe3A/edit?usp=sharing
+
 ### Ważne komendy
 0) Przygotowanie pod VM
 ```bash
