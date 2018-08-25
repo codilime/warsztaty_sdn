@@ -92,31 +92,11 @@ class Controller(object):
     def add_logical_port(self, port: LogicalPort) -> None:
         logger.info("Adding logical port on %s for %s", port.network.id, port.container.id)
         pool = self._allocate_network_pool(port.network.id)
-        router_ip, container_ip = self._allocate_router_and_container_ips(pool)
-        logger.info("Allocated %s for router and %s for container from %s pool", router_ip, container_ip, str(pool))
-
-        logger.debug("Creating underlay docker network")
-        ipam = docker.types.IPAMConfig(pool_configs=[docker.types.IPAMPool(subnet=str(pool))])
-        net_name = "{}-{}".format(port.network.id, port.container.id)
-        underlay_network = self.docker_client.networks.create(net_name, driver="bridge", ipam=ipam)
-        underlay_network.connect(self.router.id, ipv4_address=router_ip.format())
-        underlay_network.connect(port.container.id, ipv4_address=container_ip.format())
-
-        logger.debug("Notifying router and container")
-        port.router_ip = router_ip
-        port.container_ip = container_ip
-        port.underlay_network_ip = self.get_network(port.network.id).ip
-        self.router.add_logical_port(port)
-        port.container.add_logical_port(port)
 
         self.logical_ports[port.id] = port
 
     def _allocate_network_pool(self, overlay_network_id: str) -> netaddr.IPNetwork:
-        return next(self.underlay_subnets[overlay_network_id])
-
-    @staticmethod
-    def _allocate_router_and_container_ips(pool: netaddr.IPNetwork) -> (netaddr.IPAddress, netaddr.IPAddress):
-        return "192.168.0.1", "192.168.0.2"
+        return "192.168.0.8/29"
 
     def delete_logical_port(self, port: LogicalPort) -> None:
         logger.info("Deleting logical port on %s for %s", port.network.id, port.container.id)

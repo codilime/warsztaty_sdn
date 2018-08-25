@@ -89,28 +89,6 @@ class ControllerTest(unittest.TestCase):
         self.assertIn(n1, networks)
         self.assertIn(n2, networks)
 
-    def test_should_detach_logical_port_from_network(self):
-        poster = MagicMock()
-        r = Router(self.ROUTER_ID, self.ROUTER_URL, poster)
-        c = Container(self.CONTAINER_RED_ID, MagicMock(), MagicMock())
-        c.ip = self.CONTAINER_RED_URL
-        docker_client = MagicMock()
-        ctrl = Controller(r, docker_client)
-
-        n = Network("net1", "192.168.0.0/24")
-        ctrl.add_network(n)
-
-        p = LogicalPort(c, n)
-        ctrl.add_logical_port(p)
-
-        mocked_network = MagicMock()
-        docker_client.networks.get = MagicMock(return_value=mocked_network)
-        ctrl.delete_logical_port(p)
-
-        mocked_network.disconnect.assert_any_call(self.CONTAINER_RED_ID)
-        mocked_network.disconnect.assert_any_call(self.ROUTER_ID)
-        mocked_network.remove.assert_any_call()
-
     def test_should_list_logical_ports(self):
         ctrl = Controller(MagicMock(), MagicMock())
         n = Network("net1", "192.168.0.0/24")
