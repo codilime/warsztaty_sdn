@@ -27,8 +27,13 @@ class Controller(object):
         self.poster = poster
 
     def clean(self) -> None:
+        net_to_delete = list(self.networks.keys())
+        for net_id in net_to_delete:
+            self.delete_network(net_id)
+
         self.underlay_subnets = {}
         self.networks = {}
+        
         for _, container in self.containers.items():
             container.stop()
         self.containers.clear()
@@ -67,11 +72,14 @@ class Controller(object):
         if id not in self.networks:
             raise RuntimeError('Network with id {net_id} does not exist'.format(net_id=id))
 
+        lp_to_delete = []
         for lp_id, lp in self.logical_ports.items():
             if lp.network.id == id:
-                raise RuntimeError('Cannot remove network {net_id} - logical port is attached - {lp_id}'
-                                   .format(net_id=id, lp_id=lp.id))
-        # TODO - go to docker networks and delete
+                lp_to_delete.append(lp)
+
+        for lp in lp_to_delete:
+            self.delete_logical_port(lp)
+
         self.router.delete_network(self.networks[id])
         del self.networks[id]
 

@@ -15,14 +15,14 @@ class ControllerClient:
         self.endpoint = endpoint
         self.docker_client = DockerClient(base_url='unix://var/run/docker.sock')
 
-    def _post(self, url_path, data):
+    def _send_request(self, url_path, data, method=requests.post):
         url = f'http://{self.endpoint}/{url_path}'
         headers = {'Content-Type': 'application/json'}
 
         logger.info(f'Sending request to {url}')
         resp = None
         try:
-            resp = requests.post(url=url, headers=headers, data=json.dumps(data))
+            resp = method(url=url, headers=headers, data=json.dumps(data))
         except requests.RequestException:
             logger.debug(f'Error during request {url}')
             logger.debug(traceback.format_exc())
@@ -36,26 +36,25 @@ class ControllerClient:
         logger.info(f'Request success {resp.text}')
 
     def clean_data(self):
-        self._post(url_path='force_clean', data={})
+        self._send_request(url_path='force_clean', data={})
 
     def create_agent(self, name):
         data = {'id': name}
-        self._post(url_path='create/container', data=data)
+        self._send_request(url_path='create/container', data=data)
 
     def remove_agent(self, name):
-        data = {'id': name}
-        self._post(url_path='delete/container', data=data)
+        self._send_request(url_path=f'container/{name}', data={}, method=requests.delete)
 
     def create_network(self, name, cidr):
         data = {'id': name, 'ip': cidr}
-        self._post(url_path='create/network', data=data)
+        self._send_request(url_path='create/network', data=data)
 
     def create_logical_port(self, net_id, docker_id):
         data = {'net_id': net_id,
                 'container': {
                     'id': docker_id,
                 }}
-        self._post(url_path='create/logical_port', data=data)
+        self._send_request(url_path='create/logical_port', data=data)
 
     def assert_container_exists(self, name):
         try:

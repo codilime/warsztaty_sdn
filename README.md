@@ -26,38 +26,50 @@ https://www.virtualbox.org/wiki/Downloads
 
 3) Ściągnij kod https://github.com/codilime/warsztaty_sdn
 
-4) Udostępnij folder z kodem do vm pod ścieżkę /home/vagrant/warsztaty_sdn
+4) Udostępnij folder z kodem do vm, jak nazwę podaj warsztaty_sdn
 * powinno wyglądać to tak jak w share.png
 
-5) Przekieruj port 8090 guest na  8090 host oraz  8080 guest na 8081 host
-* powinno wyglądać to tak jak w port.png
 
 Kredki ubuntu/ubuntu
 
-2) Wchodzenie do vm
+1) Wchodzenie do vm
 ```bash
 vagrant ssh
 ```
 
 Opcjonalne
-3) budowanie images (vm)
+2) budowanie images (vm)
 ```bash
 cd /home/vagrant/warsztaty_sdn
-ansible-playbook -i inv.yml playbooks/build.yml
+./build.sh
 ```
 
-4) Uruchamianie kontroller i rutera (vm)
+3) Uruchamianie kontroller i rutera (vm)
 ```bash
 cd /home/vagrant/warsztaty_sdn
-ansible-playbook -i inv.yml playbooks/run.yml
+./run.sh
 ```
 
-5) Restartowanie kontroller i rutera (vm)
+4) Restartowanie kontroller i rutera (vm)
 ```bash
 cd /home/vagrant/warsztaty_sdn
 docker-compose restart
 ```
 
+5) Uruchamianie komend na kontenerze
+```bash
+docker exec <nazwa kontenera> <komenda>
+```
+Przykłady:
+Sprawdzanie adresu ip
+```bash
+docker exec ala ifconfig
+```
+
+Pingowanie
+```bash
+docker exec ala ping 192.168.0.3 -c 1
+```
 
 
 ### Jeśli nie masz linuxa tu są linki do vagrant i virtualboxa
