@@ -34,26 +34,10 @@ class Router(object):
 
     def add_logical_port(self, net: str, ip: str) -> None:
         logger.info("Adding logical port %s/%s" % (net, ip))
-        my_interface = self.interface_finder.find(ip)
-        for peer in self.networks[net]:
-            peer_interface = self.interface_finder.find(peer)
-            logger.debug("Configuring routing for %s <-> %s" % (my_interface, peer_interface))
-            self.command_executor.execute(self._build_start_routing_command(peer_interface, my_interface))
-            self.command_executor.execute(self._build_start_routing_command(my_interface, peer_interface))
+        # execute iptables -A FORWARD -i ethX -o ethY -j ACCEPT for all interface pairs in the overlay network
 
         self.networks[net].append(ip)
 
     def remove_logical_port(self, net: str, ip: str) -> None:
         logger.info("Removing logical port %s/%s" % (net, ip))
         # execute iptables -D FORWARD -i ethX -o ethY -j ACCEPT for all interface pairs in the overlay network
-
-    class IPTablesActions(Enum):
-        ADD = '-A'
-
-    def _build_start_routing_command(self, iface_in: str, iface_out: str) -> List[str]:
-        return self._build_iptables_command(self.IPTablesActions.ADD, iface_in, iface_out)
-
-    @staticmethod
-    def _build_iptables_command(action: IPTablesActions, iface_in: str, iface_out: str) -> List[str]:
-        return ['iptables', action.value, 'FORWARD', '-i', iface_in, '-o', iface_out, '-j', 'ACCEPT']
-
