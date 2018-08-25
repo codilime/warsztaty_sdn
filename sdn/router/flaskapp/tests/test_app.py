@@ -42,7 +42,7 @@ class TestRouterFlaskaap(unittest.TestCase):
         self.assertEqual(200, rv.status_code)
 
     @patch.object(router, 'remove_logical_port', return_value=None)
-    def test_create_logical_port(self, remove_logical_port):
+    def test_delete_logical_port(self, remove_logical_port):
         data = {
             'name': 'ala',
             'ip': '192.168.0.1'

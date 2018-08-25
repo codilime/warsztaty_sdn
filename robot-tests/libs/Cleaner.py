@@ -6,9 +6,17 @@ from docker.errors import APIError, NotFound
 logger = logging.getLogger('Cleaner')
 
 
+NETWORK_WHITELIST = ['bridge', 'host', 'warsztaty_sdn_static-network', 'none']
+
+
 class Cleaner:
     def __init__(self):
         self.docker_client = DockerClient(base_url='unix://var/run/docker.sock')
+
+    def clean_networks(self):
+        for net in self.docker_client.networks.list():
+            if net.name not in NETWORK_WHITELIST:
+                self.remove_network(net.name)
 
     def remove_network(self, net_name):
         if not net_name:
