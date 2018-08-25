@@ -34,13 +34,6 @@ class TestAgentFlaskapp(unittest.TestCase):
         self.assertEqual(b'Success\n', rv.data)
         self.assertEqual(200, rv.status_code)
 
-    def test_create_logical_port_without_data(self):
-        data = {}
-        rv = self.client.post('/create/logical_port', data=json.dumps(data),
-                              content_type='application/json')
-        self.assertEqual(b'Failed, not enough data\n', rv.data)
-        self.assertEqual(400, rv.status_code)
-
     def test_delete_logical_port(self):
         data = {
             'net': 'ala',
