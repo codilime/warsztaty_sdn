@@ -48,14 +48,6 @@ class Controller(object):
             raise RuntimeError('Invalid CIDR format for network {net_id} - {net_ip}'
                                .format(net_id=network.id, net_ip=network.ip))
 
-        for net_id, net in self.networks.items():
-            existing_network = ipaddr.IPNetwork(net.ip)
-            new_network = ipaddr.IPNetwork(network.ip)
-            if existing_network.overlaps(new_network):
-                raise RuntimeError('Specified CIDR for network {new_net_id}-{new_net_ip} overlaps with {ex_net_id}-{ex_net_ip}'
-                                   .format(new_net_id=network.id, new_net_ip=network.ip,
-                                           ex_net_id=net.id, ex_net_ip=net.ip))
-
     def add_network(self, network: Network) -> None:
         self._validate_network(network)
 
