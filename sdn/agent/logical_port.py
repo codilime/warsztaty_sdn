@@ -25,17 +25,8 @@ class LogicalPort(object):
 
     def create(self, cmd_executor: CommandExecutor) -> None:
         logger.info("Creating logical port on %s, my IP is %s", self.net, self.local_ip)
-        cmd_executor.execute(self._add_route_cmd())
+        # execute ip route add ...
 
     def delete(self, cmd_executor: CommandExecutor) -> None:
         logger.info("Deleting logical port on %s", self.net)
         # execute ip route del ...
-
-    def _add_route_cmd(self) -> List[str]:
-        return self._ip_route_cmd(self.IpRouteAction.ADD)
-
-    class IpRouteAction(Enum):
-        ADD = "add"
-
-    def _ip_route_cmd(self, action: IpRouteAction) -> List[str]:
-        return ['ip', 'route', action.value, self.net_ip[0], 'via', self.router_ip]
